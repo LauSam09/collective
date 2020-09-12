@@ -1,5 +1,5 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         <p>Collective</p>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
