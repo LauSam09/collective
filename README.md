@@ -1,3 +1,5 @@
+[![LauSam09](https://circleci.com/gh/LauSam09/collective.svg?style=svg)](https://app.circleci.com/pipelines/github/LauSam09/collective)
+
 # Collective
 Collective is an offline-first oauth2 (google provider) shopping list with live-syncing capabilities.
 
