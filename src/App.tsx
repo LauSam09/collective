@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 
 import { AuthenticationContext } from './authentication/AuthenticationContext'
-import './App.css'
 import { UserState } from './models'
+
+import './App.css'
 
 function App() {
   const { authenticated, login, logout, userState } = useContext(AuthenticationContext)

@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import { useEffect, useState } from 'react'
-import { UserState } from '../models'
+
+import { User, UserState } from '../models'
 
 type Props = {
   authenticated: boolean
@@ -17,7 +18,7 @@ export default function useRegistration(props: Props) {
     const doc = await db.collection('users').doc(user?.uid).get()
 
     if (doc.exists) {
-      if ((doc.data() as any).group) {
+      if ((doc.data() as User).group) {
         setUserState(UserState.Registered)
       } else {
         setUserState(UserState.Unregistered)
