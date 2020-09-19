@@ -12,7 +12,8 @@ function App() {
       <header className="App-header">
         <p>Collective</p>
         {authenticated ? <button onClick={logout}>Log out</button> : <button onClick={login}>Log in</button>}
-        {userState === UserState.Existing && <p>Welcome back</p>}
+        {userState === UserState.Registered && <p>Welcome back</p>}
+        {userState === UserState.Unregistered && <p>Create a group.</p>}
         {userState === UserState.New && <p>Welcome to Collective!</p>}
       </header>
     </div>

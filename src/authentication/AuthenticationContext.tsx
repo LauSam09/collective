@@ -1,7 +1,9 @@
 import React, { createContext } from 'react'
 
 import { UserState } from '../models'
+
 import useAuthentication from './useAuthentication'
+import useRegistration from './useRegistration'
 
 type AuthenticationContextType = {
   authenticated: boolean;
@@ -20,7 +22,9 @@ export const AuthenticationContext = createContext<AuthenticationContextType>({
 })
 
 export const AuthenticationContextProvider = ({ children }: { children: any }) => {
-  const { initialised, authenticated, userState, login, logout } = useAuthentication()
+  const { initialised, authenticated, login, logout } = useAuthentication()
+  const { userState } = useRegistration({ authenticated })
+
   const values = {
     initialised,
     authenticated,

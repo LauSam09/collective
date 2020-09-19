@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import firebase from 'firebase'
 
-import { UserState } from '../models'
-
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
 export default function useAuthentication() {
   const [initialised, setInitialised] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
-  const [userState, setUserState] = useState<UserState>()
 
   useEffect(() => {
     firebase.initializeApp({
@@ -34,28 +31,6 @@ export default function useAuthentication() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!authenticated) {
-      setUserState(undefined)
-      return
-    }
-
-    const db = firebase.firestore()
-    var user = firebase.auth().currentUser
-
-    db.collection('users').doc(user?.uid).get()
-      .then(doc => {
-        if (doc.exists) {
-          setUserState(UserState.Existing)
-        } else {
-          setUserState(UserState.New)
-          db.collection('users').doc(user?.uid).set({
-            added: new Date()
-          })
-        }
-      })
-  }, [authenticated])
-
   async function login() {
     firebase.auth().signInWithPopup(googleProvider)
   }
@@ -64,5 +39,5 @@ export default function useAuthentication() {
     firebase.auth().signOut()
   }
 
-  return { initialised, authenticated, userState, login, logout }
+  return { initialised, authenticated, login, logout }
 }
