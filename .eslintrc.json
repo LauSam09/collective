@@ -6,7 +6,10 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "standard"
+        "standard",
+        "prettier",
+        "prettier/react",
+        "prettier/@typescript-eslint"
     ],
     "globals": {
         "Atomics": "readonly",
