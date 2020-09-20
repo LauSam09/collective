@@ -23,7 +23,7 @@ export default function useList() {
     querySnapshot.forEach((item) =>
       itemsToSet.push({ ...item.data(), id: item.id } as Item)
     )
-    console.log("firing")
+
     setItems(itemsToSet)
   }, [group])
 
