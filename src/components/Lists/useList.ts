@@ -19,15 +19,14 @@ export default function useList() {
       .collection("groups")
       .doc(group?.id)
       .collection("lists")
-      .doc("7iEMVg6wzHgndtBCXm5C")
+      .doc(group?.defaultList)
       .collection("items")
       .get()
 
     const itemsToSet: Item[] = []
-    querySnapshot.forEach((item) => {
-      console.log(JSON.stringify(item.data()))
+    querySnapshot.forEach((item) =>
       itemsToSet.push({ ...item.data(), id: item.id } as Item)
-    })
+    )
 
     setItems(itemsToSet)
   }

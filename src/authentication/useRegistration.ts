@@ -34,7 +34,7 @@ export default function useRegistration(props: Props) {
       await db.collection("users").doc(user?.uid).set({
         added: firebase.firestore.FieldValue.serverTimestamp(),
       })
-      setUserState(UserState.New)
+      setUserState(UserState.Unregistered)
     }
   }
 
@@ -60,6 +60,14 @@ export default function useRegistration(props: Props) {
       users: [user.uid],
     })
     group.id = groupDoc.id
+    const listDoc = await db
+      .collection("groups")
+      .doc(group.id)
+      .collection("lists")
+      .add({
+        name: "shopping",
+      })
+    group.defaultList = listDoc.id
     await db.collection("users").doc(user.uid).update({
       group,
     })
