@@ -1,28 +1,24 @@
-import React, { useContext } from "react"
+import React from "react"
 
-import { AuthenticationContext } from "authentication/AuthenticationContext"
-import { UserState } from "models"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
-import Register from "components/Register"
+import Home from "components/Home"
 import Navigation from "components/Navigation"
 
 import classes from "./App.module.css"
 
 function App() {
-  const { authenticated, userState, group } = useContext(AuthenticationContext)
-
   return (
-    <div className={classes.app}>
-      <Navigation />
-      <header className={classes.appHeader}>
-        {!authenticated && <p>Log in to get started</p>}
-        {userState === UserState.Registered && (
-          <p>Welcome back [{group?.name}]</p>
-        )}
-        {userState === UserState.Unregistered && <Register />}
-        {userState === UserState.New && <p>Welcome to Collective!</p>}
-      </header>
-    </div>
+    <Router>
+      <div className={classes.app}>
+        <Navigation />
+        <Switch>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
 
