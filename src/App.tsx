@@ -1,25 +1,21 @@
 import React, { useContext } from "react"
 
-import { AuthenticationContext } from "./authentication/AuthenticationContext"
-import { UserState } from "./models"
+import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { UserState } from "models"
 
-import "./App.css"
-import Register from "./components/Register"
+import Register from "components/Register"
+import Navigation from "components/Navigation"
+
+import classes from "./App.module.css"
 
 function App() {
-  const { authenticated, login, logout, userState, group } = useContext(
-    AuthenticationContext
-  )
+  const { authenticated, userState, group } = useContext(AuthenticationContext)
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Collective</p>
-        {authenticated ? (
-          <button onClick={logout}>Log out</button>
-        ) : (
-          <button onClick={login}>Log in</button>
-        )}
+    <div className={classes.app}>
+      <Navigation />
+      <header className={classes.appHeader}>
+        {!authenticated && <p>Log in to get started</p>}
         {userState === UserState.Registered && (
           <p>Welcome back [{group?.name}]</p>
         )}
