@@ -1,7 +1,7 @@
 enum UserState {
   New,
   Unregistered,
-  Registered
+  Registered,
 }
 
 export default UserState

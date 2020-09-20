@@ -1,7 +1,7 @@
-import firebase from 'firebase'
-import { useEffect, useState } from 'react'
+import firebase from "firebase"
+import { useEffect, useState } from "react"
 
-import { Group, User, UserState } from '../models'
+import { Group, User, UserState } from "../models"
 
 type Props = {
   authenticated: boolean
@@ -17,10 +17,10 @@ export default function useRegistration(props: Props) {
     var user = firebase.auth().currentUser
 
     if (!user) {
-      throw Error('Authenticated user not found')
+      throw Error("Authenticated user not found")
     }
 
-    const doc = await db.collection('users').doc(user.uid).get()
+    const doc = await db.collection("users").doc(user.uid).get()
 
     if (doc.exists) {
       const group = (doc.data() as User).group
@@ -31,8 +31,8 @@ export default function useRegistration(props: Props) {
         setUserState(UserState.Unregistered)
       }
     } else {
-      await db.collection('users').doc(user?.uid).set({
-        added: firebase.firestore.FieldValue.serverTimestamp()
+      await db.collection("users").doc(user?.uid).set({
+        added: firebase.firestore.FieldValue.serverTimestamp(),
       })
       setUserState(UserState.New)
     }
@@ -52,16 +52,16 @@ export default function useRegistration(props: Props) {
     var user = firebase.auth().currentUser
 
     if (!user) {
-      throw Error('Authenticated user not found')
+      throw Error("Authenticated user not found")
     }
 
-    const groupDoc = await db.collection('groups').add({
+    const groupDoc = await db.collection("groups").add({
       ...group,
-      users: [user.uid]
+      users: [user.uid],
     })
     group.id = groupDoc.id
-    await db.collection('users').doc(user.uid).update({
-      group
+    await db.collection("users").doc(user.uid).update({
+      group,
     })
     setGroup(group)
     setUserState(UserState.Registered)

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import firebase from 'firebase'
+import { useEffect, useState } from "react"
+import firebase from "firebase"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
@@ -9,9 +9,9 @@ export default function useAuthentication() {
 
   useEffect(() => {
     firebase.initializeApp({
-      apiKey: 'AIzaSyCOeOpy_At3rf4OIkJndZIzUnNUIDrLfe4',
-      authDomain: 'collective-35e56.firebaseapp.com',
-      projectId: 'collective-35e56'
+      apiKey: "AIzaSyCOeOpy_At3rf4OIkJndZIzUnNUIDrLfe4",
+      authDomain: "collective-35e56.firebaseapp.com",
+      projectId: "collective-35e56",
     })
 
     firebase.firestore().enablePersistence()

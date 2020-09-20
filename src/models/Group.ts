@@ -1,4 +1,4 @@
 export default interface Group {
-  id?: string,
+  id?: string
   name: string
 }

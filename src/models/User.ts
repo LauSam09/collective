@@ -1,4 +1,4 @@
-import { Group } from '.'
+import { Group } from "."
 
 export default interface User {
   group: Group

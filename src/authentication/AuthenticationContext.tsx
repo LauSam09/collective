@@ -1,18 +1,18 @@
-import React, { createContext } from 'react'
+import React, { createContext } from "react"
 
-import { Group, UserState } from '../models'
+import { Group, UserState } from "../models"
 
-import useAuthentication from './useAuthentication'
-import useRegistration from './useRegistration'
+import useAuthentication from "./useAuthentication"
+import useRegistration from "./useRegistration"
 
 type AuthenticationContextType = {
-  authenticated: boolean;
-  initialised: boolean;
-  userState: UserState | undefined;
-  login: () => Promise<void>;
-  logout: () => Promise<void>;
-  register: (group: Group) => Promise<void>;
-  group?: Group;
+  authenticated: boolean
+  initialised: boolean
+  userState: UserState | undefined
+  login: () => Promise<void>
+  logout: () => Promise<void>
+  register: (group: Group) => Promise<void>
+  group?: Group
 }
 
 export const AuthenticationContext = createContext<AuthenticationContextType>({
@@ -21,10 +21,14 @@ export const AuthenticationContext = createContext<AuthenticationContextType>({
   userState: undefined,
   login: async () => {},
   logout: async () => {},
-  register: async (group: Group) => {}
+  register: async (group: Group) => {},
 })
 
-export const AuthenticationContextProvider = ({ children }: { children: any }) => {
+export const AuthenticationContextProvider = ({
+  children,
+}: {
+  children: any
+}) => {
   const { initialised, authenticated, login, logout } = useAuthentication()
   const { userState, register, group } = useRegistration({ authenticated })
 
@@ -35,7 +39,11 @@ export const AuthenticationContextProvider = ({ children }: { children: any }) =
     login,
     logout,
     register,
-    group
+    group,
   }
-  return <AuthenticationContext.Provider value={values}>{children}</AuthenticationContext.Provider>
+  return (
+    <AuthenticationContext.Provider value={values}>
+      {children}
+    </AuthenticationContext.Provider>
+  )
 }
