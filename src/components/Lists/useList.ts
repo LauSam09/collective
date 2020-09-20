@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import firebase from "firebase"
 
 import { Item } from "models"
@@ -8,11 +8,7 @@ export default function useList() {
   const [items, setItems] = useState<Item[]>([])
   const { group } = useContext(AuthenticationContext)
 
-  useEffect(() => {
-    fetchItems()
-  }, [])
-
-  async function fetchItems() {
+  const fetchItems = useCallback(async () => {
     const db = firebase.firestore()
 
     const querySnapshot = await db
@@ -27,9 +23,13 @@ export default function useList() {
     querySnapshot.forEach((item) =>
       itemsToSet.push({ ...item.data(), id: item.id } as Item)
     )
-
+    console.log("firing")
     setItems(itemsToSet)
-  }
+  }, [group])
+
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   return { items }
 }
