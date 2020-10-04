@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { AuthenticationContext } from "../../authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 export default function Register() {
   const { register } = useContext(AuthenticationContext)

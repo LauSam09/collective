@@ -9,7 +9,7 @@ export default function Lists() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    await addItem({ name, id: "" })
+    await addItem({ name, id: "", completed: false })
     setName("")
   }
 

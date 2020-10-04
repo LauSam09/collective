@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
-import classes from "./index.module.css"
+import classes from "./Navigation.module.css"
 
 export default function Navigation() {
   const { authenticated, login, logout } = useContext(AuthenticationContext)

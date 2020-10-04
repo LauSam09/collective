@@ -1,8 +1,7 @@
 import React, { useContext } from "react"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
-import Home from "components/Home"
-import Navigation from "components/Navigation"
+import { Home, Navigation } from "components"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./App.module.css"

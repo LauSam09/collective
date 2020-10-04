@@ -1,11 +1,11 @@
 import React, { useContext } from "react"
 
-import Register from "components/Register"
-import Lists from "components/Lists"
+import { Register, Lists } from "components"
+
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 import { UserState } from "models"
 
-import classes from "./index.module.css"
+import classes from "./Home.module.css"
 
 export default function Home() {
   const { authenticated, userState } = useContext(AuthenticationContext)
