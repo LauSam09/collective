@@ -28,21 +28,48 @@ export default function useList() {
   }, [group])
 
   useEffect(() => {
-    fetchItems()
-  }, [fetchItems])
+    const db = firebase.firestore()
+
+    const unsubscribe = db
+      .collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          switch (change.type) {
+            case "added":
+              setItems((items) => [
+                ...items,
+                { ...change.doc.data(), id: change.doc.id } as Item, // TODO I think can cast type in firestore api
+              ])
+              break
+            case "removed": {
+              setItems((items) =>
+                items.filter((item) => item.id !== change.doc.id)
+              )
+              break
+            }
+          }
+        })
+      })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [group])
 
   const addItem = async (item: Item) => {
     const db = firebase.firestore()
 
-    const doc = await db
+    await db
       .collection("groups")
       .doc(group?.id)
       .collection("lists")
       .doc(group?.defaultList)
       .collection("items")
       .add(item)
-
-    setItems([...items, { ...item, id: doc.id }])
   }
 
   const deleteItem = async (id: string) => {
@@ -56,9 +83,7 @@ export default function useList() {
       .collection("items")
       .doc(id)
       .delete()
-
-    setItems(items.filter((i) => i.id !== id))
   }
 
-  return { items, addItem, deleteItem }
+  return { items, fetchItems, addItem, deleteItem }
 }
