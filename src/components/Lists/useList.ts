@@ -45,12 +45,20 @@ export default function useList() {
                 { ...change.doc.data(), id: change.doc.id } as Item, // TODO I think can cast type in firestore api
               ])
               break
-            case "removed": {
+            case "modified":
+              setItems((items) =>
+                items.map((item) =>
+                  item.id === change.doc.id
+                    ? ({ ...change.doc.data(), id: change.doc.id } as Item)
+                    : { ...item }
+                )
+              )
+              break
+            case "removed":
               setItems((items) =>
                 items.filter((item) => item.id !== change.doc.id)
               )
               break
-            }
           }
         })
       })
@@ -85,5 +93,19 @@ export default function useList() {
       .delete()
   }
 
-  return { items, fetchItems, addItem, deleteItem }
+  const setCompletionStatus = async (id: string, status: boolean) => {
+    const db = firebase.firestore()
+
+    db.collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+      .doc(id)
+      .update({
+        completed: status,
+      })
+  }
+
+  return { items, fetchItems, addItem, deleteItem, setCompletionStatus }
 }
