@@ -1,12 +1,27 @@
-import React from "react"
+import React, { FormEvent, useState } from "react"
 
 import useList from "./useList"
 
 export default function Lists() {
-  const { items } = useList()
+  const { items, addItem } = useList()
+  const [name, setName] = useState("")
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    await addItem({ name, id: "" })
+    setName("")
+  }
 
   return (
     <div>
+      <form onSubmit={handleSubmit}>
+        <label>Name</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} />
+        <button type="submit" disabled={!name}>
+          Add
+        </button>
+      </form>
       <h2>Your items</h2>
       {items.length ? (
         <ul>

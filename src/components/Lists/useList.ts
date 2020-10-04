@@ -31,5 +31,19 @@ export default function useList() {
     fetchItems()
   }, [fetchItems])
 
-  return { items }
+  const addItem = async (item: Item) => {
+    const db = firebase.firestore()
+
+    const doc = await db
+      .collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+      .add(item)
+
+    setItems([...items, { ...item, id: doc.id }])
+  }
+
+  return { items, addItem }
 }
