@@ -26,7 +26,7 @@ export default function useAuthentication() {
     })
     setTimeout(() => {
       setInitialisationDelay(true)
-    }, 1000)
+    }, 250)
 
     setInitialised(true)
 
