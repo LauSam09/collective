@@ -3,7 +3,7 @@ import React, { FormEvent, useState } from "react"
 import useList from "./useList"
 
 export default function Lists() {
-  const { items, addItem } = useList()
+  const { items, addItem, deleteItem } = useList()
   const [name, setName] = useState("")
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -26,7 +26,10 @@ export default function Lists() {
       {items.length ? (
         <ul>
           {items.map((item) => (
-            <li key={item.id}>{item.name}</li>
+            <li key={item.id}>
+              {item.name}
+              <button onClick={() => deleteItem(item.id)}>x</button>
+            </li>
           ))}
         </ul>
       ) : (

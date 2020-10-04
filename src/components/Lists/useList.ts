@@ -45,5 +45,20 @@ export default function useList() {
     setItems([...items, { ...item, id: doc.id }])
   }
 
-  return { items, addItem }
+  const deleteItem = async (id: string) => {
+    const db = firebase.firestore()
+
+    await db
+      .collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+      .doc(id)
+      .delete()
+
+    setItems(items.filter((i) => i.id !== id))
+  }
+
+  return { items, addItem, deleteItem }
 }
