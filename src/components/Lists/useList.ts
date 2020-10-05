@@ -1,11 +1,12 @@
 import { useCallback, useContext, useEffect, useState } from "react"
 import firebase from "firebase"
 
-import { Item } from "models"
+import { Category, Item } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 export default function useList() {
   const [items, setItems] = useState<Item[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const { group } = useContext(AuthenticationContext)
 
   const fetchItems = useCallback(async () => {
@@ -25,6 +26,27 @@ export default function useList() {
     )
 
     setItems(itemsToSet)
+  }, [group])
+
+  useEffect(() => {
+    if (group) {
+      const db = firebase.firestore()
+      db.collection("groups")
+        .doc(group.id)
+        .collection("lists")
+        .doc(group.defaultList)
+        .collection("categories")
+        .get()
+        .then((querySnapshot) => {
+          setCategories(
+            querySnapshot.docs.map(
+              (doc) => ({ ...doc.data(), id: doc.id } as Category)
+            )
+          )
+        })
+    } else {
+      setCategories([])
+    }
   }, [group])
 
   useEffect(() => {
@@ -107,5 +129,12 @@ export default function useList() {
       })
   }
 
-  return { items, fetchItems, addItem, deleteItem, setCompletionStatus }
+  return {
+    items,
+    categories,
+    fetchItems,
+    addItem,
+    deleteItem,
+    setCompletionStatus,
+  }
 }

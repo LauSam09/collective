@@ -1,10 +1,23 @@
+import { Category } from "models"
 import React, { FormEvent, useState } from "react"
 
 import useList from "./useList"
 
 export default function Lists() {
-  const { items, addItem, deleteItem, setCompletionStatus } = useList()
+  const {
+    items,
+    categories,
+    addItem,
+    deleteItem,
+    setCompletionStatus,
+  } = useList()
   const [name, setName] = useState("")
+  const categoryMap: { [key: string]: Category } = categories.reduce(
+    (obj, cur, i) => {
+      return { ...obj, [cur.id]: cur }
+    },
+    {}
+  )
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,6 +46,11 @@ export default function Lists() {
                 onChange={(e) => setCompletionStatus(item.id, e.target.checked)}
               />
               {item.name}
+              {" (" +
+                (item.category
+                  ? categoryMap[item.category]?.name || "..."
+                  : "uncategorised") +
+                ") "}
               <button onClick={() => deleteItem(item.id)}>x</button>
             </li>
           ))}
