@@ -94,6 +94,7 @@ export default function useList() {
     const db = firebase.firestore()
 
     const { id, ...sanitisedItem } = item
+    sanitisedItem.name = sanitisedItem.name.trim()
 
     await db
       .collection("groups")

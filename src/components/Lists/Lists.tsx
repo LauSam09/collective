@@ -13,6 +13,12 @@ export default function Lists() {
   } = useList()
   const [name, setName] = useState("")
 
+  const valid =
+    name &&
+    items.filter(
+      (item) => item.name.toLowerCase() === name.trim().toLowerCase()
+    ).length === 0
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -25,7 +31,7 @@ export default function Lists() {
       <form onSubmit={handleSubmit}>
         <label>Name</label>
         <input value={name} onChange={(e) => setName(e.target.value)} />
-        <button type="submit" disabled={!name}>
+        <button type="submit" disabled={!valid}>
           Add
         </button>
       </form>
