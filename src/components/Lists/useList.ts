@@ -93,13 +93,15 @@ export default function useList() {
   const addItem = async (item: Item) => {
     const db = firebase.firestore()
 
+    const { id, ...sanitisedItem } = item
+
     await db
       .collection("groups")
       .doc(group?.id)
       .collection("lists")
       .doc(group?.defaultList)
       .collection("items")
-      .add(item)
+      .add(sanitisedItem)
   }
 
   const deleteItem = async (id: string) => {
@@ -129,6 +131,20 @@ export default function useList() {
       })
   }
 
+  const setCategory = async (id: string, category?: string) => {
+    const db = firebase.firestore()
+
+    db.collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+      .doc(id)
+      .update({
+        category: category,
+      })
+  }
+
   return {
     items,
     categories,
@@ -136,5 +152,6 @@ export default function useList() {
     addItem,
     deleteItem,
     setCompletionStatus,
+    setCategory,
   }
 }
