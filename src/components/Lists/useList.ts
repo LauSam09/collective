@@ -9,6 +9,15 @@ export default function useList() {
   const [categories, setCategories] = useState<Category[]>([])
   const { group } = useContext(AuthenticationContext)
 
+  const getItemsCollection = (db = firebase.firestore()) => {
+    return db
+      .collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+  }
+
   const fetchItems = useCallback(async () => {
     const db = firebase.firestore()
 
@@ -106,97 +115,44 @@ export default function useList() {
   }, [group])
 
   const addItem = async (item: Item) => {
-    const db = firebase.firestore()
-
     const { id, ...sanitisedItem } = item
     sanitisedItem.name = sanitisedItem.name.trim()
 
-    const existing = await db
-      .collection("groups")
-      .doc(group?.id)
-      .collection("lists")
-      .doc(group?.defaultList)
-      .collection("items")
+    const existing = await getItemsCollection()
       .where("name", "==", sanitisedItem.name)
       .limit(1)
       .get()
 
     if (existing.empty) {
-      await db
-        .collection("groups")
-        .doc(group?.id)
-        .collection("lists")
-        .doc(group?.defaultList)
-        .collection("items")
-        .add({ ...sanitisedItem, added: true })
+      await getItemsCollection().add({ ...sanitisedItem, added: true })
     } else {
-      await db
-        .collection("groups")
-        .doc(group?.id)
-        .collection("lists")
-        .doc(group?.defaultList)
-        .collection("items")
-        .doc(existing.docs[0].id)
-        .update({
-          added: true,
-          completed: false,
-        })
+      await getItemsCollection().doc(existing.docs[0].id).update({
+        added: true,
+        completed: false,
+      })
     }
   }
 
   const deleteItem = async (id: string) => {
-    const db = firebase.firestore()
-
-    await db
-      .collection("groups")
-      .doc(group?.id)
-      .collection("lists")
-      .doc(group?.defaultList)
-      .collection("items")
-      .doc(id)
-      .delete()
+    await getItemsCollection().doc(id).delete()
   }
 
   const setCompletionStatus = async (id: string, status: boolean) => {
-    const db = firebase.firestore()
-
-    db.collection("groups")
-      .doc(group?.id)
-      .collection("lists")
-      .doc(group?.defaultList)
-      .collection("items")
-      .doc(id)
-      .update({
-        completed: status,
-      })
+    await getItemsCollection().doc(id).update({
+      completed: status,
+    })
   }
 
   const setCategory = async (id: string, category?: string) => {
-    const db = firebase.firestore()
-
-    db.collection("groups")
-      .doc(group?.id)
-      .collection("lists")
-      .doc(group?.defaultList)
-      .collection("items")
-      .doc(id)
-      .update({
-        category: category,
-      })
+    await getItemsCollection().doc(id).update({
+      category: category,
+    })
   }
 
   const removeItem = async (id: string) => {
-    const db = firebase.firestore()
-
-    db.collection("groups")
-      .doc(group?.id)
-      .collection("lists")
-      .doc(group?.defaultList)
-      .collection("items")
-      .doc(id)
-      .update({
-        added: false,
-      })
+    await getItemsCollection().doc(id).update({
+      added: false,
+    })
   }
 
   const removeAll = async () => {
@@ -205,13 +161,7 @@ export default function useList() {
     const batch = db.batch()
 
     for (const item of items) {
-      const ref = db
-        .collection("groups")
-        .doc(group?.id)
-        .collection("lists")
-        .doc(group?.defaultList)
-        .collection("items")
-        .doc(item.id)
+      const ref = getItemsCollection(db).doc(item.id)
       batch.update(ref, { added: false })
     }
 
