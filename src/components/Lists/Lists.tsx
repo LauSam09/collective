@@ -8,6 +8,7 @@ export default function Lists() {
     categories,
     addItem,
     deleteItem,
+    removeItem,
     setCompletionStatus,
     setCategory,
   } = useList()
@@ -63,6 +64,7 @@ export default function Lists() {
                 ))}
               </select>
               <button onClick={() => deleteItem(item.id)}>x</button>
+              <button onClick={() => removeItem(item.id)}>-</button>
             </li>
           ))}
         </ul>

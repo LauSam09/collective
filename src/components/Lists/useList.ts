@@ -62,20 +62,27 @@ export default function useList() {
         snapshot.docChanges().forEach((change) => {
           switch (change.type) {
             case "added":
-              setItems((items) => [
-                ...items,
-                { ...change.doc.data(), id: change.doc.id } as Item, // TODO I think can cast type in firestore api
-              ])
+              change.doc.data().added &&
+                setItems((items) => [
+                  ...items,
+                  { ...change.doc.data(), id: change.doc.id } as Item, // TODO I think can cast type in firestore api
+                ])
               break
-            case "modified":
-              setItems((items) =>
-                items.map((item) =>
-                  item.id === change.doc.id
-                    ? ({ ...change.doc.data(), id: change.doc.id } as Item)
-                    : { ...item }
-                )
-              )
+            case "modified": {
+              const modifiedItem = change.doc.data()
+              modifiedItem.added
+                ? setItems((items) =>
+                    items.map((item) =>
+                      item.id === change.doc.id
+                        ? ({ ...modifiedItem, id: change.doc.id } as Item)
+                        : { ...item }
+                    )
+                  )
+                : setItems((items) =>
+                    items.filter((item) => item.id !== change.doc.id)
+                  )
               break
+            }
             case "removed":
               setItems((items) =>
                 items.filter((item) => item.id !== change.doc.id)
@@ -146,12 +153,27 @@ export default function useList() {
       })
   }
 
+  const removeItem = async (id: string) => {
+    const db = firebase.firestore()
+
+    db.collection("groups")
+      .doc(group?.id)
+      .collection("lists")
+      .doc(group?.defaultList)
+      .collection("items")
+      .doc(id)
+      .update({
+        added: false,
+      })
+  }
+
   return {
     items,
     categories,
     fetchItems,
     addItem,
     deleteItem,
+    removeItem,
     setCompletionStatus,
     setCategory,
   }
