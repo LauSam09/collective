@@ -9,6 +9,7 @@ export default function Lists() {
     addItem,
     deleteItem,
     removeItem,
+    removeAll,
     setCompletionStatus,
     setCategory,
   } = useList()
@@ -37,6 +38,9 @@ export default function Lists() {
         </button>
       </form>
       <h2>Your items</h2>
+      <sub>
+        <button onClick={removeAll}>Clear</button>
+      </sub>
       {items.length ? (
         <ul>
           {items.map((item) => (

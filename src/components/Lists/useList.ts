@@ -199,6 +199,25 @@ export default function useList() {
       })
   }
 
+  const removeAll = async () => {
+    const db = firebase.firestore()
+
+    const batch = db.batch()
+
+    for (const item of items) {
+      const ref = db
+        .collection("groups")
+        .doc(group?.id)
+        .collection("lists")
+        .doc(group?.defaultList)
+        .collection("items")
+        .doc(item.id)
+      batch.update(ref, { added: false })
+    }
+
+    await batch.commit()
+  }
+
   return {
     items,
     categories,
@@ -206,6 +225,7 @@ export default function useList() {
     addItem,
     deleteItem,
     removeItem,
+    removeAll,
     setCompletionStatus,
     setCategory,
   }
