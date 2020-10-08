@@ -18,7 +18,7 @@ export default function Lists() {
   const valid =
     name &&
     items.filter(
-      (item) => item.name.toLowerCase() === name.trim().toLowerCase()
+      (item) => item.name.trim().toLowerCase() === name.trim().toLowerCase()
     ).length === 0
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
