@@ -1,5 +1,5 @@
-import firebase from "firebase"
 import { useEffect, useState } from "react"
+import firebase from "firebase"
 
 import { Group, User, UserState } from "../models"
 
@@ -24,7 +24,11 @@ export default function useRegistration(props: Props) {
 
     if (doc.exists) {
       const group = (doc.data() as User).group
-      if (group) {
+
+      const isRegistered =
+        group?.id && (await db.collection("groups").doc(group.id).get()).exists
+
+      if (isRegistered) {
         setGroup(group)
         setUserState(UserState.Registered)
       } else {
