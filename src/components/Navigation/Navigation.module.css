@@ -4,3 +4,16 @@
   align-items: center;
   padding: 10px;
 }
+
+.container p {
+  flex: 1;
+}
+
+.container ul {
+  list-style: none;
+}
+
+.container li {
+  display: inline;
+  margin-right: 15px;
+}
