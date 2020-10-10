@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react"
 import firebase from "firebase"
 
-import { Category, Item } from "models"
+import { Category, Item, ItemEntity } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 export default function useList() {
@@ -116,17 +116,22 @@ export default function useList() {
 
   const addItem = async (item: Item) => {
     const { id, ...sanitisedItem } = item
-    sanitisedItem.name = sanitisedItem.name.trim()
+    const itemEntity: ItemEntity = {
+      ...sanitisedItem,
+      name: sanitisedItem.name.trim(),
+      lowerName: sanitisedItem.name.trim().toLowerCase(),
+    }
 
     const existing = await getItemsCollection()
-      .where("name", "==", sanitisedItem.name)
+      .where("lowerName", "==", itemEntity.lowerName)
       .limit(1)
       .get()
 
     if (existing.empty) {
-      await getItemsCollection().add({ ...sanitisedItem, added: true })
+      await getItemsCollection().add({ ...itemEntity, added: true })
     } else {
       await getItemsCollection().doc(existing.docs[0].id).update({
+        name: itemEntity.name,
         added: true,
         completed: false,
       })
