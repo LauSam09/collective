@@ -9,21 +9,47 @@ export default function useRecipes() {
   const { group } = useContext(AuthenticationContext)
 
   useEffect(() => {
-    if (group) {
-      const db = firebase.firestore()
-      db.collection("groups")
-        .doc(group.id)
-        .collection("recipes")
-        .get()
-        .then((querySnapshot) => {
-          setRecipes(
-            querySnapshot.docs.map(
-              (doc) => ({ ...doc.data(), id: doc.id } as Recipe)
-            )
-          )
+    if (!group) {
+      return
+    }
+
+    const db = firebase.firestore()
+
+    const unsubscribe = db
+      .collection("groups")
+      .doc(group?.id)
+      .collection("recipes")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          switch (change.type) {
+            case "added":
+              setRecipes((recipes) => [
+                ...recipes,
+                { ...change.doc.data(), id: change.doc.id } as Recipe,
+              ])
+              break
+            case "modified":
+              setRecipes((recipes) =>
+                recipes.map((recipe) => {
+                  if (recipe.id === change.doc.id) {
+                    return { ...change.doc.data(), id: change.doc.id } as Recipe
+                  } else {
+                    return recipe
+                  }
+                })
+              )
+              break
+            case "removed":
+              setRecipes((recipes) =>
+                recipes.filter((recipe) => recipe.id !== change.doc.id)
+              )
+              break
+          }
         })
-    } else {
-      setRecipes([])
+      })
+
+    return () => {
+      unsubscribe()
     }
   }, [group])
 
@@ -33,13 +59,11 @@ export default function useRecipes() {
     const { id, ...sanitisedItem } = recipe
     sanitisedItem.name = sanitisedItem.name.trim()
 
-    const doc = await db
+    await db
       .collection("groups")
       .doc(group?.id)
       .collection("recipes")
       .add(sanitisedItem)
-
-    setRecipes((recipes) => [...recipes, { ...sanitisedItem, id: doc.id }])
   }
 
   async function deleteRecipe(id: string) {
@@ -51,9 +75,20 @@ export default function useRecipes() {
       .collection("recipes")
       .doc(id)
       .delete()
-
-    setRecipes((recipes) => recipes.filter((recipe) => recipe.id !== id))
   }
 
-  return { recipes, addRecipe, deleteRecipe }
+  async function setDay(id: string, day?: number) {
+    const db = firebase.firestore()
+
+    await db
+      .collection("groups")
+      .doc(group?.id)
+      .collection("recipes")
+      .doc(id)
+      .update({
+        day: day === undefined ? firebase.firestore.FieldValue.delete() : day,
+      })
+  }
+
+  return { recipes, addRecipe, deleteRecipe, setDay }
 }
