@@ -1,9 +1,11 @@
 import React, { useContext } from "react"
+import { Link } from "react-router-dom"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSignInAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
 
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./Navigation.module.css"
-import { Link } from "react-router-dom"
 
 export default function Navigation() {
   const { authenticated, login, logout } = useContext(AuthenticationContext)
@@ -22,9 +24,9 @@ export default function Navigation() {
         </ul>
       </div>
       {authenticated ? (
-        <button onClick={logout}>Log out</button>
+        <FontAwesomeIcon icon={faSignOutAlt} onClick={logout} title="Log out" />
       ) : (
-        <button onClick={login}>Log in</button>
+        <FontAwesomeIcon icon={faSignInAlt} onClick={login} title="Log in" />
       )}
     </div>
   )
