@@ -20,7 +20,9 @@ export default function Navigation() {
 
   return (
     <div className={classes.container}>
-      <h2>Collective</h2>
+      <Link to="/">
+        <h2>Collective</h2>
+      </Link>
       <button
         className={classes.toggle}
         onClick={() => setHideActions((hideActions) => !hideActions)}
