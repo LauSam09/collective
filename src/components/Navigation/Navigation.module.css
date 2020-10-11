@@ -25,6 +25,10 @@
   cursor: pointer;
 }
 
+.actions div {
+  display: inline;
+}
+
 .toggle {
   cursor: pointer;
   display: none;
@@ -52,9 +56,15 @@
     flex: 0 0 100%;
   }
 
+  .actions a {
+    width: 100%;
+    display: inline-block;
+  }
+
   .actions li {
     display: block;
     text-align: center;
     margin: 0;
+    padding: 3px 0;
   }
 }
