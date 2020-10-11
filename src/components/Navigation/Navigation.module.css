@@ -2,8 +2,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
   flex-wrap: wrap;
+  padding: 10px;
+  background-color: lightgray;
 }
 
 .container p {
@@ -12,21 +13,27 @@
 
 .container ul {
   list-style: none;
+  padding: 0;
 }
 
 .container li {
   display: inline;
-  margin-right: 15px;
+  margin-left: 15px;
+  font-size: 0.8em;
 }
 
 @media (max-width: 768px) {
-  .container div {
-    flex: 0 0 100%;
-    order: 2;
+  .container p {
+    margin: 5px 0;
   }
 
-  .container div li {
+  .container div {
+    flex: 0 0 100%;
+  }
+
+  .container li {
     display: block;
     text-align: center;
+    margin: 0;
   }
 }
