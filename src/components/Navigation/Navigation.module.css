@@ -31,8 +31,10 @@
 .actions li {
   display: inline;
   margin-left: 15px;
-  font-size: 0.8em;
+  font-size: 1em;
   cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .actions div {
