@@ -66,6 +66,7 @@ export default function Recipes() {
                     )
                   }
                 >
+                  {/* TODO separate component so days can be ordered correctly? */}
                   <option value={undefined}> - </option>
                   {recipe.day !== undefined && (
                     <option value={recipe.day}>{days[recipe.day]}</option>
