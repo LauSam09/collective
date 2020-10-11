@@ -3,6 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  flex-wrap: wrap;
 }
 
 .container p {
@@ -16,4 +17,16 @@
 .container li {
   display: inline;
   margin-right: 15px;
+}
+
+@media (max-width: 768px) {
+  .container div {
+    flex: 0 0 100%;
+    order: 2;
+  }
+
+  .container div li {
+    display: block;
+    text-align: center;
+  }
 }
