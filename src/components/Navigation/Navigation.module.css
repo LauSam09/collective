@@ -1,3 +1,7 @@
+:root {
+  --highlight-colour: #e7e7e7;
+}
+
 .container {
   display: flex;
   justify-content: space-between;
@@ -9,7 +13,13 @@
 
 .container h2 {
   margin: 5px 0;
+  border-radius: 5px;
+  padding: 5px;
   flex: 1;
+}
+
+.container h2:hover {
+  background-color: var(--highlight-colour);
 }
 
 .actions ul {
@@ -29,6 +39,10 @@
   display: inline;
 }
 
+.actions li:hover {
+  background-color: var(--highlight-colour);
+}
+
 .toggle {
   cursor: pointer;
   display: none;
@@ -39,7 +53,7 @@
 }
 
 .toggle:hover {
-  background-color: rgb(231, 231, 231);
+  background-color: var(--highlight-colour);
   border-radius: 5px;
 }
 
