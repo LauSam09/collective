@@ -22,6 +22,7 @@
   display: inline;
   margin-left: 15px;
   font-size: 0.8em;
+  cursor: pointer;
 }
 
 .toggle {
@@ -43,9 +44,12 @@
     display: inline;
   }
 
+  .hidden {
+    display: none;
+  }
+
   .actions {
     flex: 0 0 100%;
-    display: none;
   }
 
   .actions li {

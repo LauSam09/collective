@@ -1,4 +1,5 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
+import classNames from "classnames/bind"
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -11,13 +12,22 @@ import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./Navigation.module.css"
 
+const cx = classNames.bind(classes)
+
 export default function Navigation() {
   const { authenticated, login, logout } = useContext(AuthenticationContext)
+  const [hideActions, setHideActions] = useState(true)
 
   return (
     <div className={classes.container}>
       <h2>Collective</h2>
-      <div className={classes.actions}>
+      <button
+        className={classes.toggle}
+        onClick={() => setHideActions((hideActions) => !hideActions)}
+      >
+        <FontAwesomeIcon icon={faBars} title="Toggle" size="2x" />
+      </button>
+      <div className={cx("actions", { hidden: hideActions })}>
         <ul>
           <li>
             <Link to="/">Lists</Link>
@@ -42,9 +52,6 @@ export default function Navigation() {
           </li>
         </ul>
       </div>
-      <button className={classes.toggle}>
-        <FontAwesomeIcon icon={faBars} title="Toggle" size="2x" />
-      </button>
     </div>
   )
 }
