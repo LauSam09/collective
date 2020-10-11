@@ -6,6 +6,7 @@ import useAuthentication from "./useAuthentication"
 import useRegistration from "./useRegistration"
 
 type AuthenticationContextType = {
+  loaded: boolean
   authenticated: boolean
   initialised: boolean
   userState: UserState | undefined
@@ -16,6 +17,7 @@ type AuthenticationContextType = {
 }
 
 export const AuthenticationContext = createContext<AuthenticationContextType>({
+  loaded: false,
   authenticated: false,
   initialised: false,
   userState: undefined,
@@ -30,9 +32,12 @@ export const AuthenticationContextProvider = ({
   children: any
 }) => {
   const { initialised, authenticated, login, logout } = useAuthentication()
-  const { userState, register, group } = useRegistration({ authenticated })
+  const { loaded, userState, register, group } = useRegistration({
+    authenticated,
+  })
 
   const values = {
+    loaded,
     initialised,
     authenticated,
     userState,

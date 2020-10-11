@@ -7,12 +7,12 @@ import { AuthenticationContext } from "authentication/AuthenticationContext"
 import classes from "./App.module.css"
 
 function App() {
-  const { initialised } = useContext(AuthenticationContext)
+  const { loaded } = useContext(AuthenticationContext)
 
   return (
     <Router>
       <div className={classes.app}>
-        {initialised ? (
+        {loaded ? (
           <>
             <Navigation />
             <Switch>
