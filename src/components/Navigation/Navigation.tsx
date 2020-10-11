@@ -1,7 +1,11 @@
 import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSignInAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
+import {
+  faBars,
+  faSignInAlt,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons"
 
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
@@ -12,8 +16,8 @@ export default function Navigation() {
 
   return (
     <div className={classes.container}>
-      <p>Collective</p>
-      <div>
+      <h2>Collective</h2>
+      <div className={classes.actions}>
         <ul>
           <li>
             <Link to="/">Lists</Link>
@@ -38,6 +42,9 @@ export default function Navigation() {
           </li>
         </ul>
       </div>
+      <button className={classes.toggle}>
+        <FontAwesomeIcon icon={faBars} title="Toggle" size="2x" />
+      </button>
     </div>
   )
 }

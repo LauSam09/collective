@@ -3,35 +3,47 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px;
+  padding: 15px;
   background-color: lightgray;
 }
 
-.container p {
+.container h2 {
+  margin: 0;
   flex: 1;
 }
 
-.container ul {
+.actions ul {
+  margin: 0;
   list-style: none;
   padding: 0;
 }
 
-.container li {
+.actions li {
   display: inline;
   margin-left: 15px;
   font-size: 0.8em;
 }
 
-@media (max-width: 768px) {
-  .container p {
-    margin: 5px 0;
+.toggle {
+  cursor: pointer;
+  display: none;
+  padding: 0;
+  border: none;
+  color: inherit;
+  background-color: inherit;
+}
+
+@media (max-width: 480px) {
+  .toggle {
+    display: inline;
   }
 
-  .container div {
+  .actions {
     flex: 0 0 100%;
+    display: none;
   }
 
-  .container li {
+  .actions li {
     display: block;
     text-align: center;
     margin: 0;
