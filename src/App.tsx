@@ -15,14 +15,16 @@ function App() {
         {loaded ? (
           <>
             <Navigation />
-            <Switch>
-              <Route path="/recipes" exact>
-                <Recipes />
-              </Route>
-              <Route path="/" exact>
-                <Home />
-              </Route>
-            </Switch>
+            <main className={classes.content}>
+              <Switch>
+                <Route path="/recipes" exact>
+                  <Recipes />
+                </Route>
+                <Route path="/" exact>
+                  <Home />
+                </Route>
+              </Switch>
+            </main>
           </>
         ) : (
           <div
