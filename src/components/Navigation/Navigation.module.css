@@ -1,14 +1,10 @@
-:root {
-  --highlight-colour: #e7e7e7;
-}
-
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   padding: 15px;
-  background-color: lightgray;
+  background-color: var(--primary-colour);
 }
 
 .container h2 {
