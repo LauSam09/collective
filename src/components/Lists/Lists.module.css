@@ -4,11 +4,28 @@
   margin: auto;
 }
 
+.clear {
+  text-align: right;
+}
+
+.clear button {
+  color: white;
+  background-color: var(--primary-colour);
+  border: none;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.clear button:hover {
+  background-color: var(--highlight-colour);
+}
+
 .addForm {
   position: sticky;
   bottom: 0;
   width: 100%;
-  background: var(--primary-colour);
+  background: var(--secondary-colour);
   padding: 10px;
 }
 
@@ -40,8 +57,11 @@
   color: white;
 }
 
-ul {
+.list {
   text-align: left;
   list-style: none;
-  padding: 0;
+  padding: 20px;
+  background-color: var(--primary-colour);
+  margin: 5px 0;
+  border-radius: 5px;
 }

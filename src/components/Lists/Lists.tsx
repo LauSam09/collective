@@ -1,4 +1,6 @@
 import React, { FormEvent, useState } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTrash } from "@fortawesome/free-solid-svg-icons"
 
 import useList from "./useList"
 
@@ -32,11 +34,13 @@ export default function Lists() {
 
   return (
     <div className={classes.wrapper}>
-      <sub>
-        <button onClick={removeAll}>Clear</button>
-      </sub>
+      <div className={classes.clear}>
+        <button onClick={removeAll} title="Clear completed">
+          <FontAwesomeIcon icon={faTrash} />
+        </button>
+      </div>
       {items.length ? (
-        <ul>
+        <ul className={classes.list}>
           {items.map((item) => (
             <li key={item.id}>
               <input
