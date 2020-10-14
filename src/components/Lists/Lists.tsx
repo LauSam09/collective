@@ -32,16 +32,6 @@ export default function Lists() {
 
   return (
     <div className={classes.wrapper}>
-      <form onSubmit={handleSubmit} className={classes.addForm}>
-        <input
-          value={name}
-          className={classes.input}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button type="submit" className={classes.submit} disabled={!valid}>
-          Add
-        </button>
-      </form>
       <sub>
         <button onClick={removeAll}>Clear</button>
       </sub>
@@ -79,6 +69,16 @@ export default function Lists() {
       ) : (
         <p>No items added yet</p>
       )}
+      <form onSubmit={handleSubmit} className={classes.addForm}>
+        <input
+          value={name}
+          className={classes.input}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button type="submit" className={classes.submit} disabled={!valid}>
+          Add
+        </button>
+      </form>
     </div>
   )
 }
