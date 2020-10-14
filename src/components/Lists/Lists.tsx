@@ -2,6 +2,8 @@ import React, { FormEvent, useState } from "react"
 
 import useList from "./useList"
 
+import classes from "./Lists.module.css"
+
 export default function Lists() {
   const {
     items,
@@ -29,15 +31,17 @@ export default function Lists() {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
-        <button type="submit" disabled={!valid}>
+    <div className={classes.wrapper}>
+      <form onSubmit={handleSubmit} className={classes.addForm}>
+        <input
+          value={name}
+          className={classes.input}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button type="submit" className={classes.submit} disabled={!valid}>
           Add
         </button>
       </form>
-      <h2>Your items</h2>
       <sub>
         <button onClick={removeAll}>Clear</button>
       </sub>

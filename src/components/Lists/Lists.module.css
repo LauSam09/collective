@@ -1,0 +1,47 @@
+.wrapper {
+  text-align: center;
+  max-width: 480px;
+  margin: auto;
+}
+
+.addForm {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: var(--primary-colour);
+  padding: 10px;
+}
+
+.input {
+  height: 30px;
+  line-height: 30px;
+  vertical-align: bottom;
+  border: none;
+  padding: 0 5px;
+  border-radius: 5px 0 0 5px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.submit {
+  height: 30px;
+  line-height: 30px;
+  vertical-align: bottom;
+  border: none;
+  padding: 0 15px;
+  border-radius: 0 5px 5px 0;
+}
+
+.submit:hover:enabled {
+  background-color: var(--highlight-colour);
+  cursor: pointer;
+  color: white;
+}
+
+ul {
+  text-align: left;
+  list-style: none;
+  padding: 0;
+}
