@@ -5,6 +5,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import useList from "./useList"
 
 import classes from "./Lists.module.css"
+import Item from "./Item"
 
 export default function Lists() {
   const {
@@ -43,30 +44,16 @@ export default function Lists() {
         <ul className={classes.list}>
           {items.map((item) => (
             <li key={item.id}>
-              <input
-                type="checkbox"
-                checked={item.completed}
-                onChange={(e) => setCompletionStatus(item.id, e.target.checked)}
-              />
-              {item.name}
-              <select
-                value={item.category}
-                onChange={(e) =>
-                  setCategory(
-                    item.id,
-                    e.target.value === "-" ? "" : e.target.value
-                  )
+              <Item
+                item={item}
+                categories={categories}
+                setCategory={(categoryId) => setCategory(item.id, categoryId)}
+                toggleComplete={(status) =>
+                  setCompletionStatus(item.id, status)
                 }
-              >
-                <option value={undefined}> - </option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              <button onClick={() => deleteItem(item.id)}>x</button>
-              <button onClick={() => removeItem(item.id)}>-</button>
+                deleteItem={() => deleteItem(item.id)}
+                remove={() => removeItem(item.id)}
+              />
             </li>
           ))}
         </ul>
