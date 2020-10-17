@@ -8,6 +8,7 @@ import {
   faLayerGroup,
   faShoppingBasket,
   faShoppingCart,
+  IconDefinition,
 } from "@fortawesome/free-solid-svg-icons"
 
 type Props = {
@@ -31,7 +32,12 @@ export default function Item(props: Props) {
     icon,
   } = props
 
-  let faIcon
+  const category =
+    item.category === undefined
+      ? undefined
+      : categories.filter((category) => category.id === item.category)[0]
+
+  let faIcon: IconDefinition
 
   switch (icon) {
     case ItemIcon.Basket:
@@ -54,7 +60,11 @@ export default function Item(props: Props) {
         <input type="checkbox" checked={item.completed} />
         {item.name}
       </div>
-      <FontAwesomeIcon icon={faIcon} className={classes.icon} />
+      <FontAwesomeIcon
+        icon={faIcon}
+        className={classes.icon}
+        style={{ color: category?.colour || "inherit" }}
+      />
 
       {/* <select
         value={item.category}
