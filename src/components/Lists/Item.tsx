@@ -3,6 +3,8 @@ import React from "react"
 import { Category, Item as ItemModel } from "models"
 
 import classes from "./Item.module.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faLayerGroup } from "@fortawesome/free-solid-svg-icons"
 
 type Props = {
   item: ItemModel
@@ -24,7 +26,7 @@ export default function Item(props: Props) {
   } = props
 
   return (
-    <div>
+    <div className={classes.container}>
       <div
         className={classes.clickable}
         onClick={() => toggleComplete(!item.completed)}
@@ -32,7 +34,8 @@ export default function Item(props: Props) {
         <input type="checkbox" checked={item.completed} />
         {item.name}
       </div>
-      <select
+      <FontAwesomeIcon icon={faLayerGroup} className={classes.icon} />
+      {/* <select
         value={item.category}
         onChange={(e) =>
           setCategory(e.target.value === "-" ? "" : e.target.value)
@@ -46,7 +49,7 @@ export default function Item(props: Props) {
         ))}
       </select>
       <button onClick={() => deleteItem()}>x</button>
-      <button onClick={() => remove()}>-</button>
+      <button onClick={() => remove()}>-</button> */}
     </div>
   )
 }

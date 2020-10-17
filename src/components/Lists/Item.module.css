@@ -1,4 +1,19 @@
+div.container {
+  margin-bottom: 5px;
+  display: flex;
+}
+
 div.clickable {
   display: inline;
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+div.clickable input {
+  margin-right: 15px;
+}
+
+.icon {
+  padding: 5px;
   cursor: pointer;
 }
