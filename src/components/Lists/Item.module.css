@@ -1,5 +1,5 @@
 div.container {
-  margin-bottom: 5px;
+  margin: 5px 0;
   display: flex;
 }
 
@@ -7,13 +7,24 @@ div.clickable {
   display: inline;
   cursor: pointer;
   flex-grow: 1;
+  border-radius: 5px;
+  padding: 5px 0;
 }
 
 div.clickable input {
-  margin-right: 15px;
+  margin: 0 15px;
+}
+
+div.clickable:hover {
+  background-color: var(--highlight-colour);
 }
 
 .icon {
   padding: 5px;
   cursor: pointer;
+}
+
+.icon:hover {
+  background-color: var(--highlight-colour);
+  border-radius: 5px;
 }

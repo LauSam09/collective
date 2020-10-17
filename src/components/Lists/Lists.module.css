@@ -60,7 +60,7 @@
 .list {
   text-align: left;
   list-style: none;
-  padding: 20px;
+  padding: 10px;
   background-color: var(--primary-colour);
   margin: 5px 0;
   border-radius: 5px;
