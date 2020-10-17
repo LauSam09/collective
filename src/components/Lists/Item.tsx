@@ -2,6 +2,8 @@ import React from "react"
 
 import { Category, Item as ItemModel } from "models"
 
+import classes from "./Item.module.css"
+
 type Props = {
   item: ItemModel
   categories: Category[]
@@ -23,12 +25,13 @@ export default function Item(props: Props) {
 
   return (
     <div>
-      <input
-        type="checkbox"
-        checked={item.completed}
-        onChange={(e) => toggleComplete(e.target.checked)}
-      />
-      {item.name}
+      <div
+        className={classes.clickable}
+        onClick={() => toggleComplete(!item.completed)}
+      >
+        <input type="checkbox" checked={item.completed} />
+        {item.name}
+      </div>
       <select
         value={item.category}
         onChange={(e) =>
