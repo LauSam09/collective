@@ -1,10 +1,14 @@
 import React from "react"
 
-import { Category, Item as ItemModel } from "models"
+import { Category, Item as ItemModel, ItemIcon } from "models"
 
 import classes from "./Item.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faLayerGroup } from "@fortawesome/free-solid-svg-icons"
+import {
+  faLayerGroup,
+  faShoppingBasket,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons"
 
 type Props = {
   item: ItemModel
@@ -13,6 +17,7 @@ type Props = {
   toggleComplete: (complete: boolean) => void
   deleteItem: () => void
   remove: () => void
+  icon: ItemIcon
 }
 
 export default function Item(props: Props) {
@@ -23,7 +28,22 @@ export default function Item(props: Props) {
     setCategory,
     deleteItem,
     remove,
+    icon,
   } = props
+
+  let faIcon
+
+  switch (icon) {
+    case ItemIcon.Basket:
+      faIcon = faShoppingBasket
+      break
+    case ItemIcon.Trolley:
+      faIcon = faShoppingCart
+      break
+    default:
+      console.warn(`Unexpected icon ${icon}`)
+      faIcon = faLayerGroup
+  }
 
   return (
     <div className={classes.container}>
@@ -34,7 +54,8 @@ export default function Item(props: Props) {
         <input type="checkbox" checked={item.completed} />
         {item.name}
       </div>
-      <FontAwesomeIcon icon={faLayerGroup} className={classes.icon} />
+      <FontAwesomeIcon icon={faIcon} className={classes.icon} />
+
       {/* <select
         value={item.category}
         onChange={(e) =>

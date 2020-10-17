@@ -6,6 +6,7 @@ import useList from "./useList"
 
 import classes from "./Lists.module.css"
 import Item from "./Item"
+import { ItemIcon } from "models"
 
 export default function Lists() {
   const {
@@ -33,6 +34,8 @@ export default function Lists() {
     setName("")
   }
 
+  const iconToRender = items.length >= 10 ? ItemIcon.Trolley : ItemIcon.Basket
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.clear}>
@@ -53,6 +56,7 @@ export default function Lists() {
                 }
                 deleteItem={() => deleteItem(item.id)}
                 remove={() => removeItem(item.id)}
+                icon={iconToRender}
               />
             </li>
           ))}
