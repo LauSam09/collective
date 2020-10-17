@@ -6,7 +6,8 @@ import useList from "./useList"
 
 import classes from "./Lists.module.css"
 import Item from "./Item"
-import { ItemIcon } from "models"
+import { ItemIcon, Item as ItemModel } from "models"
+import EditModal from "./EditModal"
 
 export default function Lists() {
   const {
@@ -20,6 +21,7 @@ export default function Lists() {
     setCategory,
   } = useList()
   const [name, setName] = useState("")
+  const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
 
   const valid =
     name &&
@@ -37,43 +39,52 @@ export default function Lists() {
   const iconToRender = items.length >= 10 ? ItemIcon.Trolley : ItemIcon.Basket
 
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.clear}>
-        <button onClick={removeAll} title="Clear completed">
-          <FontAwesomeIcon icon={faTrash} />
-        </button>
-      </div>
-      {items.length ? (
-        <ul className={classes.list}>
-          {items.map((item) => (
-            <li key={item.id}>
-              <Item
-                item={item}
-                categories={categories}
-                setCategory={(categoryId) => setCategory(item.id, categoryId)}
-                toggleComplete={(status) =>
-                  setCompletionStatus(item.id, status)
-                }
-                deleteItem={() => deleteItem(item.id)}
-                remove={() => removeItem(item.id)}
-                icon={iconToRender}
-              />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No items added yet</p>
-      )}
-      <form onSubmit={handleSubmit} className={classes.addForm}>
-        <input
-          value={name}
-          className={classes.input}
-          onChange={(e) => setName(e.target.value)}
+    <>
+      {itemBeingEdited && (
+        <EditModal
+          item={itemBeingEdited}
+          close={() => setItemBeingEdited(undefined)}
         />
-        <button type="submit" className={classes.submit} disabled={!valid}>
-          Add
-        </button>
-      </form>
-    </div>
+      )}
+      <div className={classes.wrapper}>
+        <div className={classes.clear}>
+          <button onClick={removeAll} title="Clear completed">
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+        {items.length ? (
+          <ul className={classes.list}>
+            {items.map((item) => (
+              <li key={item.id}>
+                <Item
+                  item={item}
+                  categories={categories}
+                  setCategory={(categoryId) => setCategory(item.id, categoryId)}
+                  toggleComplete={(status) =>
+                    setCompletionStatus(item.id, status)
+                  }
+                  deleteItem={() => deleteItem(item.id)}
+                  remove={() => removeItem(item.id)}
+                  icon={iconToRender}
+                  open={() => setItemBeingEdited(item)}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No items added yet</p>
+        )}
+        <form onSubmit={handleSubmit} className={classes.addForm}>
+          <input
+            value={name}
+            className={classes.input}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button type="submit" className={classes.submit} disabled={!valid}>
+            Add
+          </button>
+        </form>
+      </div>
+    </>
   )
 }

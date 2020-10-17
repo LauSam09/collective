@@ -1,0 +1,10 @@
+.modal {
+  background-color: var(--primary-colour);
+  color: white;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  padding: 20px;
+}

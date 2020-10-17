@@ -19,6 +19,7 @@ type Props = {
   deleteItem: () => void
   remove: () => void
   icon: ItemIcon
+  open: () => void
 }
 
 export default function Item(props: Props) {
@@ -30,6 +31,7 @@ export default function Item(props: Props) {
     deleteItem,
     remove,
     icon,
+    open,
   } = props
 
   const category =
@@ -64,6 +66,7 @@ export default function Item(props: Props) {
         icon={faIcon}
         className={classes.icon}
         style={{ color: category?.colour || "inherit" }}
+        onClick={open}
       />
 
       {/* <select
