@@ -10,16 +10,35 @@ type Props = {
   item: Item
   close: () => void
   categories: Category[]
-  setCategory: (categoryId: string) => void
+  setCategory: (categoryId: string) => Promise<void>
+  removeItem: () => Promise<void>
+  deleteItem: () => Promise<void>
 }
 
 export default function EditModal(props: Props) {
-  const { item, close, categories, setCategory: updateCategory } = props
+  const {
+    item,
+    close,
+    categories,
+    setCategory: updateCategory,
+    removeItem,
+    deleteItem,
+  } = props
   const [category, setCategory] = useState(item.category)
 
-  const handleSetCategory = (category: string) => {
+  const handleSetCategory = async (category: string) => {
     setCategory(category)
-    updateCategory(category)
+    await updateCategory(category)
+  }
+
+  const handleRemoveItem = async () => {
+    await removeItem()
+    close()
+  }
+
+  const handleDeleteItem = async () => {
+    await deleteItem()
+    close()
   }
 
   return (
@@ -32,7 +51,7 @@ export default function EditModal(props: Props) {
         <div className={classes.header}>
           <h3>{item.name}</h3>
           <button onClick={close}>
-            <FontAwesomeIcon icon={faWindowClose} />
+            <FontAwesomeIcon icon={faWindowClose} size="2x" />
           </button>
         </div>
         <div className={classes.modalBody}>
@@ -51,6 +70,13 @@ export default function EditModal(props: Props) {
                 </option>
               ))}
             </select>
+          </div>
+          <div className={classes.actions}>
+            <label>Actions</label>
+            <button onClick={handleRemoveItem}>Remove From List</button>
+            <button onClick={handleDeleteItem} style={{ color: "red" }}>
+              Delete
+            </button>
           </div>
         </div>
       </section>

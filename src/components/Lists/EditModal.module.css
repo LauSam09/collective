@@ -24,6 +24,9 @@
 .header button {
   float: right;
   display: inline;
+}
+
+.modal button {
   border: none;
   padding: 5px;
   background-color: inherit;
@@ -32,7 +35,7 @@
   border-radius: 5px;
 }
 
-.header button:hover {
+.modal button:hover {
   background-color: var(--highlight-colour);
 }
 
@@ -42,9 +45,23 @@
 
 .modalBody label {
   display: block;
-  margin-bottom: 5px;
+  margin: 10px 0;
 }
 
 .modalBody select {
   width: 100%;
+}
+
+.actions button {
+  display: block;
+  color: black;
+  background-color: white;
+  margin-bottom: 5px;
+  text-align: left;
+  padding: 5px 10px;
+}
+
+.actions button:hover {
+  background-color: var(--highlight-colour);
+  color: white;
 }

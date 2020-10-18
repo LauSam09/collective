@@ -54,6 +54,8 @@ export default function Lists() {
           setCategory={(categoryId) =>
             handleSetCategory(itemBeingEdited.id, categoryId)
           }
+          removeItem={() => removeItem(itemBeingEdited.id)}
+          deleteItem={() => deleteItem(itemBeingEdited.id)}
         />
       )}
       <div className={classes.wrapper}>
