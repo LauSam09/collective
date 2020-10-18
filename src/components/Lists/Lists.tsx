@@ -71,12 +71,9 @@ export default function Lists() {
                 <Item
                   item={item}
                   categories={categories}
-                  setCategory={(categoryId) => setCategory(item.id, categoryId)}
                   toggleComplete={(status) =>
                     setCompletionStatus(item.id, status)
                   }
-                  deleteItem={() => deleteItem(item.id)}
-                  remove={() => removeItem(item.id)}
                   icon={iconToRender}
                   open={() => setItemBeingEdited(item)}
                 />

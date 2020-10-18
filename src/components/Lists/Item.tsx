@@ -14,25 +14,13 @@ import {
 type Props = {
   item: ItemModel
   categories: Category[]
-  setCategory: (categoryId: string) => void
   toggleComplete: (complete: boolean) => void
-  deleteItem: () => void
-  remove: () => void
   icon: ItemIcon
   open: () => void
 }
 
 export default function Item(props: Props) {
-  const {
-    item,
-    categories,
-    toggleComplete,
-    setCategory,
-    deleteItem,
-    remove,
-    icon,
-    open,
-  } = props
+  const { item, categories, toggleComplete, icon, open } = props
 
   const category =
     item.category === undefined
@@ -68,22 +56,6 @@ export default function Item(props: Props) {
         style={{ color: category?.colour || "inherit" }}
         onClick={open}
       />
-
-      {/* <select
-        value={item.category}
-        onChange={(e) =>
-          setCategory(e.target.value === "-" ? "" : e.target.value)
-        }
-      >
-        <option value={undefined}> - </option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
-      <button onClick={() => deleteItem()}>x</button>
-      <button onClick={() => remove()}>-</button> */}
     </div>
   )
 }
