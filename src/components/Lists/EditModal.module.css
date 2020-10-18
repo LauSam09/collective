@@ -1,10 +1,37 @@
 .modal {
-  background-color: var(--primary-colour);
-  color: white;
-  position: absolute;
-  top: 40px;
-  left: 40px;
-  right: 40px;
-  bottom: 40px;
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 0 10px;
+}
+
+.modal:focus {
+  outline: none;
+}
+
+.modalBody {
+  width: 100%;
   padding: 20px;
+  color: white;
+  background-color: var(--primary-colour);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.header h3 {
+  display: inline;
+}
+
+.header button {
+  float: right;
+  display: inline;
+  border: none;
+  padding: 5px;
+  background-color: inherit;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.header button:hover {
+  background-color: var(--highlight-colour);
 }
