@@ -36,6 +36,12 @@ export default function Lists() {
     setName("")
   }
 
+  const handleSetCategory = async (id: string, categoryId: string) => {
+    await setCategory(id, categoryId)
+    itemBeingEdited &&
+      setItemBeingEdited({ ...itemBeingEdited, category: categoryId })
+  }
+
   const iconToRender = items.length >= 10 ? ItemIcon.Trolley : ItemIcon.Basket
 
   return (
@@ -44,6 +50,10 @@ export default function Lists() {
         <EditModal
           item={itemBeingEdited}
           close={() => setItemBeingEdited(undefined)}
+          categories={categories}
+          setCategory={(categoryId) =>
+            handleSetCategory(itemBeingEdited.id, categoryId)
+          }
         />
       )}
       <div className={classes.wrapper}>

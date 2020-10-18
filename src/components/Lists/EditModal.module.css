@@ -1,14 +1,14 @@
-.modal {
+.modalContainer {
   max-width: 420px;
   margin: 20px auto;
   padding: 0 10px;
 }
 
-.modal:focus {
+.modalContainer:focus {
   outline: none;
 }
 
-.modalBody {
+.modal {
   width: 100%;
   padding: 20px;
   color: white;
@@ -34,4 +34,17 @@
 
 .header button:hover {
   background-color: var(--highlight-colour);
+}
+
+.modalBody {
+  padding: 10px 0;
+}
+
+.modalBody label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modalBody select {
+  width: 100%;
 }
