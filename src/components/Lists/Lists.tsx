@@ -31,9 +31,9 @@ export default function Lists() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setName("")
 
     await addItem({ name, id: "", completed: false })
-    setName("")
   }
 
   const handleSetCategory = async (id: string, categoryId: string) => {
