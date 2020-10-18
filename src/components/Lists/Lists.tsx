@@ -16,7 +16,7 @@ export default function Lists() {
     addItem,
     deleteItem,
     removeItem,
-    removeAll,
+    removeAllCompleted,
     setCompletionStatus,
     setCategory,
   } = useList()
@@ -60,7 +60,7 @@ export default function Lists() {
       )}
       <div className={classes.wrapper}>
         <div className={classes.clear}>
-          <button onClick={removeAll} title="Clear completed">
+          <button onClick={removeAllCompleted} title="Clear completed">
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
