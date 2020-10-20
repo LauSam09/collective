@@ -5,11 +5,12 @@ import { Category, Item, ItemEntity } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 export default function useList() {
+  const db = firebase.firestore()
   const [items, setItems] = useState<Item[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const { group } = useContext(AuthenticationContext)
 
-  const getItemsCollection = (db = firebase.firestore()) => {
+  const getItemsCollection = () => {
     return db
       .collection("groups")
       .doc(group?.id)
@@ -19,8 +20,6 @@ export default function useList() {
   }
 
   const fetchItems = useCallback(async () => {
-    const db = firebase.firestore()
-
     const querySnapshot = await db
       .collection("groups")
       .doc(group?.id)
@@ -35,11 +34,10 @@ export default function useList() {
     )
 
     setItems(itemsToSet)
-  }, [group])
+  }, [group, db])
 
   useEffect(() => {
     if (group) {
-      const db = firebase.firestore()
       db.collection("groups")
         .doc(group.id)
         .collection("lists")
@@ -56,11 +54,9 @@ export default function useList() {
     } else {
       setCategories([])
     }
-  }, [group])
+  }, [group, db])
 
   useEffect(() => {
-    const db = firebase.firestore()
-
     const unsubscribe = db
       .collection("groups")
       .doc(group?.id)
@@ -112,7 +108,7 @@ export default function useList() {
     return () => {
       unsubscribe()
     }
-  }, [group])
+  }, [group, db])
 
   const addItem = async (item: Item) => {
     const { id, ...sanitisedItem } = item
@@ -161,12 +157,10 @@ export default function useList() {
   }
 
   const removeAll = async () => {
-    const db = firebase.firestore()
-
     const batch = db.batch()
 
     for (const item of items) {
-      const ref = getItemsCollection(db).doc(item.id)
+      const ref = getItemsCollection().doc(item.id)
       batch.update(ref, { added: false })
     }
 
@@ -174,12 +168,10 @@ export default function useList() {
   }
 
   const removeAllCompleted = async () => {
-    const db = firebase.firestore()
-
     const batch = db.batch()
 
     for (const item of items.filter((item) => item.completed)) {
-      const ref = getItemsCollection(db).doc(item.id)
+      const ref = getItemsCollection().doc(item.id)
       batch.update(ref, { added: false })
     }
 

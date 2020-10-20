@@ -5,15 +5,17 @@ import { Recipe } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 export default function useRecipes() {
+  const db = firebase.firestore()
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const { group } = useContext(AuthenticationContext)
+
+  const getRecipesCollection = () =>
+    db.collection("groups").doc(group?.id).collection("recipes")
 
   useEffect(() => {
     if (!group) {
       return
     }
-
-    const db = firebase.firestore()
 
     const unsubscribe = db
       .collection("groups")
@@ -51,39 +53,21 @@ export default function useRecipes() {
     return () => {
       unsubscribe()
     }
-  }, [group])
+  }, [group, db])
 
   async function addRecipe(recipe: Recipe) {
-    const db = firebase.firestore()
-
     const { id, ...sanitisedItem } = recipe
     sanitisedItem.name = sanitisedItem.name.trim()
 
-    await db
-      .collection("groups")
-      .doc(group?.id)
-      .collection("recipes")
-      .add(sanitisedItem)
+    await getRecipesCollection().add(sanitisedItem)
   }
 
   async function deleteRecipe(id: string) {
-    const db = firebase.firestore()
-
-    await db
-      .collection("groups")
-      .doc(group?.id)
-      .collection("recipes")
-      .doc(id)
-      .delete()
+    await getRecipesCollection().doc(id).delete()
   }
 
   async function setDay(id: string, day?: number) {
-    const db = firebase.firestore()
-
-    await db
-      .collection("groups")
-      .doc(group?.id)
-      .collection("recipes")
+    await getRecipesCollection()
       .doc(id)
       .update({
         day: day === undefined ? firebase.firestore.FieldValue.delete() : day,
