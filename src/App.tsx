@@ -29,15 +29,8 @@ function App() {
             </main>
           </>
         ) : (
-          <div
-            className="loader center"
-            style={{ textAlign: "center", minHeight: "100vh" }}
-          >
-            <FontAwesomeIcon
-              icon={faCircleNotch}
-              className="fa-spin"
-              style={{ position: "absolute", top: "50%" }}
-            />
+          <div className={classes.spinner}>
+            <FontAwesomeIcon icon={faCircleNotch} className="fa-spin" />
           </div>
         )}
       </div>

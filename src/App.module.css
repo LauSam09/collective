@@ -9,3 +9,13 @@
   padding: 10px 20px;
   background-color: var(--secondary-colour);
 }
+
+.spinner {
+  text-align: center;
+  min-height: 100vh;
+}
+
+.spinner svg {
+  position: absolute;
+  top: 50%;
+}
