@@ -46,6 +46,7 @@ export default function Item(props: Props) {
       <div
         className={classes.clickable}
         onClick={() => toggleComplete(!item.completed)}
+        style={{ textDecoration: item.completed ? "line-through" : "inherit" }}
       >
         <input type="checkbox" checked={item.completed} />
         {item.name}
