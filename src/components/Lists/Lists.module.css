@@ -13,11 +13,14 @@
   background-color: var(--primary-colour);
   border: none;
   padding: 8px 10px;
-  cursor: pointer;
   border-radius: 5px;
 }
 
-.clear button:hover {
+.clear button:enabled {
+  cursor: pointer;
+}
+
+.clear button:hover:enabled {
   background-color: var(--highlight-colour);
 }
 
@@ -47,7 +50,6 @@
 .submit {
   height: 30px;
   line-height: 30px;
-  vertical-align: bottom;
   border: none;
   padding: 0 15px;
   border-radius: 0 5px 5px 0;
@@ -66,4 +68,17 @@
   background-color: var(--primary-colour);
   margin: 5px 0;
   border-radius: 5px;
+}
+
+.spinner {
+  background-color: var(--primary-colour);
+  margin: 5px 0;
+  text-align: center;
+  border-radius: 5px;
+  min-height: 25vh;
+}
+
+.spinner svg {
+  position: absolute;
+  top: 26vh;
 }

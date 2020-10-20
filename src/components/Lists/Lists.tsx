@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faCircleNotch, faTrash } from "@fortawesome/free-solid-svg-icons"
 
 import useList from "./useList"
 
@@ -11,6 +11,7 @@ import EditModal from "./EditModal"
 
 export default function Lists() {
   const {
+    categoriesLoaded,
     items,
     categories,
     addItem,
@@ -60,39 +61,55 @@ export default function Lists() {
       )}
       <div className={classes.wrapper}>
         <div className={classes.clear}>
-          <button onClick={removeAllCompleted} title="Clear completed">
+          <button
+            onClick={removeAllCompleted}
+            title="Clear completed"
+            disabled={!categoriesLoaded}
+          >
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
-        {items.length ? (
-          <ul className={classes.list}>
-            {items.map((item) => (
-              <li key={item.id}>
-                <Item
-                  item={item}
-                  categories={categories}
-                  toggleComplete={(status) =>
-                    setCompletionStatus(item.id, status)
-                  }
-                  icon={iconToRender}
-                  open={() => setItemBeingEdited(item)}
-                />
-              </li>
-            ))}
-          </ul>
+        {categoriesLoaded ? (
+          <>
+            {items.length ? (
+              <ul className={classes.list}>
+                {items.map((item) => (
+                  <li key={item.id}>
+                    <Item
+                      item={item}
+                      categories={categories}
+                      toggleComplete={(status) =>
+                        setCompletionStatus(item.id, status)
+                      }
+                      icon={iconToRender}
+                      open={() => setItemBeingEdited(item)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No items added yet</p>
+            )}
+            <form onSubmit={handleSubmit} className={classes.addForm}>
+              <input
+                value={name}
+                className={classes.input}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <button
+                type="submit"
+                className={classes.submit}
+                disabled={!valid}
+              >
+                Add
+              </button>
+            </form>
+          </>
         ) : (
-          <p>No items added yet</p>
+          <div className={classes.spinner}>
+            <FontAwesomeIcon icon={faCircleNotch} className="fa-spin" />
+          </div>
         )}
-        <form onSubmit={handleSubmit} className={classes.addForm}>
-          <input
-            value={name}
-            className={classes.input}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <button type="submit" className={classes.submit} disabled={!valid}>
-            Add
-          </button>
-        </form>
       </div>
     </>
   )

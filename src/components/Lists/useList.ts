@@ -8,6 +8,7 @@ export default function useList() {
   const db = firebase.firestore()
   const [items, setItems] = useState<Item[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false)
   const { group } = useContext(AuthenticationContext)
 
   const getItemsCollection = () => {
@@ -51,8 +52,10 @@ export default function useList() {
             )
           )
         })
+        .then(() => setCategoriesLoaded(true))
     } else {
       setCategories([])
+      setCategoriesLoaded(true)
     }
   }, [group, db])
 
@@ -179,6 +182,7 @@ export default function useList() {
   }
 
   return {
+    categoriesLoaded,
     items,
     categories,
     fetchItems,
