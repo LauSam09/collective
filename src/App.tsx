@@ -5,6 +5,8 @@ import { Home, Navigation, Recipes } from "components"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./App.module.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons"
 
 function App() {
   const { loaded } = useContext(AuthenticationContext)
@@ -31,8 +33,9 @@ function App() {
             className="loader center"
             style={{ textAlign: "center", minHeight: "100vh" }}
           >
-            <i
-              className="fa fa-cog fa-spin"
+            <FontAwesomeIcon
+              icon={faCircleNotch}
+              className="fa-spin"
               style={{ position: "absolute", top: "50%" }}
             />
           </div>
