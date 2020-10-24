@@ -24,6 +24,15 @@ export default function Lists() {
   } = useList()
   const [name, setName] = useState("")
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
+  const categorisedItems = items
+    .filter((item) => !item.category)
+    .concat(
+      categories
+        .sort((a, b) => a.order - b.order)
+        .flatMap((category) =>
+          items.filter((item) => item.category === category.id)
+        )
+    )
 
   const valid =
     name &&
@@ -72,9 +81,9 @@ export default function Lists() {
         </div>
         {categoriesLoaded ? (
           <>
-            {items.length ? (
+            {categorisedItems.length ? (
               <ul className={classes.list}>
-                {items.map((item) => (
+                {categorisedItems.map((item) => (
                   <li key={item.id}>
                     <Item
                       item={item}
