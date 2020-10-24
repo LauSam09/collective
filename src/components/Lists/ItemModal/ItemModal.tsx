@@ -1,10 +1,10 @@
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Category, Item } from "models"
 import React, { useState } from "react"
 import Modal from "react-modal"
+import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import classes from "./EditModal.module.css"
+import { Category, Item } from "models"
+import classes from "./ItemModal.module.css"
 
 type Props = {
   item: Item

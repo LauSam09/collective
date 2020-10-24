@@ -4,10 +4,11 @@ import { faCircleNotch, faTrash } from "@fortawesome/free-solid-svg-icons"
 
 import useList from "./useList"
 
-import classes from "./Lists.module.css"
 import Item from "./Item"
 import { ItemIcon, Item as ItemModel } from "models"
-import EditModal from "./EditModal"
+import EditModal from "./ItemModal"
+
+import classes from "./Lists.module.css"
 
 export default function Lists() {
   const {
@@ -52,7 +53,7 @@ export default function Lists() {
           item={itemBeingEdited}
           close={() => setItemBeingEdited(undefined)}
           categories={categories}
-          setCategory={(categoryId) =>
+          setCategory={(categoryId: string) =>
             handleSetCategory(itemBeingEdited.id, categoryId)
           }
           removeItem={() => removeItem(itemBeingEdited.id)}
