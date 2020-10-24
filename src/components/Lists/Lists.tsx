@@ -26,11 +26,14 @@ export default function Lists() {
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
   const categorisedItems = items
     .filter((item) => !item.category)
+    .sort((a, b) => a.name.localeCompare(b.name))
     .concat(
       categories
         .sort((a, b) => a.order - b.order)
         .flatMap((category) =>
-          items.filter((item) => item.category === category.id)
+          items
+            .filter((item) => item.category === category.id)
+            .sort((a, b) => a.name.localeCompare(b.name))
         )
     )
 
