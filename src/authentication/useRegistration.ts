@@ -9,15 +9,15 @@ type Props = {
 
 export default function useRegistration(props: Props) {
   const { authenticated } = props
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(true)
   const [userState, setUserState] = useState<UserState>()
   const [group, setGroup] = useState<Group>()
 
   useEffect(() => {
-    if (!loaded && userState !== undefined) {
+    if (!loaded && (!authenticated || userState !== undefined)) {
       setLoaded(true)
     }
-  }, [userState, loaded])
+  }, [userState, loaded, authenticated])
 
   async function getUserState() {
     const db = firebase.firestore()
