@@ -4,20 +4,24 @@ import firebase from "firebase"
 import { Group, User, UserState } from "../models"
 
 type Props = {
+  initialised: boolean
   authenticated: boolean
 }
 
 export default function useRegistration(props: Props) {
-  const { authenticated } = props
-  const [loaded, setLoaded] = useState(true)
+  const { initialised, authenticated } = props
+  const [loaded, setLoaded] = useState(false)
   const [userState, setUserState] = useState<UserState>()
   const [group, setGroup] = useState<Group>()
 
   useEffect(() => {
-    if (!loaded && (!authenticated || userState !== undefined)) {
+    if (
+      !loaded &&
+      (userState !== undefined || (initialised && !authenticated))
+    ) {
       setLoaded(true)
     }
-  }, [userState, loaded, authenticated])
+  }, [userState, loaded, authenticated, initialised])
 
   async function getUserState() {
     const db = firebase.firestore()

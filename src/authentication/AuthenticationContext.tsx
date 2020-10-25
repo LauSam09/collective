@@ -23,7 +23,7 @@ export const AuthenticationContext = createContext<AuthenticationContextType>({
   userState: undefined,
   login: async () => {},
   logout: async () => {},
-  register: async (group: Group) => {},
+  register: async () => {},
 })
 
 export const AuthenticationContextProvider = ({
@@ -33,6 +33,7 @@ export const AuthenticationContextProvider = ({
 }) => {
   const { initialised, authenticated, login, logout } = useAuthentication()
   const { loaded, userState, register, group } = useRegistration({
+    initialised,
     authenticated,
   })
 

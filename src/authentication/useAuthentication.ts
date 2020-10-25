@@ -23,12 +23,11 @@ export default function useAuthentication() {
       } else {
         setAuthenticated(false)
       }
+      setInitialised(true)
     })
     setTimeout(() => {
       setInitialisationDelay(true)
     }, 250)
-
-    setInitialised(true)
 
     return () => {
       unsubscribe()
