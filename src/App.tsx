@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
-import { Home, Navigation, Recipes } from "components"
+import { ErrorBoundary, Home, Navigation, Recipes } from "components"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./App.module.css"
@@ -18,14 +18,16 @@ function App() {
           <>
             <Navigation />
             <main className={classes.content}>
-              <Switch>
-                <Route path="/recipes" exact>
-                  <Recipes />
-                </Route>
-                <Route path="/" exact>
-                  <Home />
-                </Route>
-              </Switch>
+              <ErrorBoundary>
+                <Switch>
+                  <Route path="/recipes" exact>
+                    <Recipes />
+                  </Route>
+                  <Route path="/" exact>
+                    <Home />
+                  </Route>
+                </Switch>
+              </ErrorBoundary>
             </main>
           </>
         ) : (
