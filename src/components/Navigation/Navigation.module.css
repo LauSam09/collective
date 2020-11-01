@@ -18,6 +18,10 @@
   background-color: var(--highlight-colour);
 }
 
+.container h2 small {
+  font-size: 0.5em;
+}
+
 .actions ul {
   margin: 0;
   list-style: none;
