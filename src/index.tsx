@@ -3,14 +3,17 @@ import ReactDOM from "react-dom"
 import Modal from "react-modal"
 import LogRocket from "logrocket"
 
-import "./index.css"
 import App from "./App"
 import * as serviceWorker from "./serviceWorker"
 import { AuthenticationContextProvider } from "./authentication/AuthenticationContext"
 
+import "./index.css"
+
 Modal.setAppElement("#root")
 
-LogRocket.init("a0rvdh/collective")
+if (process.env.NODE_ENV === "production") {
+  LogRocket.init("a0rvdh/collective")
+}
 
 ReactDOM.render(
   <React.StrictMode>

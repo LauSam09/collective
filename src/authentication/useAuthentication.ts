@@ -21,10 +21,12 @@ export default function useAuthentication() {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setAuthenticated(true)
-        LogRocket.identify(user.uid, {
-          name: user.displayName || "No display name",
-          email: user.email || "No email address",
-        })
+        if (process.env.NODE_ENV === "production") {
+          LogRocket.identify(user.uid, {
+            name: user.displayName || "No display name",
+            email: user.email || "No email address",
+          })
+        }
       } else {
         setAuthenticated(false)
       }
