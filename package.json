@@ -2,6 +2,15 @@
   "name": "collective",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "npx eslint src/ --ext .tsx,.ts",
+    "format": "npx prettier --write .",
+    "format:check": "npx prettier --check ."
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
@@ -22,15 +31,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "typescript": "^3.7.5"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "npx eslint src/ --ext .tsx,.ts",
-    "format": "npx prettier --write .",
-    "format:check": "npx prettier --check ."
   },
   "eslintConfig": {
     "extends": "react-app"
