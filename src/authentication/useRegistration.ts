@@ -48,6 +48,7 @@ export default function useRegistration(props: Props) {
     } else {
       await db.collection("users").doc(user?.uid).set({
         added: firebase.firestore.FieldValue.serverTimestamp(),
+        email: user.email,
       })
       setUserState(UserState.Unregistered)
     }
