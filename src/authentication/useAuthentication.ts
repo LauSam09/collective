@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import firebase from "firebase"
+import LogRocket from "logrocket"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
@@ -20,6 +21,10 @@ export default function useAuthentication() {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setAuthenticated(true)
+        LogRocket.identify(user.uid, {
+          name: user.displayName || "No display name",
+          email: user.email || "No email address",
+        })
       } else {
         setAuthenticated(false)
       }
