@@ -15,3 +15,7 @@
 
 # Node.js dependencies:
 node_modules/
+
+# Ignore source and public folder
+src/
+public/
