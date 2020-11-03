@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
-import { ErrorBoundary, Home, Navigation, Recipes } from "components"
+import { ErrorBoundary, Home, Lists, Navigation, Recipes } from "components"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./App.module.css"
@@ -23,7 +23,10 @@ function App() {
                   <Route path="/recipes" exact>
                     <Recipes />
                   </Route>
-                  <Route path="/" exact>
+                  <Route path="/lists" exact>
+                    <Lists />
+                  </Route>
+                  <Route path="/">
                     <Home />
                   </Route>
                 </Switch>

@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
-
-import { Lists } from "components"
+import { Redirect } from "react-router-dom"
 
 import Login from "./Login"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
@@ -14,7 +13,7 @@ export default function Home() {
   return (
     <>
       {userState === UserState.Registered ? (
-        <Lists />
+        <Redirect to="/lists" />
       ) : (
         <header className={classes.appHeader}>
           {!authenticated && <Login />}
