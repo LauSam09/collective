@@ -6,7 +6,6 @@ const googleProvider = new firebase.auth.GoogleAuthProvider()
 
 export default function useAuthentication() {
   const [initialised, setInitialised] = useState(false)
-  const [initialisationDelay, setInitialisationDelay] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
 
   useEffect(() => {
@@ -32,9 +31,6 @@ export default function useAuthentication() {
       }
       setInitialised(true)
     })
-    setTimeout(() => {
-      setInitialisationDelay(true)
-    }, 250)
 
     return () => {
       unsubscribe()
@@ -50,7 +46,7 @@ export default function useAuthentication() {
   }
 
   return {
-    initialised: initialisationDelay && initialised,
+    initialised,
     authenticated,
     login,
     logout,
