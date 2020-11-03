@@ -34,13 +34,13 @@ export default function Navigation() {
       </button>
       <div className={cx("actions", { hidden: hideActions })}>
         <ul>
-          <li>
+          <li onClick={() => setHideActions(true)}>
             <Link to="/">Lists</Link>
           </li>
-          <li>
+          <li onClick={() => setHideActions(true)}>
             <Link to="/recipes">Recipes</Link>
           </li>
-          <li>
+          <li onClick={() => setHideActions(true)}>
             {authenticated ? (
               <FontAwesomeIcon
                 icon={faSignOutAlt}
