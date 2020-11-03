@@ -16,7 +16,7 @@ export default function useAuthentication() {
       projectId: "collective-35e56",
     })
 
-    firebase.firestore().enablePersistence()
+    firebase.firestore().enablePersistence({ synchronizeTabs: true })
 
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
