@@ -27,7 +27,7 @@
 
 .addForm {
   position: sticky;
-  bottom: 0;
+  bottom: 10px;
   width: 100%;
   background: var(--secondary-colour);
   display: flex;
@@ -46,6 +46,11 @@
 
 .input:focus {
   outline: none;
+  box-shadow: 0 0 3pt 2pt white;
+}
+
+.input:focus + button {
+  box-shadow: 0 0 3pt 2pt white;
 }
 
 .submit {
@@ -54,6 +59,7 @@
   border: none;
   padding: 0 15px;
   border-radius: 0 5px 5px 0;
+  outline: none;
 }
 
 .submit:hover:enabled {
