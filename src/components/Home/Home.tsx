@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 
 import { Lists } from "components"
 
+import Login from "./Login"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 import { UserState } from "models"
 
@@ -16,7 +17,7 @@ export default function Home() {
         <Lists />
       ) : (
         <header className={classes.appHeader}>
-          {!authenticated && <p>Log in to get started</p>}
+          {!authenticated && <Login />}
           {userState === UserState.Unregistered && (
             <span>
               Looks like you aren&apos;t registered yet! Speak to an
