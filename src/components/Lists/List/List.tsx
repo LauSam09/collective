@@ -1,6 +1,10 @@
-import React, { FormEvent, useState } from "react"
+import React, { FormEvent, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleNotch, faTrash } from "@fortawesome/free-solid-svg-icons"
+import {
+  faCircleNotch,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons"
 
 import useList from "./useList"
 
@@ -22,6 +26,7 @@ export default function Lists() {
     setCompletionStatus,
     setCategory,
   } = useList()
+  const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState("")
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
   const [modalOpen, setModalOpen] = useState(false)
@@ -78,7 +83,10 @@ export default function Lists() {
         />
       )}
       <div className={classes.wrapper}>
-        <div className={classes.clear}>
+        <div className={classes.actions}>
+          <button onClick={() => inputRef.current?.focus()}>
+            <FontAwesomeIcon icon={faPlus} size="2x" />
+          </button>
           <button
             onClick={removeAllCompleted}
             title="Clear completed"
@@ -113,6 +121,7 @@ export default function Lists() {
             )}
             <form onSubmit={handleSubmit} className={classes.addForm}>
               <input
+                ref={inputRef}
                 value={name}
                 className={classes.input}
                 onChange={(e) => setName(e.target.value)}

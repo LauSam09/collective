@@ -4,23 +4,24 @@
   margin: auto;
 }
 
-.clear {
+.actions {
   text-align: right;
 }
 
-.clear button {
+.actions button {
   color: white;
   background-color: var(--primary-colour);
   border: none;
   padding: 8px 10px;
   border-radius: 5px;
+  margin-left: 10px;
 }
 
-.clear button:enabled {
+.actions button:enabled {
   cursor: pointer;
 }
 
-.clear button:hover:enabled {
+.actions button:hover:enabled {
   background-color: var(--highlight-colour);
 }
 
