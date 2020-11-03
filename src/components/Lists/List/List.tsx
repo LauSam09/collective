@@ -24,6 +24,7 @@ export default function Lists() {
   } = useList()
   const [name, setName] = useState("")
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
+  const [modalOpen, setModalOpen] = useState(false)
   const categorisedItems = items
     .filter((item) => !item.category)
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -62,11 +63,15 @@ export default function Lists() {
     <>
       {itemBeingEdited && (
         <EditModal
+          open={modalOpen}
           item={itemBeingEdited}
-          close={() => setItemBeingEdited(undefined)}
+          close={() => {
+            setModalOpen(false)
+            setTimeout(() => setItemBeingEdited(undefined), 250)
+          }}
           categories={categories}
           setCategory={(categoryId: string) =>
-            handleSetCategory(itemBeingEdited.id, categoryId)
+            handleSetCategory(itemBeingEdited?.id || "", categoryId)
           }
           removeItem={() => removeItem(itemBeingEdited.id)}
           deleteItem={() => deleteItem(itemBeingEdited.id)}
@@ -95,7 +100,10 @@ export default function Lists() {
                         setCompletionStatus(item.id, status)
                       }
                       icon={iconToRender}
-                      open={() => setItemBeingEdited(item)}
+                      open={() => {
+                        setItemBeingEdited(item)
+                        setModalOpen(true)
+                      }}
                     />
                   </li>
                 ))}

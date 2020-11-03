@@ -8,6 +8,7 @@ import classes from "./ItemModal.module.css"
 
 type Props = {
   item: Item
+  open: boolean
   close: () => void
   categories: Category[]
   setCategory: (categoryId: string) => Promise<void>
@@ -15,9 +16,10 @@ type Props = {
   deleteItem: () => Promise<void>
 }
 
-export default function EditModal(props: Props) {
+export default function ItemModal(props: Props) {
   const {
     item,
+    open,
     close,
     categories,
     setCategory: updateCategory,
@@ -43,13 +45,14 @@ export default function EditModal(props: Props) {
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={open}
       onRequestClose={close}
+      closeTimeoutMS={250}
       className={classes.modalContainer}
     >
       <section className={classes.modal}>
         <div className={classes.header}>
-          <h3>{item.name}</h3>
+          <h3>{item?.name}</h3>
           <button onClick={close}>
             <FontAwesomeIcon icon={faWindowClose} size="2x" />
           </button>
