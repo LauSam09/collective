@@ -84,7 +84,7 @@ export default function Lists() {
             title="Clear completed"
             disabled={!categoriesLoaded}
           >
-            <FontAwesomeIcon icon={faTrash} />
+            <FontAwesomeIcon icon={faTrash} size="2x" />
           </button>
         </div>
         {categoriesLoaded ? (

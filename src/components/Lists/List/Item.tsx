@@ -1,8 +1,4 @@
 import React from "react"
-
-import { Category, Item as ItemModel, ItemIcon } from "models"
-
-import classes from "./Item.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faLayerGroup,
@@ -10,6 +6,10 @@ import {
   faShoppingCart,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons"
+
+import { Category, Item as ItemModel, ItemIcon } from "models"
+
+import classes from "./Item.module.css"
 
 type Props = {
   item: ItemModel
@@ -56,6 +56,7 @@ export default function Item(props: Props) {
         className={classes.icon}
         style={{ color: category?.colour || "inherit" }}
         onClick={open}
+        size="lg"
       />
     </div>
   )
