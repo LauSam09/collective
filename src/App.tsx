@@ -1,12 +1,19 @@
 import React, { useContext } from "react"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons"
 
-import { ErrorBoundary, Home, Lists, Navigation, Recipes } from "components"
+import {
+  ErrorBoundary,
+  Home,
+  Lists,
+  Navigation,
+  PrivateRoute,
+  Recipes,
+} from "components"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./App.module.css"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleNotch } from "@fortawesome/free-solid-svg-icons"
 
 function App() {
   const { loaded } = useContext(AuthenticationContext)
@@ -20,12 +27,12 @@ function App() {
             <main className={classes.content}>
               <ErrorBoundary>
                 <Switch>
-                  <Route path="/recipes" exact>
+                  <PrivateRoute path="/recipes" exact>
                     <Recipes />
-                  </Route>
-                  <Route path="/lists" exact>
+                  </PrivateRoute>
+                  <PrivateRoute path="/lists" exact>
                     <Lists />
-                  </Route>
+                  </PrivateRoute>
                   <Route path="/">
                     <Home />
                   </Route>
