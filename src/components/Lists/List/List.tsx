@@ -13,6 +13,7 @@ import EditModal from "../ItemModal"
 import { ItemIcon, Item as ItemModel } from "models"
 
 import classes from "./List.module.css"
+import { Button } from "components"
 
 export default function Lists() {
   const {
@@ -84,16 +85,16 @@ export default function Lists() {
       )}
       <>
         <div className={classes.actions}>
-          <button onClick={() => inputRef.current?.focus()}>
+          <Button onClick={() => inputRef.current?.focus()}>
             <FontAwesomeIcon icon={faPlus} size="2x" />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={removeAllCompleted}
             title="Clear completed"
             disabled={!categoriesLoaded}
           >
             <FontAwesomeIcon icon={faTrash} size="2x" />
-          </button>
+          </Button>
         </div>
         {categoriesLoaded ? (
           <>

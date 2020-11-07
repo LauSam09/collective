@@ -1,0 +1,16 @@
+.button {
+  color: white;
+  background-color: var(--primary-colour);
+  border: none;
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.button:enabled {
+  cursor: pointer;
+}
+
+.button:hover:enabled {
+  background-color: var(--highlight-colour);
+}

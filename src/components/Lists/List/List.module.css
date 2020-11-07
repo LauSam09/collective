@@ -8,23 +8,6 @@
   text-align: right;
 }
 
-.actions button {
-  color: white;
-  background-color: var(--primary-colour);
-  border: none;
-  padding: 8px 10px;
-  border-radius: 5px;
-  margin-left: 10px;
-}
-
-.actions button:enabled {
-  cursor: pointer;
-}
-
-.actions button:hover:enabled {
-  background-color: var(--highlight-colour);
-}
-
 .addForm {
   position: sticky;
   bottom: 10px;
