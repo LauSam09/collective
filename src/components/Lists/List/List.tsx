@@ -82,7 +82,7 @@ export default function Lists() {
           deleteItem={() => deleteItem(itemBeingEdited.id)}
         />
       )}
-      <div className={classes.wrapper}>
+      <>
         <div className={classes.actions}>
           <button onClick={() => inputRef.current?.focus()}>
             <FontAwesomeIcon icon={faPlus} size="2x" />
@@ -140,7 +140,7 @@ export default function Lists() {
             <FontAwesomeIcon icon={faCircleNotch} className="fa-spin" />
           </div>
         )}
-      </div>
+      </>
     </>
   )
 }
