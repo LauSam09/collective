@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import Modal from "react-modal"
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+import { Button, Modal } from "components"
 import { Category, Item } from "models"
 import classes from "./ItemModal.module.css"
 
@@ -44,18 +44,13 @@ export default function ItemModal(props: Props) {
   }
 
   return (
-    <Modal
-      isOpen={open}
-      onRequestClose={close}
-      closeTimeoutMS={250}
-      className={classes.modalContainer}
-    >
+    <Modal isOpen={open} onRequestClose={close} closeTimeoutMS={250}>
       <section className={classes.modal}>
         <div className={classes.header}>
           <h3>{item?.name}</h3>
-          <button onClick={close}>
+          <Button onClick={close}>
             <FontAwesomeIcon icon={faWindowClose} size="2x" />
-          </button>
+          </Button>
         </div>
         <div className={classes.modalBody}>
           <div>
