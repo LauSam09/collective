@@ -1,0 +1,11 @@
+.wrapper {
+  text-align: initial;
+}
+
+.wrapper h2 {
+  display: inline;
+}
+
+.actions {
+  float: right;
+}

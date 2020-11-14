@@ -1,41 +1,42 @@
-import React, { FormEvent, useState } from "react"
+import React, { useState } from "react"
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
+import { Button } from "components"
 
 import useRecipes from "./useRecipes"
+
+import classes from "./Recipes.module.css"
+import RecipeModal from "./RecipeModal"
 
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
   const { recipes, addRecipe, deleteRecipe, setDay } = useRecipes()
-  const [name, setName] = useState("")
   const assignedRecipes = recipes.filter((recipe) => recipe.day !== undefined)
   const assignedDays = assignedRecipes.map((recipe) => recipe.day)
+  const [modalOpen, setModalOpen] = useState(false)
   const unassignedDays = [...Array(7).keys()].filter(
     (day) => assignedDays.indexOf(day) < 0
   )
 
-  const valid =
-    name &&
-    recipes.filter(
-      (recipe) => recipe.name.trim().toLowerCase() === name.trim().toLowerCase()
-    ).length === 0
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-
-    await addRecipe({ name, id: "" })
-    setName("")
-  }
-
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
-        <button type="submit" disabled={!valid}>
-          Add
-        </button>
-      </form>
-      <h2>Recipes</h2>
+      <RecipeModal
+        open={modalOpen}
+        close={() => setModalOpen(false)}
+        recipes={recipes}
+        addRecipe={addRecipe}
+      />
+      <div className={classes.wrapper}>
+        <h2>Recipes</h2>
+
+        <div className={classes.actions}>
+          <Button title="Add Recipe" onClick={() => setModalOpen(true)}>
+            <FontAwesomeIcon icon={faPlus} size="2x" />
+          </Button>
+        </div>
+      </div>
       <h4>This week</h4>
       <ul>
         {days.map((day, index) => {
