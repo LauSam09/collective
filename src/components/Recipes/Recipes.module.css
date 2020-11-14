@@ -4,6 +4,7 @@
 
 .header {
   text-align: initial;
+  margin-bottom: 20px !important;
 }
 
 .header h2 {
@@ -18,6 +19,7 @@
   text-align: left;
   padding: 10px;
   background-color: var(--primary-colour);
+  border-radius: 5px;
 }
 
 .weekly h4 {

@@ -52,7 +52,7 @@ export default function Recipes() {
                       <Pill
                         key={recipe.id}
                         text={recipe.name}
-                        remove={() => null}
+                        remove={() => setDay(recipe.id, undefined)}
                       />
                     ))}
                 </li>
