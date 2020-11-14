@@ -1,11 +1,35 @@
-.wrapper {
+.wrapper > div {
+  margin-bottom: 10px;
+}
+
+.header {
   text-align: initial;
 }
 
-.wrapper h2 {
+.header h2 {
   display: inline;
 }
 
 .actions {
   float: right;
+}
+
+.weekly {
+  text-align: left;
+  padding: 10px;
+  background-color: var(--primary-colour);
+}
+
+.weekly h4 {
+  margin: 0;
+}
+
+.weekly ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.weekly ul li {
+  display: flex;
+  flex-wrap: wrap;
 }

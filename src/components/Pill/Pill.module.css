@@ -1,0 +1,23 @@
+.pill {
+  font-size: 1rem;
+  display: inline;
+  background-color: var(--secondary-colour);
+  border-radius: 3px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.pill span {
+  padding: 3px 5px;
+}
+
+.pill button {
+  background-color: inherit;
+  border: none;
+  color: inherit;
+  border-radius: 3px;
+}
+
+.pill button:hover {
+  background-color: var(--highlight-colour);
+}
