@@ -13,13 +13,7 @@ import classes from "./Recipes.module.css"
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
-  const {
-    recipes,
-    addRecipe,
-    // deleteRecipe,
-    setDay,
-    updateRecipe,
-  } = useRecipes()
+  const { recipes, addRecipe, setDay, updateRecipe } = useRecipes()
   const assignedRecipes = recipes.filter((recipe) => recipe.day !== undefined)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
@@ -80,29 +74,33 @@ export default function Recipes() {
         </div>
         <div className={classes.recipes}>
           <ul>
-            {recipes.map((recipe) => (
-              <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
-                {recipe.name}
-                <select
-                  value={recipe.day === undefined ? -1 : recipe.day}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) =>
-                    setDay(
-                      recipe.id,
-                      e.target.value === "-" ? -1 : +e.target.value
-                    )
-                  }
-                >
-                  {/* TODO separate component so days can be ordered correctly? */}
-                  <option value={-1}> - </option>
-                  {[...Array(7).keys()].map((day) => (
-                    <option key={day} value={day}>
-                      {days[day]}
-                    </option>
-                  ))}
-                </select>
-              </li>
-            ))}
+            {recipes
+              .sort((a, b) =>
+                a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+              )
+              .map((recipe) => (
+                <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
+                  {recipe.name}
+                  <select
+                    value={recipe.day === undefined ? -1 : recipe.day}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) =>
+                      setDay(
+                        recipe.id,
+                        e.target.value === "-" ? -1 : +e.target.value
+                      )
+                    }
+                  >
+                    {/* TODO separate component so days can be ordered correctly? */}
+                    <option value={-1}> - </option>
+                    {[...Array(7).keys()].map((day) => (
+                      <option key={day} value={day}>
+                        {days[day]}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+              ))}
           </ul>
         </div>
       </div>
