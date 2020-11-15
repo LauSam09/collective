@@ -49,7 +49,10 @@ export default function Item(props: Props) {
         style={{ textDecoration: item.completed ? "line-through" : "inherit" }}
       >
         <input type="checkbox" checked={item.completed} />
-        {item.name}
+        <div>
+          <span>{item.name}</span>
+          {item.notes && <span className={classes.notes}>{item.notes}</span>}
+        </div>
       </div>
       <FontAwesomeIcon
         icon={faIcon}
