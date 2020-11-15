@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
@@ -14,6 +14,7 @@ type Props = {
   setCategory: (categoryId: string) => Promise<void>
   removeItem: () => Promise<void>
   deleteItem: () => Promise<void>
+  updateNotes: (notes: string) => Promise<void>
 }
 
 export default function ItemModal(props: Props) {
@@ -25,30 +26,44 @@ export default function ItemModal(props: Props) {
     setCategory: updateCategory,
     removeItem,
     deleteItem,
+    updateNotes,
   } = props
   const [category, setCategory] = useState(item.category)
+  const [notes, setNotes] = useState(item.notes || "")
 
-  const handleSetCategory = async (category: string) => {
+  useEffect(() => {
+    setNotes(item?.notes || "")
+  }, [item])
+
+  async function handleSetCategory(category: string) {
     setCategory(category)
     await updateCategory(category)
   }
 
-  const handleRemoveItem = async () => {
+  async function handleRemoveItem() {
     await removeItem()
     close()
   }
 
-  const handleDeleteItem = async () => {
+  async function handleDeleteItem() {
     await deleteItem()
     close()
   }
 
+  async function handleClose() {
+    if (notes !== item.notes) {
+      await updateNotes(notes)
+    }
+
+    close()
+  }
+
   return (
-    <Modal isOpen={open} onRequestClose={close} closeTimeoutMS={250}>
+    <Modal isOpen={open} onRequestClose={handleClose} closeTimeoutMS={250}>
       <section className={classes.modal}>
         <div className={classes.header}>
           <h3>{item?.name}</h3>
-          <Button onClick={close}>
+          <Button onClick={handleClose}>
             <FontAwesomeIcon icon={faWindowClose} size="2x" />
           </Button>
         </div>
@@ -68,6 +83,13 @@ export default function ItemModal(props: Props) {
                 </option>
               ))}
             </select>
+          </div>
+          <div className={classes.notes}>
+            <label>Notes</label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
           </div>
           <div className={classes.actions}>
             <label>Actions</label>

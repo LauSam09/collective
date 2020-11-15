@@ -3,4 +3,5 @@ export default interface ItemEntity {
   lowerName: string
   completed: boolean
   category?: string
+  notes?: string
 }

@@ -26,6 +26,7 @@ export default function Lists() {
     removeAllCompleted,
     setCompletionStatus,
     setCategory,
+    updateNotes,
   } = useList()
   const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState("")
@@ -81,6 +82,7 @@ export default function Lists() {
           }
           removeItem={() => removeItem(itemBeingEdited.id)}
           deleteItem={() => deleteItem(itemBeingEdited.id)}
+          updateNotes={(notes) => updateNotes(itemBeingEdited.id, notes)}
         />
       )}
       <>

@@ -156,6 +156,7 @@ export default function useList() {
   const removeItem = async (id: string) => {
     await getItemsCollection().doc(id).update({
       added: false,
+      notes: firebase.firestore.FieldValue.delete(),
     })
   }
 
@@ -181,6 +182,15 @@ export default function useList() {
     await batch.commit()
   }
 
+  const updateNotes = async (id: string, notes: string | undefined) => {
+    await getItemsCollection()
+      .doc(id)
+      .update({
+        notes:
+          notes === undefined ? firebase.firestore.FieldValue.delete() : notes,
+      })
+  }
+
   return {
     categoriesLoaded,
     items,
@@ -193,5 +203,6 @@ export default function useList() {
     removeAllCompleted,
     setCompletionStatus,
     setCategory,
+    updateNotes,
   }
 }

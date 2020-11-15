@@ -3,4 +3,5 @@ export default interface Item {
   name: string
   completed: boolean
   category?: string
+  notes?: string
 }
