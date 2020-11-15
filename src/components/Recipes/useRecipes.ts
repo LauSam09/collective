@@ -74,5 +74,11 @@ export default function useRecipes() {
       })
   }
 
-  return { recipes, addRecipe, deleteRecipe, setDay }
+  async function updateRecipe(recipe: Recipe) {
+    const { id, ...sanitisedItem } = recipe
+    sanitisedItem.name = sanitisedItem.name.trim()
+    await getRecipesCollection().doc(id).update(sanitisedItem)
+  }
+
+  return { recipes, addRecipe, deleteRecipe, setDay, updateRecipe }
 }

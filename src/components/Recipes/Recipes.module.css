@@ -35,3 +35,24 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.recipes ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.recipes ul li {
+  background-color: var(--primary-colour);
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.recipes ul li:hover {
+  background-color: var(--highlight-colour);
+  cursor: pointer;
+}
+
+.recipes select {
+  float: right;
+}

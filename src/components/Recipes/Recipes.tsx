@@ -3,20 +3,36 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button, Pill } from "components"
+import RecipeModal from "./RecipeModal"
+import { Recipe } from "models"
 
 import useRecipes from "./useRecipes"
 
 import classes from "./Recipes.module.css"
-import RecipeModal from "./RecipeModal"
 
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
-  const { recipes, addRecipe, deleteRecipe, setDay } = useRecipes()
+  const {
+    recipes,
+    addRecipe,
+    // deleteRecipe,
+    setDay,
+    updateRecipe,
+  } = useRecipes()
   const assignedRecipes = recipes.filter((recipe) => recipe.day !== undefined)
-  const assignedDays = assignedRecipes.map((recipe) => recipe.day)
   const [modalOpen, setModalOpen] = useState(false)
-  const unassignedDays = [...Array(7).keys()].filter((day) => true)
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
+
+  function handleAddClick() {
+    setSelectedRecipe(undefined)
+    setModalOpen(true)
+  }
+
+  function handleRecipeClick(recipe: Recipe) {
+    setSelectedRecipe(recipe)
+    setModalOpen(true)
+  }
 
   return (
     <>
@@ -25,13 +41,15 @@ export default function Recipes() {
         close={() => setModalOpen(false)}
         recipes={recipes}
         addRecipe={addRecipe}
+        recipe={selectedRecipe}
+        updateRecipe={updateRecipe}
       />
       <div className={classes.wrapper}>
         <div className={classes.header}>
           <h2>Recipes</h2>
 
           <div className={classes.actions}>
-            <Button title="Add Recipe" onClick={() => setModalOpen(true)}>
+            <Button title="Add Recipe" onClick={() => handleAddClick()}>
               <FontAwesomeIcon icon={faPlus} size="2x" />
             </Button>
           </div>
@@ -60,36 +78,31 @@ export default function Recipes() {
             })}
           </ul>
         </div>
-        <div>
+        <div className={classes.recipes}>
           <ul>
-            <li>
-              {recipes.map((recipe) => (
-                <li key={recipe.id}>
-                  {recipe.name}
-                  <select
-                    value={recipe.day}
-                    onChange={(e) =>
-                      setDay(
-                        recipe.id,
-                        e.target.value === "-" ? undefined : +e.target.value
-                      )
-                    }
-                  >
-                    {/* TODO separate component so days can be ordered correctly? */}
-                    <option value={undefined}> - </option>
-                    {recipe.day !== undefined && (
-                      <option value={recipe.day}>{days[recipe.day]}</option>
-                    )}
-                    {unassignedDays.map((day) => (
-                      <option key={day} value={day}>
-                        {days[day]}
-                      </option>
-                    ))}
-                  </select>
-                  <button onClick={() => deleteRecipe(recipe.id)}>x</button>
-                </li>
-              ))}
-            </li>
+            {recipes.map((recipe) => (
+              <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
+                {recipe.name}
+                <select
+                  value={recipe.day === undefined ? -1 : recipe.day}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) =>
+                    setDay(
+                      recipe.id,
+                      e.target.value === "-" ? -1 : +e.target.value
+                    )
+                  }
+                >
+                  {/* TODO separate component so days can be ordered correctly? */}
+                  <option value={-1}> - </option>
+                  {[...Array(7).keys()].map((day) => (
+                    <option key={day} value={day}>
+                      {days[day]}
+                    </option>
+                  ))}
+                </select>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

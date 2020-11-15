@@ -1,34 +1,46 @@
-import React, { FormEvent, useState } from "react"
+import React, { FormEvent, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faWindowClose } from "@fortawesome/free-solid-svg-icons"
 
 import { Button, Modal } from "components"
+import { Recipe } from "models"
 
 import classes from "./RecipeModal.module.css"
-import { Recipe } from "models"
 
 type RecipeModalProps = {
   open: boolean
   recipes: Recipe[]
   close: () => void
+  recipe?: Recipe
   addRecipe: (recipe: Recipe) => Promise<void>
+  updateRecipe: (recipe: Recipe) => Promise<void>
 }
 
 export default function RecipeModal(props: RecipeModalProps) {
-  const { open, recipes, addRecipe, close } = props
+  const { open, recipe, recipes, addRecipe, updateRecipe, close } = props
 
-  const [name, setName] = useState("")
+  const [name, setName] = useState(recipe?.name || "")
+
+  useEffect(() => {
+    setName(recipe?.name || "")
+  }, [recipe])
 
   const valid =
     name &&
     recipes.filter(
-      (recipe) => recipe.name.trim().toLowerCase() === name.trim().toLowerCase()
+      (r) =>
+        r.name.trim().toLowerCase() === name.trim().toLowerCase() &&
+        r.id !== recipe?.id
     ).length === 0
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    await addRecipe({ name, id: "" })
+    if (recipe === undefined) {
+      await addRecipe({ name, id: "" })
+    } else {
+      await updateRecipe({ ...recipe, name })
+    }
     setName("")
     close()
   }
@@ -37,7 +49,7 @@ export default function RecipeModal(props: RecipeModalProps) {
     <Modal isOpen={open} onRequestClose={close} closeTimeoutMS={250}>
       <section className={classes.modal}>
         <div className={classes.header}>
-          <h3>Add Recipe</h3>
+          <h3>{recipe ? "Edit" : "Add"} Recipe</h3>
           <Button onClick={close}>
             <FontAwesomeIcon icon={faWindowClose} size="2x" />
           </Button>
@@ -49,9 +61,13 @@ export default function RecipeModal(props: RecipeModalProps) {
           </div>
 
           <div className={classes.actions}>
-            <button type="submit" disabled={!valid}>
-              Save
-            </button>
+            <Button type="submit" disabled={!valid}>
+              <FontAwesomeIcon
+                icon={faSave}
+                size="2x"
+                style={{ color: valid ? "inherit" : "grey" }}
+              />
+            </Button>
           </div>
         </form>
       </section>

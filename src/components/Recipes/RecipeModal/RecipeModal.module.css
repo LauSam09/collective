@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+.header {
+  margin-bottom: 20px;
+}
+
 .header h3 {
   display: inline;
 }
@@ -18,10 +22,15 @@
 
 .modal label {
   display: block;
+  margin-bottom: 5px;
 }
 
 .modal input {
   width: 100%;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  margin-bottom: 15px;
 }
 
 .actions {
