@@ -25,10 +25,12 @@ export default function useRecipes() {
         snapshot.docChanges().forEach((change) => {
           switch (change.type) {
             case "added":
-              setRecipes((recipes) => [
-                ...recipes,
-                { ...change.doc.data(), id: change.doc.id } as Recipe,
-              ])
+              // When collection is empty, a document with only an id is being added - unsure why
+              change.doc.data().name &&
+                setRecipes((recipes) => [
+                  ...recipes,
+                  { ...change.doc.data(), id: change.doc.id } as Recipe,
+                ])
               break
             case "modified":
               setRecipes((recipes) =>
@@ -58,7 +60,6 @@ export default function useRecipes() {
   async function addRecipe(recipe: Recipe) {
     const { id, ...sanitisedItem } = recipe
     sanitisedItem.name = sanitisedItem.name.trim()
-
     await getRecipesCollection().add(sanitisedItem)
   }
 
