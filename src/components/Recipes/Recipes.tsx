@@ -14,7 +14,7 @@ const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
   const { recipes, addRecipe, setDay, updateRecipe } = useRecipes()
-  const assignedRecipes = recipes.filter((recipe) => recipe.day !== undefined)
+  const assignedRecipes = recipes.filter((recipe) => recipe.days !== undefined)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
 
@@ -52,8 +52,8 @@ export default function Recipes() {
           <h4>This week</h4>
           <ul>
             {days.map((day, index) => {
-              const recipes = assignedRecipes.filter(
-                (recipe) => recipe.day === index
+              const recipes = assignedRecipes.filter((recipe) =>
+                recipe.days.includes(index)
               )
 
               return (
@@ -82,7 +82,7 @@ export default function Recipes() {
                 <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
                   {recipe.name}
                   <select
-                    value={recipe.day === undefined ? -1 : recipe.day}
+                    value={recipe.days.length > 0 ? recipe.days[0] : -1}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) =>
                       setDay(

@@ -71,7 +71,7 @@ export default function useRecipes() {
     await getRecipesCollection()
       .doc(id)
       .update({
-        day: day === undefined ? firebase.firestore.FieldValue.delete() : day,
+        days: day === undefined ? [] : [day],
       })
   }
 

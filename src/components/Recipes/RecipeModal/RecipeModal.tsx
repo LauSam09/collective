@@ -37,7 +37,7 @@ export default function RecipeModal(props: RecipeModalProps) {
     e.preventDefault()
 
     if (recipe === undefined) {
-      await addRecipe({ name, id: "" })
+      await addRecipe({ name, id: "", days: [] })
     } else {
       await updateRecipe({ ...recipe, name })
     }
