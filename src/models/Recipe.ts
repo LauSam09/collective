@@ -1,5 +1,5 @@
 export default interface Recipe {
   id: string
   name: string
-  days: number[]
+  days: number[] | undefined // Undefined for backwards compatibility
 }

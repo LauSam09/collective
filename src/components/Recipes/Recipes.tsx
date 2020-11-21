@@ -53,7 +53,7 @@ export default function Recipes() {
           <ul>
             {days.map((day, index) => {
               const recipes = assignedRecipes.filter((recipe) =>
-                recipe.days.includes(index)
+                recipe.days?.includes(index)
               )
 
               return (
@@ -82,7 +82,7 @@ export default function Recipes() {
                 <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
                   {recipe.name}
                   <select
-                    value={recipe.days.length > 0 ? recipe.days[0] : -1}
+                    value={recipe.days?.[0] || -1}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) =>
                       setDay(
