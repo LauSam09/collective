@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
 import firebase from "firebase"
 
 import { Recipe } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { addRecipe as addRecipeAction } from "store/actions"
 
 export default function useRecipes() {
+  const dispatch = useDispatch()
   const db = firebase.firestore()
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const { group } = useContext(AuthenticationContext)
@@ -24,14 +27,22 @@ export default function useRecipes() {
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           switch (change.type) {
-            case "added":
+            case "added": {
               // When collection is empty, a document with only an id is being added - unsure why
-              change.doc.data().name &&
-                setRecipes((recipes) => [
-                  ...recipes,
-                  { ...change.doc.data(), id: change.doc.id } as Recipe,
-                ])
+              if (change.doc.data().name) {
+                const data = change.doc.data()
+                const recipe: Recipe = {
+                  id: change.doc.id,
+                  name: data.name,
+                  days: data.days,
+                }
+                setRecipes((recipes) => [...recipes, recipe])
+                dispatch(addRecipeAction(recipe))
+              }
+
               break
+            }
+
             case "modified":
               setRecipes((recipes) =>
                 recipes.map((recipe) => {
@@ -55,7 +66,7 @@ export default function useRecipes() {
     return () => {
       unsubscribe()
     }
-  }, [group, db])
+  }, [group, db, dispatch])
 
   async function addRecipe(recipe: Recipe) {
     const { id, ...sanitisedItem } = recipe

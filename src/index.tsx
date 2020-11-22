@@ -1,11 +1,13 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { Provider } from "react-redux"
 import Modal from "react-modal"
 import LogRocket from "logrocket"
 
 import App from "./App"
 import * as serviceWorker from "./serviceWorker"
 import { AuthenticationContextProvider } from "./authentication/AuthenticationContext"
+import store from "store"
 
 import "./index.css"
 
@@ -17,9 +19,11 @@ if (process.env.NODE_ENV === "production") {
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthenticationContextProvider>
-      <App />
-    </AuthenticationContextProvider>
+    <Provider store={store}>
+      <AuthenticationContextProvider>
+        <App />
+      </AuthenticationContextProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 )

@@ -9,11 +9,14 @@ import { Recipe } from "models"
 import useRecipes from "./useRecipes"
 
 import classes from "./Recipes.module.css"
+import { useSelector } from "react-redux"
+import { RootState } from "store/reducers"
 
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
-  const { recipes, addRecipe, setDay, updateRecipe } = useRecipes()
+  const { addRecipe, setDay, updateRecipe } = useRecipes()
+  const recipes = useSelector((state: RootState) => state.recipeState.recipes)
   const assignedRecipes = recipes.filter((recipe) => recipe.days !== undefined)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
