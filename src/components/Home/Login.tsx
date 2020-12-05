@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import GoogleButton from "react-google-button"
 
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
@@ -10,7 +11,7 @@ export default function Login() {
   return (
     <div className={classes.container}>
       <p>Log in to get started</p>
-      <button onClick={login}>Login</button>
+      <GoogleButton onClick={login} type="dark" />
     </div>
   )
 }
