@@ -36,3 +36,10 @@ a {
 .ReactModal__Overlay--before-close {
   opacity: 0;
 }
+
+/* Font-size for inputs must be greater than 16px to prevent zoom on iOS */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
