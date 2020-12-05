@@ -34,12 +34,17 @@ export default function Navigation() {
       </button>
       <div className={cx("actions", { hidden: hideActions })}>
         <ul>
-          <li onClick={() => setHideActions(true)}>
-            <Link to="/">Lists</Link>
-          </li>
-          <li onClick={() => setHideActions(true)}>
-            <Link to="/recipes">Recipes</Link>
-          </li>
+          {authenticated && (
+            <>
+              <li onClick={() => setHideActions(true)}>
+                <Link to="/">Lists</Link>
+              </li>
+              <li onClick={() => setHideActions(true)}>
+                <Link to="/recipes">Recipes</Link>
+              </li>
+            </>
+          )}
+
           <li onClick={() => setHideActions(true)}>
             {authenticated ? (
               <FontAwesomeIcon
