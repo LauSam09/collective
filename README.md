@@ -14,8 +14,10 @@ See application hosted [here](https://collective-293516.ew.r.appspot.com/).
 ## Architecture
 
 - React
+- Redux
 - Google Firestore
 - Google App Engine
+  - `gcloud app deploy --version=X-Y-Z`
 
 ## Development
 
@@ -25,7 +27,7 @@ See application hosted [here](https://collective-293516.ew.r.appspot.com/).
 
 # Authentication
 
-- OAuth2 authentication. Support providers:
+- OAuth2 authentication. Supported providers:
   - Google
 
 # Multi-tenancy
