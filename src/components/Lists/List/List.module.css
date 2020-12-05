@@ -31,6 +31,12 @@
   outline: none;
 }
 
+@-moz-document url-prefix() {
+  .submit:hover:disabled {
+    background-color: #f7f7f7;
+  }
+}
+
 .submit {
   height: 30px;
   line-height: 30px;
