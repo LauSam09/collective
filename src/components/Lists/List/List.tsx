@@ -85,20 +85,20 @@ export default function Lists() {
           updateNotes={(notes) => updateNotes(itemBeingEdited.id, notes)}
         />
       )}
-      <>
-        <div className={classes.actions}>
-          <Button onClick={() => inputRef.current?.focus()}>
-            <FontAwesomeIcon icon={faPlus} size="2x" />
-          </Button>
-          <Button
-            onClick={removeAllCompleted}
-            title="Clear completed"
-            disabled={!categoriesLoaded}
-          >
-            <FontAwesomeIcon icon={faTrash} size="2x" />
-          </Button>
-        </div>
-        {categoriesLoaded ? (
+      {categoriesLoaded ? (
+        <>
+          <div className={classes.actions}>
+            <Button onClick={() => inputRef.current?.focus()}>
+              <FontAwesomeIcon icon={faPlus} size="2x" />
+            </Button>
+            <Button
+              onClick={removeAllCompleted}
+              title="Clear completed"
+              disabled={!categoriesLoaded}
+            >
+              <FontAwesomeIcon icon={faTrash} size="2x" />
+            </Button>
+          </div>
           <>
             {categorisedItems.length ? (
               <ul className={classes.list}>
@@ -138,12 +138,12 @@ export default function Lists() {
               </button>
             </form>
           </>
-        ) : (
-          <div className={classes.spinner}>
-            <FontAwesomeIcon icon={faCircleNotch} className="fa-spin" />
-          </div>
-        )}
-      </>
+        </>
+      ) : (
+        <div className={classes.spinner}>
+          <FontAwesomeIcon icon={faCircleNotch} className="fa-spin" />
+        </div>
+      )}
     </>
   )
 }

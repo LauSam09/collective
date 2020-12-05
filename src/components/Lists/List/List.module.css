@@ -62,14 +62,8 @@
 }
 
 .spinner {
-  background-color: var(--primary-colour);
   margin: 5px 0;
   text-align: center;
   border-radius: 5px;
-  min-height: 25vh;
-}
-
-.spinner svg {
-  position: absolute;
-  top: 26vh;
+  padding: 30px;
 }
