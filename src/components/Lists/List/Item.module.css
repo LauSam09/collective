@@ -1,13 +1,17 @@
 div.container {
-  margin: 5px 0;
+  margin: 0 0 10px 0;
   display: flex;
+  background-color: var(--primary-colour);
+  border-radius: 5px;
+  padding: 5px;
 }
 
 div.clickable {
-  display: inline;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   flex-grow: 1;
-  border-radius: 5px;
+  border-radius: 5px 0 0 5px;
   padding: 5px 0;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -39,5 +43,5 @@ div.clickable .notes {
 
 .icon:hover {
   background-color: var(--highlight-colour);
-  border-radius: 5px;
+  border-radius: 0 5px 5px 0;
 }

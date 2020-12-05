@@ -89,14 +89,14 @@ export default function Lists() {
         <>
           <div className={classes.actions}>
             <Button onClick={() => inputRef.current?.focus()}>
-              <FontAwesomeIcon icon={faPlus} size="2x" />
+              <FontAwesomeIcon icon={faPlus} size="1x" />
             </Button>
             <Button
               onClick={removeAllCompleted}
               title="Clear completed"
               disabled={!categoriesLoaded}
             >
-              <FontAwesomeIcon icon={faTrash} size="2x" />
+              <FontAwesomeIcon icon={faTrash} size="1x" />
             </Button>
           </div>
           <>

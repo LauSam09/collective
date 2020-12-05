@@ -55,9 +55,8 @@
 .list {
   text-align: left;
   list-style: none;
-  padding: 10px;
-  background-color: var(--primary-colour);
-  margin: 5px 0;
+  padding: 0;
+  margin: 20px 0;
   border-radius: 5px;
 }
 
