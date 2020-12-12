@@ -1,15 +1,18 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import firebase from "firebase"
 
 import { Recipe } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
-import { addRecipe as addRecipeAction } from "store/actions"
+import {
+  addRecipe as addRecipeAction,
+  editRecipe as editRecipeAction,
+  deleteRecipe as deleteRecipeAction,
+} from "store/actions"
 
 export default function useRecipes() {
   const dispatch = useDispatch()
   const db = firebase.firestore()
-  const [recipes, setRecipes] = useState<Recipe[]>([])
   const { group } = useContext(AuthenticationContext)
 
   const getRecipesCollection = () =>
@@ -37,7 +40,6 @@ export default function useRecipes() {
                   days: data.days,
                   recipeUrl: data.recipeUrl,
                 }
-                setRecipes((recipes) => [...recipes, recipe])
                 dispatch(addRecipeAction(recipe))
               }
 
@@ -45,20 +47,15 @@ export default function useRecipes() {
             }
 
             case "modified":
-              setRecipes((recipes) =>
-                recipes.map((recipe) => {
-                  if (recipe.id === change.doc.id) {
-                    return { ...change.doc.data(), id: change.doc.id } as Recipe
-                  } else {
-                    return recipe
-                  }
-                })
+              dispatch(
+                editRecipeAction({
+                  ...change.doc.data(),
+                  id: change.doc.id,
+                } as Recipe)
               )
               break
             case "removed":
-              setRecipes((recipes) =>
-                recipes.filter((recipe) => recipe.id !== change.doc.id)
-              )
+              dispatch(deleteRecipeAction(change.doc.id))
               break
           }
         })
@@ -93,5 +90,5 @@ export default function useRecipes() {
     await getRecipesCollection().doc(id).update(sanitisedItem)
   }
 
-  return { recipes, addRecipe, deleteRecipe, setDay, updateRecipe }
+  return { addRecipe, deleteRecipe, setDay, updateRecipe }
 }

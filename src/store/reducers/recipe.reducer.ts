@@ -1,5 +1,10 @@
 import { Recipe } from "models"
-import { ADD_RECIPE, RecipeActionTypes } from "store/actions"
+import {
+  ADD_RECIPE,
+  DELETE_RECIPE,
+  EDIT_RECIPE,
+  RecipeActionTypes,
+} from "store/actions"
 
 type RecipeState = {
   recipes: Recipe[]
@@ -15,6 +20,20 @@ export default function (state = initialState, action: RecipeActionTypes) {
       return {
         ...state,
         recipes: [...state.recipes, action.payload],
+      }
+
+    case EDIT_RECIPE:
+      return {
+        ...state,
+        recipes: state.recipes.map((recipe) =>
+          recipe.id === action.payload.id ? action.payload : recipe
+        ),
+      }
+
+    case DELETE_RECIPE:
+      return {
+        ...state,
+        recipes: state.recipes.filter((recipe) => recipe.id !== action.payload),
       }
 
     default:
