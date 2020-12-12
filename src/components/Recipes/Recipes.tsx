@@ -85,7 +85,9 @@ export default function Recipes() {
                 <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
                   {recipe.name}
                   <select
-                    value={recipe.days?.[0] || -1}
+                    value={
+                      recipe.days?.[0] === undefined ? -1 : recipe.days?.[0]
+                    }
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) =>
                       setDay(
