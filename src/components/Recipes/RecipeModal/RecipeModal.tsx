@@ -25,7 +25,7 @@ export default function RecipeModal(props: RecipeModalProps) {
   useEffect(() => {
     setName(recipe?.name || "")
     setRecipeUrl(recipe?.recipeUrl || "")
-  }, [recipe])
+  }, [recipe, open])
 
   const valid =
     name &&
