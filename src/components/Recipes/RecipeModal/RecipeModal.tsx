@@ -20,9 +20,11 @@ export default function RecipeModal(props: RecipeModalProps) {
   const { open, recipe, recipes, addRecipe, updateRecipe, close } = props
 
   const [name, setName] = useState(recipe?.name || "")
+  const [recipeUrl, setRecipeUrl] = useState(recipe?.recipeUrl || "")
 
   useEffect(() => {
     setName(recipe?.name || "")
+    setRecipeUrl(recipe?.recipeUrl || "")
   }, [recipe])
 
   const valid =
@@ -37,11 +39,12 @@ export default function RecipeModal(props: RecipeModalProps) {
     e.preventDefault()
 
     if (recipe === undefined) {
-      await addRecipe({ name, id: "", days: [] })
+      await addRecipe({ name, id: "", days: [], recipeUrl })
     } else {
-      await updateRecipe({ ...recipe, name })
+      await updateRecipe({ ...recipe, name, recipeUrl })
     }
     setName("")
+    setRecipeUrl("")
     close()
   }
 
@@ -58,6 +61,21 @@ export default function RecipeModal(props: RecipeModalProps) {
           <div>
             <label>Name</label>
             <input value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <label>
+              Recipe Url{" "}
+              {recipeUrl && (
+                <small>
+                  <a href={recipeUrl}>(Visit Site)</a>
+                </small>
+              )}
+            </label>
+
+            <input
+              value={recipeUrl}
+              onChange={(e) => setRecipeUrl(e.target.value)}
+            />
           </div>
 
           <div className={classes.actions}>

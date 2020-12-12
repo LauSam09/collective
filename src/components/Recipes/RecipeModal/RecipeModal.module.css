@@ -36,3 +36,8 @@
 .actions {
   text-align: right;
 }
+
+.modal a {
+  color: #c0c0df;
+  margin: 10px 0;
+}

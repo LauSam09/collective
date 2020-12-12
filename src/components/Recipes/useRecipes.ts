@@ -35,6 +35,7 @@ export default function useRecipes() {
                   id: change.doc.id,
                   name: data.name,
                   days: data.days,
+                  recipeUrl: data.recipeUrl,
                 }
                 setRecipes((recipes) => [...recipes, recipe])
                 dispatch(addRecipeAction(recipe))
