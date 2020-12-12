@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import firebase from "firebase"
 
 import { Recipe } from "models"
@@ -9,10 +9,12 @@ import {
   editRecipe as editRecipeAction,
   deleteRecipe as deleteRecipeAction,
 } from "store/actions"
+import { RootState } from "store/reducers"
 
 export default function useRecipes() {
   const dispatch = useDispatch()
   const db = firebase.firestore()
+  const recipes = useSelector((state: RootState) => state.recipeState.recipes)
   const { group } = useContext(AuthenticationContext)
 
   const getRecipesCollection = () =>
@@ -40,7 +42,10 @@ export default function useRecipes() {
                   days: data.days,
                   recipeUrl: data.recipeUrl,
                 }
-                dispatch(addRecipeAction(recipe))
+                // Every time recipes re-renders, this hook is fired, and items are re-added.
+                if (!recipes.filter((r) => r.id === recipe.id).length) {
+                  dispatch(addRecipeAction(recipe))
+                }
               }
 
               break
@@ -64,7 +69,8 @@ export default function useRecipes() {
     return () => {
       unsubscribe()
     }
-  }, [group, db, dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function addRecipe(recipe: Recipe) {
     const { id, ...sanitisedItem } = recipe
