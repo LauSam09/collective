@@ -62,7 +62,7 @@ export default function ItemModal(props: Props) {
     <Modal isOpen={open} onRequestClose={handleClose} closeTimeoutMS={250}>
       <section className={classes.modal}>
         <div className={classes.header}>
-          <h3>{item?.name}</h3>
+          <h3 title={item?.name}>{item?.name}</h3>
           <Button onClick={handleClose}>
             <FontAwesomeIcon icon={faWindowClose} size="2x" />
           </Button>
