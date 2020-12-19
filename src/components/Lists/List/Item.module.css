@@ -4,43 +4,44 @@ div.container {
   background-color: var(--primary-colour);
   border-radius: 5px;
   padding: 5px;
+  align-items: stretch;
 }
 
-div.clickable {
+div.container > div,
+.icon {
+  border-radius: 5px;
+}
+
+div.container > div:hover,
+.icon:hover {
+  background-color: var(--highlight-colour);
+  cursor: pointer;
+}
+
+div.toggle {
   display: flex;
   align-items: center;
-  cursor: pointer;
+  padding: 0 15px;
+}
+
+div.title {
   flex-grow: 1;
-  border-radius: 5px 0 0 5px;
-  padding: 5px 0;
+  padding: 10px 5px;
+  display: inline;
+}
+
+div.title .notes {
+  display: block;
+  font-size: 0.8rem;
+}
+
+div.title,
+div.title .notes {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
-div.clickable input {
-  margin: 0 15px;
-}
-
-div.clickable:hover {
-  background-color: var(--highlight-colour);
-}
-
-div.clickable div {
-  display: inline;
-}
-
-div.clickable .notes {
-  display: block;
-  font-size: 0.8rem;
-}
-
 .icon {
   padding: 10px;
-  cursor: pointer;
-}
-
-.icon:hover {
-  background-color: var(--highlight-colour);
-  border-radius: 0 5px 5px 0;
 }
