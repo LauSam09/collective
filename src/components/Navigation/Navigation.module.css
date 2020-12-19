@@ -78,17 +78,21 @@
 
   .actions a {
     width: 100%;
+    padding: 5px 0;
     display: inline-block;
   }
 
   .actions li {
+    background-color: var(--secondary-colour);
     display: block;
     text-align: center;
     margin: 0;
+    margin-bottom: 5px;
     padding: 3px 0;
   }
 
   .actions svg {
+    padding: 5px 0;
     width: 100% !important;
   }
 }
