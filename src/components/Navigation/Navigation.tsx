@@ -9,7 +9,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 
 import { AuthenticationContext } from "authentication/AuthenticationContext"
-import packageJson from "../../../package.json"
 
 import classes from "./Navigation.module.css"
 
@@ -23,7 +22,7 @@ export default function Navigation() {
     <div className={classes.container}>
       <Link to="/">
         <h2>
-          Collective <small>{packageJson.version}</small>
+          Collective <small>{process.env.REACT_APP_VERSION}</small>
         </h2>
       </Link>
       <button
