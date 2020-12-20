@@ -60,46 +60,41 @@ export default function ItemModal(props: Props) {
 
   return (
     <Modal isOpen={open} onRequestClose={handleClose} closeTimeoutMS={250}>
-      <section className={classes.modal}>
-        <div className={classes.header}>
-          <h3 title={item?.name}>{item?.name}</h3>
-          <Button onClick={handleClose}>
-            <FontAwesomeIcon icon={faWindowClose} size="2x" />
-          </Button>
+      <div className={classes.header}>
+        <h3 title={item?.name}>{item?.name}</h3>
+        <Button onClick={handleClose}>
+          <FontAwesomeIcon icon={faWindowClose} size="2x" />
+        </Button>
+      </div>
+      <div className={classes.modalBody}>
+        <div>
+          <label>Category</label>
+          <select
+            value={category}
+            onChange={(e) =>
+              handleSetCategory(e.target.value === "-" ? "" : e.target.value)
+            }
+          >
+            <option value={undefined}> - </option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className={classes.modalBody}>
-          <div>
-            <label>Category</label>
-            <select
-              value={category}
-              onChange={(e) =>
-                handleSetCategory(e.target.value === "-" ? "" : e.target.value)
-              }
-            >
-              <option value={undefined}> - </option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={classes.notes}>
-            <label>Notes</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </div>
-          <div className={classes.actions}>
-            <label>Actions</label>
-            <button onClick={handleRemoveItem}>Remove From List</button>
-            <button onClick={handleDeleteItem} style={{ color: "red" }}>
-              Delete
-            </button>
-          </div>
+        <div className={classes.notes}>
+          <label>Notes</label>
+          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
         </div>
-      </section>
+        <div className={classes.actions}>
+          <label>Actions</label>
+          <button onClick={handleRemoveItem}>Remove From List</button>
+          <button onClick={handleDeleteItem} style={{ color: "red" }}>
+            Delete
+          </button>
+        </div>
+      </div>
     </Modal>
   )
 }

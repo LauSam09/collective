@@ -31,43 +31,40 @@ export default function CategoryModal(props: CategoryModalProps) {
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close} closeTimeoutMS={250}>
-      {/* TODO move section to modal component */}
-      <section className={classes.modal}>
-        <div className={classes.header}>
-          <h3 title={name}>{name}</h3>
-          <Button onClick={close}>
-            <FontAwesomeIcon icon={faWindowClose} size="2x" />
-          </Button>
-        </div>
-        <div>
-          <ul className={classes.list}>
-            {categories.map((category) => (
-              <li
-                key={category.id}
-                onClick={() => selectCategory(category)}
-                className={classes.category}
+      <div className={classes.header}>
+        <h3 title={name}>{name}</h3>
+        <Button onClick={close}>
+          <FontAwesomeIcon icon={faWindowClose} size="2x" />
+        </Button>
+      </div>
+      <div>
+        <ul className={classes.list}>
+          {categories.map((category) => (
+            <li
+              key={category.id}
+              onClick={() => selectCategory(category)}
+              className={classes.category}
+            >
+              <span
+                style={{
+                  fontWeight:
+                    category.id === selectedCategoryId ? "bold" : "inherit",
+                }}
               >
-                <span
-                  style={{
-                    fontWeight:
-                      category.id === selectedCategoryId ? "bold" : "inherit",
-                  }}
-                >
-                  {category.name}
-                </span>
-                <FontAwesomeIcon
-                  icon={faShoppingBasket}
-                  className={classes.icon}
-                  style={{
-                    color: category?.colour || "inherit",
-                  }}
-                  size="lg"
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+                {category.name}
+              </span>
+              <FontAwesomeIcon
+                icon={faShoppingBasket}
+                className={classes.icon}
+                style={{
+                  color: category?.colour || "inherit",
+                }}
+                size="lg"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     </Modal>
   )
 }

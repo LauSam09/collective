@@ -7,3 +7,12 @@
 .modal:focus {
   outline: none;
 }
+
+.modalBody {
+  width: 100%;
+  padding: 20px;
+  color: white;
+  background-color: var(--primary-colour);
+  border-radius: 5px;
+  box-sizing: border-box;
+}

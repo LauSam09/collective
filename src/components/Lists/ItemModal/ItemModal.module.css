@@ -18,23 +18,6 @@
   white-space: nowrap;
 }
 
-.modal button {
-  border: none;
-  padding: 5px;
-  background-color: inherit;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.modal button:hover {
-  background-color: var(--highlight-colour);
-}
-
-.modalBody {
-  padding: 10px 0;
-}
-
 .modalBody label {
   display: block;
   margin: 10px 0;
@@ -42,6 +25,11 @@
 
 .modalBody select {
   width: 100%;
+  border-radius: 5px;
+}
+
+.modalBody select:focus {
+  outline: none;
 }
 
 .notes textarea {
@@ -60,11 +48,14 @@
 
 .actions button {
   display: block;
+  border: none;
   color: black;
   background-color: white;
   margin-bottom: 5px;
   text-align: left;
   padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .actions button:hover {

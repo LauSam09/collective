@@ -9,7 +9,7 @@ export default function Modal(props: ModalProps) {
   const { children, ...rest } = props
   return (
     <ReactModal {...rest} className={classes.modal}>
-      {props.children}
+      <section className={classes.modalBody}>{props.children}</section>
     </ReactModal>
   )
 }
