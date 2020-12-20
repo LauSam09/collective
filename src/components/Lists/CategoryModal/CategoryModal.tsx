@@ -13,13 +13,21 @@ import classes from "./CategoryModal.module.css"
 type CategoryModalProps = {
   isOpen: boolean
   name: string
-  close: () => void
   categories: Category[]
   selectedCategoryId: string | undefined
+  close: () => void
+  selectCategory: (category: Category) => Promise<void>
 }
 
 export default function CategoryModal(props: CategoryModalProps) {
-  const { isOpen, name, close, categories, selectedCategoryId } = props
+  const {
+    isOpen,
+    name,
+    close,
+    categories,
+    selectedCategoryId,
+    selectCategory,
+  } = props
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close} closeTimeoutMS={250}>
@@ -34,7 +42,11 @@ export default function CategoryModal(props: CategoryModalProps) {
         <div>
           <ul className={classes.list}>
             {categories.map((category) => (
-              <li key={category.id} className={classes.category}>
+              <li
+                key={category.id}
+                onClick={() => selectCategory(category)}
+                className={classes.category}
+              >
                 <span
                   style={{
                     fontWeight:

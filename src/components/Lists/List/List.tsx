@@ -64,6 +64,14 @@ export default function Lists() {
     await setCategory(id, categoryId)
     itemBeingEdited &&
       setItemBeingEdited({ ...itemBeingEdited, category: categoryId })
+    if (categoryModalOpen) {
+      closeCategoryModal()
+    }
+  }
+
+  const closeCategoryModal = () => {
+    setCategoryModalOpen(false)
+    setTimeout(() => setItemBeingEdited(undefined), 250)
   }
 
   const iconToRender = items.length >= 10 ? ItemIcon.Trolley : ItemIcon.Basket
@@ -91,12 +99,12 @@ export default function Lists() {
         <CategoryModal
           isOpen={categoryModalOpen}
           name={itemBeingEdited.name}
-          close={() => {
-            setCategoryModalOpen(false)
-            setTimeout(() => setItemBeingEdited(undefined), 250)
-          }}
           categories={categories}
           selectedCategoryId={itemBeingEdited.category}
+          close={closeCategoryModal}
+          selectCategory={(category) =>
+            handleSetCategory(itemBeingEdited?.id || "", category.id)
+          }
         />
       )}
       {categoriesLoaded ? (
