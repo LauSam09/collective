@@ -27,6 +27,7 @@ export default function Lists() {
     removeAllCompleted,
     setCompletionStatus,
     setCategory,
+    editItem,
   } = useList()
   const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState("")
@@ -88,6 +89,11 @@ export default function Lists() {
           categories={categories}
           removeItem={() => removeItem(itemBeingEdited.id)}
           deleteItem={() => deleteItem(itemBeingEdited.id)}
+          updateItem={async (item) => {
+            await editItem(item)
+            setModalOpen(false)
+            setTimeout(() => setItemBeingEdited(undefined), 250)
+          }}
         />
       )}
       {itemBeingEdited && (

@@ -191,6 +191,12 @@ export default function useList() {
       })
   }
 
+  const editItem = async (item: Item) => {
+    const { id, ...sanitisedItem } = item
+
+    await getItemsCollection().doc(id).update(sanitisedItem)
+  }
+
   return {
     categoriesLoaded,
     items,
@@ -204,5 +210,6 @@ export default function useList() {
     setCompletionStatus,
     setCategory,
     updateNotes,
+    editItem,
   }
 }

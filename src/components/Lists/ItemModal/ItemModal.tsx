@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button, Modal } from "components"
 import { Category, Item } from "models"
+
 import classes from "./ItemModal.module.css"
+import { useForm } from "react-hook-form"
 
 type Props = {
   item: Item
@@ -13,20 +15,24 @@ type Props = {
   categories: Category[]
   removeItem: () => Promise<void>
   deleteItem: () => Promise<void>
+  updateItem: (item: Item) => Promise<void>
 }
 
 export default function ItemModal(props: Props) {
-  const { item, open, close, categories, removeItem, deleteItem } = props
-  const [category, setCategory] = useState(item.category)
-  const [notes, setNotes] = useState(item.notes || "")
-
-  useEffect(() => {
-    setNotes(item?.notes || "")
-  }, [item])
-
-  async function handleSetCategory(category: string) {
-    setCategory(category)
-  }
+  const {
+    item,
+    open,
+    close,
+    categories,
+    removeItem,
+    deleteItem,
+    updateItem,
+  } = props
+  const { register, formState, handleSubmit } = useForm({
+    defaultValues: item,
+    mode: "onChange",
+  })
+  const { isDirty } = formState
 
   async function handleRemoveItem() {
     await removeItem()
@@ -38,8 +44,12 @@ export default function ItemModal(props: Props) {
     close()
   }
 
-  async function handleClose() {
+  function handleClose() {
     close()
+  }
+
+  async function onSubmit(data: Item) {
+    await updateItem({ ...item, ...data })
   }
 
   return (
@@ -51,38 +61,38 @@ export default function ItemModal(props: Props) {
         </Button>
       </div>
       <div className={classes.modalBody}>
-        <div>
-          <label>Category</label>
-          <select
-            value={category}
-            onChange={(e) =>
-              handleSetCategory(e.target.value === "-" ? "" : e.target.value)
-            }
-          >
-            <option value={undefined}> - </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={classes.notes}>
-          <label>Notes</label>
-          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
-        </div>
-        <div className={classes.actions}>
-          <label>Actions</label>
-          <button onClick={handleRemoveItem}>Remove From List</button>
-          <button onClick={handleDeleteItem} style={{ color: "red" }}>
-            Delete
-          </button>
-        </div>
-        <div className={classes.modalActions}>
-          {/* <div style={{ flexGrow: 1 }} /> */}
-          <Button>Cancel</Button>
-          <Button>Save</Button>
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <label>Category</label>
+            <select ref={register} name="category">
+              <option value={undefined}> - </option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={classes.notes}>
+            <label>Notes</label>
+            <textarea ref={register} name="notes" />
+          </div>
+          <div className={classes.actions}>
+            <label>Actions</label>
+            <button onClick={handleRemoveItem}>Remove From List</button>
+            <button onClick={handleDeleteItem} style={{ color: "red" }}>
+              Delete
+            </button>
+          </div>
+          <div className={classes.modalActions}>
+            <Button onClick={handleClose} type="button">
+              Cancel
+            </Button>
+            <Button disabled={!isDirty} type="submit">
+              Save
+            </Button>
+          </div>
+        </form>
       </div>
     </Modal>
   )
