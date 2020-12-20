@@ -96,6 +96,7 @@ export default function Lists() {
             setTimeout(() => setItemBeingEdited(undefined), 250)
           }}
           categories={categories}
+          selectedCategoryId={itemBeingEdited.category}
         />
       )}
       {categoriesLoaded ? (

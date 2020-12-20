@@ -15,10 +15,11 @@ type CategoryModalProps = {
   name: string
   close: () => void
   categories: Category[]
+  selectedCategoryId: string | undefined
 }
 
 export default function CategoryModal(props: CategoryModalProps) {
-  const { isOpen, name, close, categories } = props
+  const { isOpen, name, close, categories, selectedCategoryId } = props
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close} closeTimeoutMS={250}>
@@ -34,11 +35,20 @@ export default function CategoryModal(props: CategoryModalProps) {
           <ul className={classes.list}>
             {categories.map((category) => (
               <li key={category.id} className={classes.category}>
-                <span>{category.name}</span>
+                <span
+                  style={{
+                    fontWeight:
+                      category.id === selectedCategoryId ? "bold" : "inherit",
+                  }}
+                >
+                  {category.name}
+                </span>
                 <FontAwesomeIcon
                   icon={faShoppingBasket}
                   className={classes.icon}
-                  style={{ color: category?.colour || "inherit" }}
+                  style={{
+                    color: category?.colour || "inherit",
+                  }}
                   size="lg"
                 />
               </li>
