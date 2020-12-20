@@ -11,6 +11,10 @@
   cursor: pointer;
 }
 
+.button:disabled {
+  opacity: 0.5;
+}
+
 .button:hover:enabled {
   background-color: var(--highlight-colour);
 }
