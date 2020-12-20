@@ -27,7 +27,6 @@ export default function Lists() {
     removeAllCompleted,
     setCompletionStatus,
     setCategory,
-    updateNotes,
   } = useList()
   const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState("")
@@ -87,12 +86,8 @@ export default function Lists() {
             setTimeout(() => setItemBeingEdited(undefined), 250)
           }}
           categories={categories}
-          setCategory={(categoryId: string) =>
-            handleSetCategory(itemBeingEdited?.id || "", categoryId)
-          }
           removeItem={() => removeItem(itemBeingEdited.id)}
           deleteItem={() => deleteItem(itemBeingEdited.id)}
-          updateNotes={(notes) => updateNotes(itemBeingEdited.id, notes)}
         />
       )}
       {itemBeingEdited && (

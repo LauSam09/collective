@@ -11,23 +11,12 @@ type Props = {
   open: boolean
   close: () => void
   categories: Category[]
-  setCategory: (categoryId: string) => Promise<void>
   removeItem: () => Promise<void>
   deleteItem: () => Promise<void>
-  updateNotes: (notes: string) => Promise<void>
 }
 
 export default function ItemModal(props: Props) {
-  const {
-    item,
-    open,
-    close,
-    categories,
-    setCategory: updateCategory,
-    removeItem,
-    deleteItem,
-    updateNotes,
-  } = props
+  const { item, open, close, categories, removeItem, deleteItem } = props
   const [category, setCategory] = useState(item.category)
   const [notes, setNotes] = useState(item.notes || "")
 
@@ -37,7 +26,6 @@ export default function ItemModal(props: Props) {
 
   async function handleSetCategory(category: string) {
     setCategory(category)
-    await updateCategory(category)
   }
 
   async function handleRemoveItem() {
@@ -51,10 +39,6 @@ export default function ItemModal(props: Props) {
   }
 
   async function handleClose() {
-    if (notes !== item.notes) {
-      await updateNotes(notes)
-    }
-
     close()
   }
 
@@ -93,6 +77,11 @@ export default function ItemModal(props: Props) {
           <button onClick={handleDeleteItem} style={{ color: "red" }}>
             Delete
           </button>
+        </div>
+        <div className={classes.modalActions}>
+          {/* <div style={{ flexGrow: 1 }} /> */}
+          <Button>Cancel</Button>
+          <Button>Save</Button>
         </div>
       </div>
     </Modal>

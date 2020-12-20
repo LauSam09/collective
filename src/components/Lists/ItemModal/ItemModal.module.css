@@ -62,3 +62,15 @@
   background-color: var(--highlight-colour);
   color: white;
 }
+
+.modalActions {
+  display: flex;
+}
+
+.modalActions button:first-child {
+  margin-left: auto;
+}
+
+.modalActions button:last-child {
+  background-color: var(--secondary-colour);
+}
