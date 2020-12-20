@@ -8,12 +8,13 @@ import {
 
 import useList from "./useList"
 
+import { Button } from "components"
 import Item from "./Item"
 import EditModal from "../ItemModal"
 import { ItemIcon, Item as ItemModel } from "models"
 
 import classes from "./List.module.css"
-import { Button } from "components"
+import CategoryModal from "../CategoryModal"
 
 export default function Lists() {
   const {
@@ -32,6 +33,7 @@ export default function Lists() {
   const [name, setName] = useState("")
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
   const [modalOpen, setModalOpen] = useState(false)
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false)
   const categorisedItems = items
     .filter((item) => !item.category)
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -85,6 +87,16 @@ export default function Lists() {
           updateNotes={(notes) => updateNotes(itemBeingEdited.id, notes)}
         />
       )}
+      {itemBeingEdited && (
+        <CategoryModal
+          isOpen={categoryModalOpen}
+          name={itemBeingEdited.name}
+          close={() => {
+            setCategoryModalOpen(false)
+            setTimeout(() => setItemBeingEdited(undefined), 250)
+          }}
+        />
+      )}
       {categoriesLoaded ? (
         <>
           <div className={classes.actions}>
@@ -114,6 +126,10 @@ export default function Lists() {
                       open={() => {
                         setItemBeingEdited(item)
                         setModalOpen(true)
+                      }}
+                      selectCategory={() => {
+                        setItemBeingEdited(item)
+                        setCategoryModalOpen(true)
                       }}
                     />
                   </li>

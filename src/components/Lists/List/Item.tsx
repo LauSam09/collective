@@ -17,10 +17,11 @@ type Props = {
   toggleComplete: (complete: boolean) => void
   icon: ItemIcon
   open: () => void
+  selectCategory: () => void
 }
 
 export default function Item(props: Props) {
-  const { item, categories, toggleComplete, icon, open } = props
+  const { item, categories, toggleComplete, icon, open, selectCategory } = props
 
   const category =
     item.category === undefined
@@ -63,12 +64,13 @@ export default function Item(props: Props) {
         </span>
         {item.notes && <span className={classes.notes}>{item.notes}</span>}
       </div>
+
       <FontAwesomeIcon
         icon={faIcon}
         className={classes.icon}
         style={{ color: category?.colour || "inherit" }}
-        onClick={open}
         size="lg"
+        onClick={selectCategory}
       />
     </div>
   )
