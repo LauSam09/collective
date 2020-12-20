@@ -95,6 +95,7 @@ export default function Lists() {
             setCategoryModalOpen(false)
             setTimeout(() => setItemBeingEdited(undefined), 250)
           }}
+          categories={categories}
         />
       )}
       {categoriesLoaded ? (

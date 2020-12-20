@@ -17,3 +17,25 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.category {
+  display: flex;
+  padding: 10px;
+  background-color: var(--secondary-colour);
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.category:hover {
+  background-color: var(--highlight-colour);
+  cursor: pointer;
+}
+
+.category span {
+  flex-grow: 1;
+}

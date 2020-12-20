@@ -1,7 +1,11 @@
 import React from "react"
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
+import {
+  faShoppingBasket,
+  faWindowClose,
+} from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+import { Category } from "models"
 import { Button, Modal } from "components"
 
 import classes from "./CategoryModal.module.css"
@@ -10,10 +14,11 @@ type CategoryModalProps = {
   isOpen: boolean
   name: string
   close: () => void
+  categories: Category[]
 }
 
 export default function CategoryModal(props: CategoryModalProps) {
-  const { isOpen, name, close } = props
+  const { isOpen, name, close, categories } = props
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close} closeTimeoutMS={250}>
@@ -25,7 +30,21 @@ export default function CategoryModal(props: CategoryModalProps) {
             <FontAwesomeIcon icon={faWindowClose} size="2x" />
           </Button>
         </div>
-        <div></div>
+        <div>
+          <ul className={classes.list}>
+            {categories.map((category) => (
+              <li key={category.id} className={classes.category}>
+                <span>{category.name}</span>
+                <FontAwesomeIcon
+                  icon={faShoppingBasket}
+                  className={classes.icon}
+                  style={{ color: category?.colour || "inherit" }}
+                  size="lg"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
     </Modal>
   )
