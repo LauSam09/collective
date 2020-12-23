@@ -4,7 +4,11 @@ import firebase from "firebase"
 
 import { Category, Item, ItemEntity } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
-import { ListItem, upsertItem } from "store/actions"
+import {
+  ListItem,
+  upsertItem,
+  removeItem as removeItemAction,
+} from "store/actions"
 
 export default function useList() {
   const db = firebase.firestore()
@@ -97,8 +101,11 @@ export default function useList() {
                       listId: group?.defaultList || "",
                     } as ListItem)
                   )
-                : setItems((items) =>
-                    items.filter((item) => item.id !== change.doc.id)
+                : dispatch(
+                    removeItemAction({
+                      id: change.doc.id,
+                      listId: group?.defaultList || "",
+                    })
                   )
               break
             }
