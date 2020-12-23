@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import classNames from "classnames/bind"
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faBars,
@@ -20,11 +20,11 @@ export default function Navigation() {
 
   return (
     <div className={classes.container}>
-      <Link to="/">
+      <NavLink to="/">
         <h2>
           Collective <small>{process.env.REACT_APP_VERSION}</small>
         </h2>
-      </Link>
+      </NavLink>
       <button
         className={classes.toggle}
         onClick={() => setHideActions((hideActions) => !hideActions)}
@@ -36,10 +36,14 @@ export default function Navigation() {
           {authenticated && (
             <>
               <li onClick={() => setHideActions(true)}>
-                <Link to="/">Lists</Link>
+                <NavLink exact to="/lists">
+                  Lists
+                </NavLink>
               </li>
               <li onClick={() => setHideActions(true)}>
-                <Link to="/recipes">Recipes</Link>
+                <NavLink exact to="/recipes">
+                  Recipes
+                </NavLink>
               </li>
             </>
           )}

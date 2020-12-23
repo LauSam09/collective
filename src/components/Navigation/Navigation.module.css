@@ -45,6 +45,10 @@
   background-color: var(--highlight-colour);
 }
 
+:global a.active {
+  font-weight: bold;
+}
+
 .toggle {
   cursor: pointer;
   display: none;
