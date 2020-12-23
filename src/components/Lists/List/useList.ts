@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
-import firebase from "firebase"
+import firebase from "firebase/app"
 
 import { Item, ItemEntity } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"

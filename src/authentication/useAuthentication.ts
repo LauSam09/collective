@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
-import firebase from "firebase"
 import LogRocket from "logrocket"
+import firebase from "firebase/app"
+import "firebase/auth"
+import "firebase/firestore"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
