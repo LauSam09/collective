@@ -21,7 +21,6 @@ import { RootState } from "store/reducers"
 export default function Lists() {
   const {
     categoriesLoaded,
-    categories,
     addItem,
     deleteItem,
     removeItem,
@@ -31,11 +30,16 @@ export default function Lists() {
     editItem,
   } = useList()
   const items = useSelector((state: RootState) => state.listState.items)
+  const categories = useSelector(
+    (state: RootState) => state.categoryState.categories
+  )
   const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState("")
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
   const [modalOpen, setModalOpen] = useState(false)
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
+
+  // TODO If an item has a category that no longer exists, this list will filter it out incorrectly
   const categorisedItems = items
     .filter((item) => !item.category)
     .sort((a, b) => a.name.localeCompare(b.name))

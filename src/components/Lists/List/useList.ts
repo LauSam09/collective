@@ -2,19 +2,20 @@ import { useContext, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import firebase from "firebase"
 
-import { Category, Item, ItemEntity } from "models"
+import { Item, ItemEntity } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 import {
   ListItem,
   upsertItem,
   removeItem as removeItemAction,
-} from "store/actions"
+  getCategories,
+  ListCategory,
+} from "store"
 
 export default function useList() {
   const db = firebase.firestore()
   const dispatch = useDispatch()
   const [items, setItems] = useState<Item[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
   const [categoriesLoaded, setCategoriesLoaded] = useState(false)
   const { group } = useContext(AuthenticationContext)
 
@@ -36,18 +37,25 @@ export default function useList() {
         .collection("categories")
         .get()
         .then((querySnapshot) => {
-          setCategories(
-            querySnapshot.docs.map(
-              (doc) => ({ ...doc.data(), id: doc.id } as Category)
+          dispatch(
+            getCategories(
+              querySnapshot.docs.map(
+                (doc) =>
+                  ({
+                    ...doc.data(),
+                    id: doc.id,
+                    listId: group.defaultList || "",
+                  } as ListCategory)
+              )
             )
           )
         })
         .then(() => setCategoriesLoaded(true))
     } else {
-      setCategories([])
+      dispatch(getCategories([]))
       setCategoriesLoaded(true)
     }
-  }, [group, db])
+  }, [group, db, dispatch])
 
   useEffect(() => {
     const unsubscribe = db
@@ -142,7 +150,7 @@ export default function useList() {
 
   const setCategory = async (id: string, category?: string) => {
     await getItemsCollection().doc(id).update({
-      category: category,
+      category,
     })
   }
 
@@ -192,7 +200,6 @@ export default function useList() {
 
   return {
     categoriesLoaded,
-    categories,
     addItem,
     deleteItem,
     removeItem,
