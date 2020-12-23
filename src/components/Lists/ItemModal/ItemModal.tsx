@@ -3,31 +3,27 @@ import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button, Modal } from "components"
-import { Category, Item } from "models"
+import { Item } from "models"
 
 import classes from "./ItemModal.module.css"
 import { useForm } from "react-hook-form"
+import { useSelector } from "react-redux"
+import { RootState } from "store/reducers"
 
 type Props = {
   item: Item
   open: boolean
   close: () => void
-  categories: Category[]
   removeItem: () => Promise<void>
   deleteItem: () => Promise<void>
   updateItem: (item: Item) => Promise<void>
 }
 
 export default function ItemModal(props: Props) {
-  const {
-    item,
-    open,
-    close,
-    categories,
-    removeItem,
-    deleteItem,
-    updateItem,
-  } = props
+  const { item, open, close, removeItem, deleteItem, updateItem } = props
+  const categories = useSelector(
+    (state: RootState) => state.categoryState.categories
+  )
   const { register, formState, handleSubmit } = useForm({
     defaultValues: item,
     mode: "onChange",

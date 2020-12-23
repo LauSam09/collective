@@ -92,7 +92,6 @@ export default function Lists() {
             setModalOpen(false)
             setTimeout(() => setItemBeingEdited(undefined), 250)
           }}
-          categories={categories}
           removeItem={() => removeItem(itemBeingEdited.id)}
           deleteItem={() => deleteItem(itemBeingEdited.id)}
           updateItem={async (item) => {
