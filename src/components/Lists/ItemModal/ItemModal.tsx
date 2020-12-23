@@ -79,8 +79,14 @@ export default function ItemModal(props: Props) {
           </div>
           <div className={classes.actions}>
             <label>Actions</label>
-            <button onClick={handleRemoveItem}>Remove From List</button>
-            <button onClick={handleDeleteItem} style={{ color: "red" }}>
+            <button type="button" onClick={handleRemoveItem}>
+              Remove From List
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteItem}
+              style={{ color: "red" }}
+            >
               Delete
             </button>
           </div>
