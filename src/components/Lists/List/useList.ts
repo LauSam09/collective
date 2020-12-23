@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import firebase from "firebase/app"
 
 import { Item, ItemEntity } from "models"
@@ -10,12 +10,13 @@ import {
   removeItem as removeItemAction,
   getCategories,
   ListCategory,
+  RootState,
 } from "store"
 
 export default function useList() {
   const db = firebase.firestore()
   const dispatch = useDispatch()
-  const [items, setItems] = useState<Item[]>([])
+  const items = useSelector((state: RootState) => state.listState.items)
   const [categoriesLoaded, setCategoriesLoaded] = useState(false)
   const { group } = useContext(AuthenticationContext)
 
@@ -101,9 +102,10 @@ export default function useList() {
               break
             }
             case "removed":
-              setItems((items) =>
-                items.filter((item) => item.id !== change.doc.id)
-              )
+              removeItemAction({
+                id: change.doc.id,
+                listId: group?.defaultList || "",
+              })
               break
           }
         })
@@ -161,17 +163,6 @@ export default function useList() {
     })
   }
 
-  const removeAll = async () => {
-    const batch = db.batch()
-
-    for (const item of items) {
-      const ref = getItemsCollection().doc(item.id)
-      batch.update(ref, { added: false })
-    }
-
-    await batch.commit()
-  }
-
   const removeAllCompleted = async () => {
     const batch = db.batch()
 
@@ -181,15 +172,6 @@ export default function useList() {
     }
 
     await batch.commit()
-  }
-
-  const updateNotes = async (id: string, notes: string | undefined) => {
-    await getItemsCollection()
-      .doc(id)
-      .update({
-        notes:
-          notes === undefined ? firebase.firestore.FieldValue.delete() : notes,
-      })
   }
 
   const editItem = async (item: Item) => {
@@ -203,11 +185,9 @@ export default function useList() {
     addItem,
     deleteItem,
     removeItem,
-    removeAll,
     removeAllCompleted,
     setCompletionStatus,
     setCategory,
-    updateNotes,
     editItem,
   }
 }
