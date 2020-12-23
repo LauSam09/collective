@@ -90,15 +90,12 @@ export default function useList() {
               const modifiedItem = change.doc.data()
               const { added, ...rest } = modifiedItem
               added
-                ? setItems((items) =>
-                    items.filter((item) => item.id === change.doc.id).length ===
-                    0
-                      ? [...items, { ...rest, id: change.doc.id } as Item]
-                      : items.map((item) =>
-                          item.id === change.doc.id
-                            ? ({ ...rest, id: change.doc.id } as Item)
-                            : { ...item }
-                        )
+                ? dispatch(
+                    upsertItem({
+                      ...rest,
+                      id: change.doc.id,
+                      listId: group?.defaultList || "",
+                    } as ListItem)
                   )
                 : setItems((items) =>
                     items.filter((item) => item.id !== change.doc.id)
