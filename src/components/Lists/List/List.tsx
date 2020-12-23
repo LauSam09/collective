@@ -1,4 +1,5 @@
 import React, { FormEvent, useRef, useState } from "react"
+import { useSelector } from "react-redux"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faCircleNotch,
@@ -15,13 +16,11 @@ import { ItemIcon, Item as ItemModel } from "models"
 
 import classes from "./List.module.css"
 import CategoryModal from "../CategoryModal"
-import { useSelector } from "react-redux"
 import { RootState } from "store/reducers"
 
 export default function Lists() {
   const {
     categoriesLoaded,
-    // items,
     categories,
     addItem,
     deleteItem,

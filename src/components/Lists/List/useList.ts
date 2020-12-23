@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import firebase from "firebase"
 
@@ -26,23 +26,6 @@ export default function useList() {
       .doc(group?.defaultList)
       .collection("items")
   }
-
-  const fetchItems = useCallback(async () => {
-    const querySnapshot = await db
-      .collection("groups")
-      .doc(group?.id)
-      .collection("lists")
-      .doc(group?.defaultList)
-      .collection("items")
-      .get()
-
-    const itemsToSet: Item[] = []
-    querySnapshot.forEach((item) =>
-      itemsToSet.push({ ...item.data(), id: item.id } as Item)
-    )
-
-    setItems(itemsToSet)
-  }, [group, db])
 
   useEffect(() => {
     if (group) {
@@ -209,9 +192,7 @@ export default function useList() {
 
   return {
     categoriesLoaded,
-    items,
     categories,
-    fetchItems,
     addItem,
     deleteItem,
     removeItem,

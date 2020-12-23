@@ -8,7 +8,10 @@ const initialState: ListState = {
   items: [],
 }
 
-export default function (state = initialState, action: ListActionTypes) {
+export default function (
+  state = initialState,
+  action: ListActionTypes
+): ListState {
   const { type, payload } = action
   switch (type) {
     case UPSERT_ITEM: {
@@ -21,14 +24,14 @@ export default function (state = initialState, action: ListActionTypes) {
           ...state,
           items: state.items.map((i) => {
             return i.id === payload.id && i.listId === payload.listId
-              ? payload
+              ? (payload as ListItem)
               : i
           }),
         }
       } else {
         return {
           ...state,
-          items: [...state.items, payload],
+          items: [...state.items, payload as ListItem],
         }
       }
     }
