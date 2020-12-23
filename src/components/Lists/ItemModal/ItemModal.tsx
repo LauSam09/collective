@@ -1,14 +1,14 @@
 import React from "react"
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useForm } from "react-hook-form"
+import { useSelector } from "react-redux"
 
 import { Button, Modal } from "components"
+import { RootState } from "store"
 import { Item } from "models"
 
 import classes from "./ItemModal.module.css"
-import { useForm } from "react-hook-form"
-import { useSelector } from "react-redux"
-import { RootState } from "store/reducers"
 
 type Props = {
   item: Item

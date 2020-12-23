@@ -13,10 +13,10 @@ import { Button } from "components"
 import Item from "./Item"
 import EditModal from "../ItemModal"
 import { ItemIcon, Item as ItemModel } from "models"
+import { RootState } from "store"
+import CategoryModal from "../CategoryModal"
 
 import classes from "./List.module.css"
-import CategoryModal from "../CategoryModal"
-import { RootState } from "store/reducers"
 
 export default function Lists() {
   const {
