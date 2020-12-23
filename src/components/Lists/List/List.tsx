@@ -122,7 +122,10 @@ export default function Lists() {
             <Button
               onClick={removeAllCompleted}
               title="Clear completed"
-              disabled={!categoriesLoaded}
+              disabled={
+                !categoriesLoaded ||
+                items.filter((i) => i.completed).length === 0
+              }
             >
               <FontAwesomeIcon icon={faTrash} size="1x" />
             </Button>
