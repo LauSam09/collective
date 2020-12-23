@@ -15,11 +15,13 @@ import { ItemIcon, Item as ItemModel } from "models"
 
 import classes from "./List.module.css"
 import CategoryModal from "../CategoryModal"
+import { useSelector } from "react-redux"
+import { RootState } from "store/reducers"
 
 export default function Lists() {
   const {
     categoriesLoaded,
-    items,
+    // items,
     categories,
     addItem,
     deleteItem,
@@ -29,6 +31,7 @@ export default function Lists() {
     setCategory,
     editItem,
   } = useList()
+  const items = useSelector((state: RootState) => state.listState.items)
   const inputRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState("")
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()

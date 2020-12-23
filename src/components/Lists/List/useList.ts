@@ -1,11 +1,14 @@
 import { useCallback, useContext, useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
 import firebase from "firebase"
 
 import { Category, Item, ItemEntity } from "models"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { ListItem, upsertItem } from "store/actions"
 
 export default function useList() {
   const db = firebase.firestore()
+  const dispatch = useDispatch()
   const [items, setItems] = useState<Item[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [categoriesLoaded, setCategoriesLoaded] = useState(false)
@@ -73,10 +76,13 @@ export default function useList() {
               const addedItem = change.doc.data()
               const { added, ...rest } = addedItem
               added &&
-                setItems((items) => [
-                  ...items,
-                  { ...rest, id: change.doc.id } as Item, // TODO I think can cast type in firestore api
-                ])
+                dispatch(
+                  upsertItem({
+                    ...rest,
+                    id: change.doc.id,
+                    listId: group?.defaultList || "",
+                  } as ListItem)
+                )
               break
             }
 
@@ -111,7 +117,7 @@ export default function useList() {
     return () => {
       unsubscribe()
     }
-  }, [group, db])
+  }, [group, db, dispatch])
 
   const addItem = async (item: Item) => {
     const { id, ...sanitisedItem } = item
