@@ -1,16 +1,16 @@
 import React, { useState } from "react"
+import { useSelector } from "react-redux"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button, Pill } from "components"
 import RecipeModal from "./RecipeModal"
 import { Recipe } from "models"
+import { RootState } from "store/reducers"
 
 import useRecipes from "./useRecipes"
 
 import classes from "./Recipes.module.css"
-import { useSelector } from "react-redux"
-import { RootState } from "store/reducers"
 
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
@@ -82,8 +82,12 @@ export default function Recipes() {
                 a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
               )
               .map((recipe) => (
-                <li key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
-                  {recipe.name}
+                <li
+                  key={recipe.id}
+                  onClick={() => handleRecipeClick(recipe)}
+                  className={classes.recipe}
+                >
+                  <span>{recipe.name}</span>
                   <select
                     value={
                       recipe.days?.[0] === undefined ? -1 : recipe.days?.[0]

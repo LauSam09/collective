@@ -41,18 +41,27 @@
   padding-left: 0;
 }
 
-.recipes ul li {
+.recipe {
+  display: flex;
   background-color: var(--primary-colour);
   padding: 5px;
   border-radius: 5px;
   margin-bottom: 5px;
 }
 
-.recipes ul li:hover {
+.recipe:hover {
   background-color: var(--highlight-colour);
   cursor: pointer;
 }
 
-.recipes select {
-  float: right;
+.recipe span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+  text-align: left;
+}
+
+.recipe select {
+  border-radius: 5px;
 }
