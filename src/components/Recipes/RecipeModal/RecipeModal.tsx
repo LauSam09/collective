@@ -1,6 +1,10 @@
 import React, { FormEvent, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus, faWindowClose } from "@fortawesome/free-solid-svg-icons"
+import {
+  faPlus,
+  faTrash,
+  faWindowClose,
+} from "@fortawesome/free-solid-svg-icons"
 
 import { Button, Modal } from "components"
 import { Recipe } from "models"
@@ -99,19 +103,29 @@ export default function RecipeModal(props: RecipeModalProps) {
             />
           </div>
           <div>
-            <label>
-              Ingredients{" "}
+            <h4>
+              Ingredients
               <FontAwesomeIcon
                 icon={faPlus}
                 style={{ float: "right", cursor: "pointer" }}
                 onClick={handleAddIngredient}
               />
-            </label>
+            </h4>
             {ingredients.length ? (
-              ingredients.map((ingredient) => (
-                <span style={{ display: "block" }} key={ingredient}>
-                  {ingredient}
-                </span>
+              ingredients.map((ingredient, index) => (
+                <div key={index} className={classes.ingredient}>
+                  <span>{ingredient}</span>
+                  <Button type="button">
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      onClick={(_) => {
+                        const ingreds = [...ingredients]
+                        ingreds.splice(index, 1)
+                        setIngredients(ingreds)
+                      }}
+                    />
+                  </Button>
+                </div>
               ))
             ) : (
               <small>No ingredients added yet</small>
