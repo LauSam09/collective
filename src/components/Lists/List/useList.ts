@@ -130,13 +130,20 @@ export default function useList() {
       .get()
 
     if (existing.empty) {
-      await getItemsCollection().add({ ...itemEntity, added: true })
-    } else {
-      await getItemsCollection().doc(existing.docs[0].id).update({
-        name: itemEntity.name,
+      await getItemsCollection().add({
+        ...itemEntity,
         added: true,
-        completed: false,
+        count: 1,
       })
+    } else {
+      await getItemsCollection()
+        .doc(existing.docs[0].id)
+        .update({
+          name: itemEntity.name,
+          added: true,
+          completed: false,
+          count: (existing.docs[0].data().count ?? 0) + 1,
+        })
     }
   }
 

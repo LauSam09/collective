@@ -4,4 +4,5 @@ export default interface ItemEntity {
   completed: boolean
   category?: string
   notes?: string
+  count?: number
 }
