@@ -41,7 +41,7 @@ export default function Lists() {
 
   // TODO If an item has a category that no longer exists, this list will filter it out incorrectly
   const categorisedItems = items
-    .filter((item) => !item.category)
+    .filter((item) => !item.category || item.category === "-")
     .sort((a, b) => a.name.localeCompare(b.name))
     .concat(
       categories

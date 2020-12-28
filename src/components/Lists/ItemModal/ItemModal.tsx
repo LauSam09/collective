@@ -45,6 +45,9 @@ export default function ItemModal(props: Props) {
   }
 
   async function onSubmit(data: Item) {
+    if (data.category === "-") {
+      delete data.category
+    }
     await updateItem({ ...item, ...data })
   }
 
