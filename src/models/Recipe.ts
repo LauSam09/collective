@@ -3,4 +3,5 @@ export default interface Recipe {
   name: string
   days: number[] | undefined
   recipeUrl?: string
+  ingredients?: string[]
 }

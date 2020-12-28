@@ -41,6 +41,7 @@ export default function useRecipes() {
                   name: data.name,
                   days: data.days,
                   recipeUrl: data.recipeUrl,
+                  ingredients: data.ingredients,
                 }
                 // Every time recipes re-renders, this hook is fired, and items are re-added.
                 if (!recipes.filter((r) => r.id === recipe.id).length) {

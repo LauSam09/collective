@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faWindowClose } from "@fortawesome/free-solid-svg-icons"
 
 import { Button, Modal } from "components"
 import { Recipe } from "models"
@@ -21,10 +21,12 @@ export default function RecipeModal(props: RecipeModalProps) {
 
   const [name, setName] = useState(recipe?.name || "")
   const [recipeUrl, setRecipeUrl] = useState(recipe?.recipeUrl || "")
+  const [ingredients, setIngredients] = useState(recipe?.ingredients || [])
 
   useEffect(() => {
     setName(recipe?.name || "")
     setRecipeUrl(recipe?.recipeUrl || "")
+    setIngredients(recipe?.ingredients || [])
   }, [recipe, open])
 
   const valid =
@@ -75,11 +77,26 @@ export default function RecipeModal(props: RecipeModalProps) {
                 </small>
               )}
             </label>
-
             <input
               value={recipeUrl}
               onChange={(e) => setRecipeUrl(e.target.value)}
             />
+          </div>
+          <div>
+            <label>
+              Ingredients{" "}
+              <FontAwesomeIcon
+                icon={faPlus}
+                style={{ float: "right", cursor: "pointer" }}
+              />
+            </label>
+            {ingredients.length ? (
+              ingredients.map((ingredient) => (
+                <span key={ingredient}>{ingredient}</span>
+              ))
+            ) : (
+              <small>No ingredients added yet</small>
+            )}
           </div>
           <div className={classes.modalActions}>
             <Button type="button" onClick={close}>
