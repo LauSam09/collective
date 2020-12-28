@@ -33,6 +33,8 @@
 
 .ingredient {
   display: flex;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .ingredient:nth-child(even) {

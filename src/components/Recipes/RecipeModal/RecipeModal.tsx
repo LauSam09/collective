@@ -111,25 +111,23 @@ export default function RecipeModal(props: RecipeModalProps) {
                 onClick={handleAddIngredient}
               />
             </h4>
-            {ingredients.length ? (
-              ingredients.map((ingredient, index) => (
-                <div key={index} className={classes.ingredient}>
-                  <span>{ingredient}</span>
-                  <Button type="button">
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      onClick={(_) => {
-                        const ingreds = [...ingredients]
-                        ingreds.splice(index, 1)
-                        setIngredients(ingreds)
-                      }}
-                    />
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <small>No ingredients added yet</small>
-            )}
+            {ingredients.length
+              ? ingredients.map((ingredient, index) => (
+                  <div key={index} className={classes.ingredient}>
+                    <span>{ingredient}</span>
+                    <Button type="button">
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        onClick={(_) => {
+                          const ingreds = [...ingredients]
+                          ingreds.splice(index, 1)
+                          setIngredients(ingreds)
+                        }}
+                      />
+                    </Button>
+                  </div>
+                ))
+              : !addIngredient && <small>No ingredients added yet</small>}
             {addIngredient && (
               <input
                 onChange={(e) => setIngredient(e.target.value)}
