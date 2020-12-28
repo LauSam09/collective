@@ -30,6 +30,7 @@ export default function Lists() {
     editItem,
   } = useList()
   const items = useSelector((state: RootState) => state.listState.items)
+  const completedItems = items.filter((i) => i.completed)
   const categories = useSelector(
     (state: RootState) => state.categoryState.categories
   )
@@ -116,6 +117,13 @@ export default function Lists() {
       {categoriesLoaded ? (
         <>
           <div className={classes.actions}>
+            <div className={classes.count}>
+              <span>
+                {completedItems.length
+                  ? `${completedItems.length}/${items.length}`
+                  : items.length}
+              </span>
+            </div>
             <Button onClick={() => inputRef.current?.focus()}>
               <FontAwesomeIcon icon={faPlus} size="1x" />
             </Button>

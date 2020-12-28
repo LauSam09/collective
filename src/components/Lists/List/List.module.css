@@ -5,7 +5,8 @@
 }
 
 .actions {
-  text-align: right;
+  /* text-align: right; */
+  display: flex;
 }
 
 .addForm {
@@ -65,4 +66,17 @@
   text-align: center;
   border-radius: 5px;
   padding: 30px;
+}
+
+.count {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.count span {
+  background-color: var(--primary-colour);
+  padding: 3px 10px;
+  border-radius: 5px;
 }
