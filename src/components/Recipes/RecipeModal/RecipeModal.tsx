@@ -22,11 +22,15 @@ export default function RecipeModal(props: RecipeModalProps) {
   const [name, setName] = useState(recipe?.name || "")
   const [recipeUrl, setRecipeUrl] = useState(recipe?.recipeUrl || "")
   const [ingredients, setIngredients] = useState(recipe?.ingredients || [])
+  const [addIngredient, setAddIngredient] = useState(false)
+  const [ingredient, setIngredient] = useState("")
 
   useEffect(() => {
     setName(recipe?.name || "")
     setRecipeUrl(recipe?.recipeUrl || "")
     setIngredients(recipe?.ingredients || [])
+    setAddIngredient(false)
+    setIngredient("")
   }, [recipe, open])
 
   const valid =
@@ -41,13 +45,25 @@ export default function RecipeModal(props: RecipeModalProps) {
     e.preventDefault()
 
     if (recipe === undefined) {
-      await addRecipe({ name, id: "", days: [], recipeUrl })
+      await addRecipe({ name, id: "", days: [], recipeUrl, ingredients })
     } else {
-      await updateRecipe({ ...recipe, name, recipeUrl })
+      await updateRecipe({ ...recipe, name, recipeUrl, ingredients })
     }
     setName("")
     setRecipeUrl("")
     close()
+  }
+
+  function handleAddIngredient() {
+    setAddIngredient(true)
+  }
+
+  function handleIngredientSubmit() {
+    if (ingredient) {
+      setIngredients([...ingredients, ingredient.trim()])
+      setIngredient("")
+      setAddIngredient(false)
+    }
   }
 
   return (
@@ -88,14 +104,24 @@ export default function RecipeModal(props: RecipeModalProps) {
               <FontAwesomeIcon
                 icon={faPlus}
                 style={{ float: "right", cursor: "pointer" }}
+                onClick={handleAddIngredient}
               />
             </label>
             {ingredients.length ? (
               ingredients.map((ingredient) => (
-                <span key={ingredient}>{ingredient}</span>
+                <span style={{ display: "block" }} key={ingredient}>
+                  {ingredient}
+                </span>
               ))
             ) : (
               <small>No ingredients added yet</small>
+            )}
+            {addIngredient && (
+              <input
+                onChange={(e) => setIngredient(e.target.value)}
+                onBlur={handleIngredientSubmit}
+                autoFocus={true}
+              />
             )}
           </div>
           <div className={classes.modalActions}>
