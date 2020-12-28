@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSave, faWindowClose } from "@fortawesome/free-solid-svg-icons"
+import { faWindowClose } from "@fortawesome/free-solid-svg-icons"
 
 import { Button, Modal } from "components"
 import { Recipe } from "models"
@@ -81,14 +81,12 @@ export default function RecipeModal(props: RecipeModalProps) {
               onChange={(e) => setRecipeUrl(e.target.value)}
             />
           </div>
-
-          <div className={classes.actions}>
+          <div className={classes.modalActions}>
+            <Button type="button" onClick={close}>
+              Cancel
+            </Button>
             <Button type="submit" disabled={!valid}>
-              <FontAwesomeIcon
-                icon={faSave}
-                size="2x"
-                style={{ color: valid ? "inherit" : "grey" }}
-              />
+              Save
             </Button>
           </div>
         </form>

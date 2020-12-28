@@ -1,18 +1,10 @@
-.modal {
-  width: 100%;
-  padding: 20px;
-  color: white;
-  background-color: var(--primary-colour);
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
 .header {
-  margin-bottom: 20px;
+  display: flex;
 }
 
 .header h3 {
   display: inline;
+  flex: 1;
 }
 
 .header button {
@@ -31,13 +23,23 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   margin-bottom: 15px;
-}
-
-.actions {
-  text-align: right;
+  border-radius: 5px;
 }
 
 .modal a {
   color: #c0c0df;
   margin: 10px 0;
+}
+
+.modalActions {
+  margin-top: 10px;
+  display: flex;
+}
+
+.modalActions button:first-child {
+  margin-left: auto;
+}
+
+.modalActions button:last-child {
+  background-color: var(--secondary-colour);
 }
