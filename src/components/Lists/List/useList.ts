@@ -102,10 +102,12 @@ export default function useList() {
               break
             }
             case "removed":
-              removeItemAction({
-                id: change.doc.id,
-                listId: group?.defaultList || "",
-              })
+              dispatch(
+                removeItemAction({
+                  id: change.doc.id,
+                  listId: group?.defaultList || "",
+                })
+              )
               break
           }
         })
