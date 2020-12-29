@@ -88,7 +88,7 @@ export default function RecipeModal(props: RecipeModalProps) {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              autoFocus
+              autoFocus={!recipe}
             />
           </div>
           <div>
