@@ -27,7 +27,7 @@ export default function Ingredient(props: IngredientProps) {
       <Pill text={name} remove={() => removeItem(addedIngredient?.id)} />
     </div>
   ) : (
-    <div>
+    <div className={classes.unadded}>
       <Pill
         text={name}
         remove={() =>

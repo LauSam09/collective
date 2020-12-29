@@ -7,11 +7,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 
 import useList from "components/Lists/List/useList"
+import Ingredient from "./Ingredient"
 import { Button, Modal } from "components"
 import { Recipe } from "models"
 
 import classes from "./RecipeModal.module.css"
-import Ingredient from "./Ingredient"
 
 type RecipeModalProps = {
   open: boolean
@@ -66,11 +66,11 @@ export default function RecipeModal(props: RecipeModalProps) {
   }
 
   function handleIngredientSubmit() {
-    if (ingredient) {
+    if (ingredient.trim()) {
       setIngredients([...ingredients, ingredient.trim()])
-      setIngredient("")
-      setAddIngredient(false)
     }
+    setIngredient("")
+    setAddIngredient(false)
   }
 
   return (

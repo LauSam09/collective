@@ -1,3 +1,12 @@
 .added div {
   background-color: green;
 }
+
+.added button:hover,
+.unadded button:hover {
+  background-color: inherit !important;
+}
+
+.unadded div {
+  background-color: inherit;
+}
