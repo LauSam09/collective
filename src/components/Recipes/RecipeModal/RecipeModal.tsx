@@ -5,14 +5,14 @@ import {
   faTrash,
   faWindowClose,
 } from "@fortawesome/free-solid-svg-icons"
+import { useSelector } from "react-redux"
 
-import { Button, Modal } from "components"
+import { RootState } from "store"
+import useList from "components/Lists/List/useList"
+import { Button, Modal, Pill } from "components"
 import { Recipe } from "models"
 
 import classes from "./RecipeModal.module.css"
-import { useSelector } from "react-redux"
-import { RootState } from "store"
-import useList from "components/Lists/List/useList"
 
 type RecipeModalProps = {
   open: boolean
@@ -31,7 +31,7 @@ export default function RecipeModal(props: RecipeModalProps) {
   const [ingredients, setIngredients] = useState(recipe?.ingredients || [])
   const [addIngredient, setAddIngredient] = useState(false)
   const [ingredient, setIngredient] = useState("")
-  useList()
+  const { addItem, removeItem } = useList()
   const listItems = useSelector((state: RootState) => state.listState.items)
 
   useEffect(() => {
@@ -124,15 +124,26 @@ export default function RecipeModal(props: RecipeModalProps) {
             {ingredients.length
               ? ingredients.map((ingredient, index) => (
                   <div key={index} className={classes.ingredient}>
-                    <span
-                      style={{
-                        backgroundColor: isAddedToList(ingredient)
-                          ? "green"
-                          : "blue",
-                      }}
-                    >
-                      {ingredient}
-                    </span>
+                    {/* Separating out to separate component would allow us to store the fetched item */}
+                    {isAddedToList(ingredient) ? (
+                      <div className={classes.added}>
+                        <Pill text={ingredient} remove={() => null} />
+                      </div>
+                    ) : (
+                      <div>
+                        <Pill
+                          text={ingredient}
+                          remove={() =>
+                            addItem({
+                              name: ingredient,
+                              id: "",
+                              completed: false,
+                            })
+                          }
+                          icon={<FontAwesomeIcon icon={faPlus} />}
+                        />
+                      </div>
+                    )}
                     <Button
                       type="button"
                       onClick={(_) => {

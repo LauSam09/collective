@@ -41,14 +41,18 @@
   background-color: var(--secondary-colour);
 }
 
-.ingredient button {
-  background-color: inherit;
-}
-
-.ingredient span {
+.ingredient > div {
   flex: 1;
   display: flex;
   align-items: center;
+}
+
+.ingredient .added div {
+  background-color: green;
+}
+
+.ingredient button {
+  background-color: inherit;
 }
 
 .modalActions {
