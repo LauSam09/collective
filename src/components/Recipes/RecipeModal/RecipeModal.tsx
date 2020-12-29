@@ -10,6 +10,9 @@ import { Button, Modal } from "components"
 import { Recipe } from "models"
 
 import classes from "./RecipeModal.module.css"
+import { useSelector } from "react-redux"
+import { RootState } from "store"
+import useList from "components/Lists/List/useList"
 
 type RecipeModalProps = {
   open: boolean
@@ -28,6 +31,8 @@ export default function RecipeModal(props: RecipeModalProps) {
   const [ingredients, setIngredients] = useState(recipe?.ingredients || [])
   const [addIngredient, setAddIngredient] = useState(false)
   const [ingredient, setIngredient] = useState("")
+  useList()
+  const listItems = useSelector((state: RootState) => state.listState.items)
 
   useEffect(() => {
     setName(recipe?.name || "")
@@ -68,6 +73,11 @@ export default function RecipeModal(props: RecipeModalProps) {
       setIngredient("")
       setAddIngredient(false)
     }
+  }
+
+  function isAddedToList(ingredient: string): boolean {
+    const lowerName = ingredient.toLowerCase()
+    return listItems.find((i) => i.lowerName === lowerName) !== undefined
   }
 
   return (
@@ -114,16 +124,24 @@ export default function RecipeModal(props: RecipeModalProps) {
             {ingredients.length
               ? ingredients.map((ingredient, index) => (
                   <div key={index} className={classes.ingredient}>
-                    <span>{ingredient}</span>
-                    <Button type="button">
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        onClick={(_) => {
-                          const ingreds = [...ingredients]
-                          ingreds.splice(index, 1)
-                          setIngredients(ingreds)
-                        }}
-                      />
+                    <span
+                      style={{
+                        backgroundColor: isAddedToList(ingredient)
+                          ? "green"
+                          : "blue",
+                      }}
+                    >
+                      {ingredient}
+                    </span>
+                    <Button
+                      type="button"
+                      onClick={(_) => {
+                        const ingreds = [...ingredients]
+                        ingreds.splice(index, 1)
+                        setIngredients(ingreds)
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
                     </Button>
                   </div>
                 ))
