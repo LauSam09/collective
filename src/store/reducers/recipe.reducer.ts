@@ -3,7 +3,9 @@ import {
   ADD_RECIPE,
   DELETE_RECIPE,
   EDIT_RECIPE,
+  FETCH_RECIPES,
   RecipeActionTypes,
+  SET_RECIPE_DAYS,
 } from "store/actions"
 
 type RecipeState = {
@@ -34,6 +36,22 @@ export default function (state = initialState, action: RecipeActionTypes) {
       return {
         ...state,
         recipes: state.recipes.filter((recipe) => recipe.id !== action.payload),
+      }
+
+    case SET_RECIPE_DAYS:
+      return {
+        ...state,
+        recipes: state.recipes.map((recipe) =>
+          recipe.id === action.payload.id
+            ? { ...recipe, days: action.payload.days }
+            : recipe
+        ),
+      }
+
+    case FETCH_RECIPES:
+      return {
+        ...state,
+        recipes: action.payload,
       }
 
     default:

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useSelector } from "react-redux"
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faCircleNotch, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button, Pill } from "components"
@@ -15,7 +15,7 @@ import classes from "./Recipes.module.css"
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
-  const { addRecipe, setDay, updateRecipe } = useRecipes()
+  const { addRecipe, setDay, updateRecipe, loading } = useRecipes()
   const recipes = useSelector((state: RootState) => state.recipeState.recipes)
   const assignedRecipes = recipes.filter((recipe) => recipe.days !== undefined)
   const [modalOpen, setModalOpen] = useState(false)
@@ -29,6 +29,14 @@ export default function Recipes() {
   function handleRecipeClick(recipe: Recipe) {
     setSelectedRecipe(recipe)
     setModalOpen(true)
+  }
+
+  if (loading) {
+    return (
+      <div className={classes.spinner}>
+        <FontAwesomeIcon icon={faCircleNotch} className="fa-spin" />
+      </div>
+    )
   }
 
   return (
