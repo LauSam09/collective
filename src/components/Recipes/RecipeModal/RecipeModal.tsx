@@ -5,14 +5,13 @@ import {
   faTrash,
   faWindowClose,
 } from "@fortawesome/free-solid-svg-icons"
-import { useSelector } from "react-redux"
 
-import { RootState } from "store"
 import useList from "components/Lists/List/useList"
-import { Button, Modal, Pill } from "components"
+import { Button, Modal } from "components"
 import { Recipe } from "models"
 
 import classes from "./RecipeModal.module.css"
+import Ingredient from "./Ingredient"
 
 type RecipeModalProps = {
   open: boolean
@@ -32,7 +31,6 @@ export default function RecipeModal(props: RecipeModalProps) {
   const [addIngredient, setAddIngredient] = useState(false)
   const [ingredient, setIngredient] = useState("")
   const { addItem, removeItem } = useList()
-  const listItems = useSelector((state: RootState) => state.listState.items)
 
   useEffect(() => {
     setName(recipe?.name || "")
@@ -73,11 +71,6 @@ export default function RecipeModal(props: RecipeModalProps) {
       setIngredient("")
       setAddIngredient(false)
     }
-  }
-
-  function isAddedToList(ingredient: string): boolean {
-    const lowerName = ingredient.toLowerCase()
-    return listItems.find((i) => i.lowerName === lowerName) !== undefined
   }
 
   return (
@@ -124,26 +117,11 @@ export default function RecipeModal(props: RecipeModalProps) {
             {ingredients.length
               ? ingredients.map((ingredient, index) => (
                   <div key={index} className={classes.ingredient}>
-                    {/* Separating out to separate component would allow us to store the fetched item */}
-                    {isAddedToList(ingredient) ? (
-                      <div className={classes.added}>
-                        <Pill text={ingredient} remove={() => null} />
-                      </div>
-                    ) : (
-                      <div>
-                        <Pill
-                          text={ingredient}
-                          remove={() =>
-                            addItem({
-                              name: ingredient,
-                              id: "",
-                              completed: false,
-                            })
-                          }
-                          icon={<FontAwesomeIcon icon={faPlus} />}
-                        />
-                      </div>
-                    )}
+                    <Ingredient
+                      name={ingredient}
+                      addItem={addItem}
+                      removeItem={removeItem}
+                    />
                     <Button
                       type="button"
                       onClick={(_) => {
