@@ -38,7 +38,7 @@ export default function useItems() {
     const itemEntity: ItemEntity = {
       ...sanitisedItem,
       name: sanitisedItem.name.trim(),
-      lowerName: sanitisedItem.name.trim().toLowerCase(),
+      lowerName: singular(sanitisedItem.name.trim().toLowerCase()),
     }
 
     const existing = await getItemsCollection()
