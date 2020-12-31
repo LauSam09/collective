@@ -6,6 +6,7 @@ import {
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
+import { singular } from "pluralize"
 
 import useList from "./useList"
 
@@ -54,11 +55,13 @@ export default function Lists() {
         )
     )
 
+  const sanitisedName = singular(name.trim().toLowerCase())
+
   const valid =
     name &&
-    items.filter(
-      (item) => item.name.trim().toLowerCase() === name.trim().toLowerCase()
-    ).length === 0
+    !items.find(
+      (item) => singular(item.name.trim().toLowerCase()) === sanitisedName
+    )
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
