@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector } from "react-redux"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { singular } from "pluralize"
 
 import { Item } from "models"
 import { RootState } from "store"
@@ -18,9 +19,12 @@ type IngredientProps = {
 export default function Ingredient(props: IngredientProps) {
   const { name, addItem, removeItem } = props
   const listItems = useSelector((state: RootState) => state.listState.items)
-  const lowerName = name.toLowerCase()
 
-  const addedIngredient = listItems.find((i) => i.lowerName === lowerName)
+  const sanitisedName = singular(name.trim().toLowerCase())
+
+  const addedIngredient = listItems.find(
+    (i) => singular(i.name.toLowerCase()) === sanitisedName
+  )
 
   return addedIngredient ? (
     <div className={classes.added}>
