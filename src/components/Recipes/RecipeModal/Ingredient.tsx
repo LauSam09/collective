@@ -1,30 +1,21 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { singular } from "pluralize"
 
-import { Item } from "models"
-import { RootState } from "store"
+import { useItems } from "hooks"
 import { Pill } from "components"
 
 import classes from "./Ingredient.module.css"
 
 type IngredientProps = {
   name: string
-  addItem: (item: Item) => Promise<void>
-  removeItem: (id: string) => Promise<void>
 }
 
 export default function Ingredient(props: IngredientProps) {
-  const { name, addItem, removeItem } = props
-  const listItems = useSelector((state: RootState) => state.listState.items)
+  const { name } = props
+  const { addItem, getMatchingItem, removeItem } = useItems()
 
-  const sanitisedName = singular(name.trim().toLowerCase())
-
-  const addedIngredient = listItems.find(
-    (i) => singular(i.name.toLowerCase()) === sanitisedName
-  )
+  const addedIngredient = getMatchingItem(name)
 
   return addedIngredient ? (
     <div className={classes.added}>

@@ -1,16 +1,9 @@
 import React, { useContext } from "react"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { BrowserRouter as Router } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons"
 
-import {
-  ErrorBoundary,
-  Home,
-  Lists,
-  Navigation,
-  PrivateRoute,
-  Recipes,
-} from "components"
+import { Main, Navigation } from "components"
 import { AuthenticationContext } from "authentication/AuthenticationContext"
 
 import classes from "./App.module.css"
@@ -24,21 +17,7 @@ function App() {
         {loaded ? (
           <>
             <Navigation />
-            <main className={classes.content}>
-              <ErrorBoundary>
-                <Switch>
-                  <PrivateRoute path="/recipes" exact>
-                    <Recipes />
-                  </PrivateRoute>
-                  <PrivateRoute path="/lists" exact>
-                    <Lists />
-                  </PrivateRoute>
-                  <Route path="/">
-                    <Home />
-                  </Route>
-                </Switch>
-              </ErrorBoundary>
-            </main>
+            <Main />
           </>
         ) : (
           <div className={classes.spinner}>

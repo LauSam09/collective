@@ -6,7 +6,6 @@ import {
   faWindowClose,
 } from "@fortawesome/free-solid-svg-icons"
 
-import useList from "components/Lists/List/useList"
 import Ingredient from "./Ingredient"
 import { Button, Modal } from "components"
 import { Recipe } from "models"
@@ -30,7 +29,6 @@ export default function RecipeModal(props: RecipeModalProps) {
   const [ingredients, setIngredients] = useState(recipe?.ingredients || [])
   const [addIngredient, setAddIngredient] = useState(false)
   const [ingredient, setIngredient] = useState("")
-  const { addItem, removeItem } = useList()
 
   useEffect(() => {
     setName(recipe?.name || "")
@@ -117,11 +115,7 @@ export default function RecipeModal(props: RecipeModalProps) {
             {ingredients.length
               ? ingredients.map((ingredient, index) => (
                   <div key={index} className={classes.ingredient}>
-                    <Ingredient
-                      name={ingredient}
-                      addItem={addItem}
-                      removeItem={removeItem}
-                    />
+                    <Ingredient name={ingredient} />
                     <Button
                       type="button"
                       onClick={(_) => {

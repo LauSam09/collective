@@ -6,9 +6,6 @@ import {
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
-import { singular } from "pluralize"
-
-import useList from "./useList"
 
 import { Button } from "components"
 import Item from "./Item"
@@ -16,12 +13,14 @@ import EditModal from "../ItemModal"
 import { ItemIcon, Item as ItemModel } from "models"
 import { RootState } from "store"
 import CategoryModal from "../CategoryModal"
+import { useItems, useCategories } from "hooks"
 
 import classes from "./List.module.css"
 
 export default function Lists() {
+  const { categoriesLoaded } = useCategories()
   const {
-    categoriesLoaded,
+    getMatchingItem,
     addItem,
     deleteItem,
     removeItem,
@@ -29,7 +28,7 @@ export default function Lists() {
     setCompletionStatus,
     setCategory,
     editItem,
-  } = useList()
+  } = useItems()
   const items = useSelector((state: RootState) => state.listState.items)
   const completedItems = items.filter((i) => i.completed)
   const categories = useSelector(
@@ -55,13 +54,7 @@ export default function Lists() {
         )
     )
 
-  const sanitisedName = singular(name.trim().toLowerCase())
-
-  const valid =
-    name &&
-    !items.find(
-      (item) => singular(item.name.trim().toLowerCase()) === sanitisedName
-    )
+  const valid = !getMatchingItem(name)
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
