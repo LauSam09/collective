@@ -15,6 +15,10 @@ export default function Main() {
   const { group } = useContext(AuthenticationContext)
 
   useEffect(() => {
+    if (!group) {
+      return
+    }
+
     const unsubscribe = db
       .collection("groups")
       .doc(group?.id)
