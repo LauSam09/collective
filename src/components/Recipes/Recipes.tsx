@@ -14,7 +14,13 @@ import classes from "./Recipes.module.css"
 const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"]
 
 export default function Recipes() {
-  const { addRecipe, setDay, updateRecipe, loading } = useRecipes()
+  const {
+    addRecipe,
+    setDay,
+    updateRecipe,
+    deleteRecipe,
+    loading,
+  } = useRecipes()
   const recipes = useSelector((state: RootState) => state.recipeState.recipes)
   const assignedRecipes = recipes.filter((recipe) => recipe.days !== undefined)
   const [modalOpen, setModalOpen] = useState(false)
@@ -47,6 +53,7 @@ export default function Recipes() {
         addRecipe={addRecipe}
         recipe={selectedRecipe}
         updateRecipe={updateRecipe}
+        deleteRecipe={() => deleteRecipe(selectedRecipe?.id || "")}
       />
       <div className={classes.wrapper}>
         <div className={classes.header}>

@@ -19,10 +19,19 @@ type RecipeModalProps = {
   recipe?: Recipe
   addRecipe: (recipe: Recipe) => Promise<void>
   updateRecipe: (recipe: Recipe) => Promise<void>
+  deleteRecipe: () => Promise<void>
 }
 
 export default function RecipeModal(props: RecipeModalProps) {
-  const { open, recipe, recipes, addRecipe, updateRecipe, close } = props
+  const {
+    open,
+    recipe,
+    recipes,
+    addRecipe,
+    updateRecipe,
+    deleteRecipe,
+    close,
+  } = props
 
   const [name, setName] = useState(recipe?.name || "")
   const [recipeUrl, setRecipeUrl] = useState(recipe?.recipeUrl || "")
@@ -71,6 +80,11 @@ export default function RecipeModal(props: RecipeModalProps) {
     setAddIngredient(false)
   }
 
+  async function handleDeleteRecipe() {
+    await deleteRecipe()
+    close()
+  }
+
   return (
     <Modal isOpen={open} onRequestClose={close} closeTimeoutMS={250}>
       <section className={classes.modal}>
@@ -103,6 +117,19 @@ export default function RecipeModal(props: RecipeModalProps) {
               onChange={(e) => setRecipeUrl(e.target.value)}
             />
           </div>
+          {recipe && (
+            <div className={classes.actions}>
+              <label>Actions</label>
+              <button
+                type="button"
+                style={{ color: "red" }}
+                onClick={handleDeleteRecipe}
+              >
+                Delete
+              </button>
+            </div>
+          )}
+
           <div>
             <h4>
               Ingredients

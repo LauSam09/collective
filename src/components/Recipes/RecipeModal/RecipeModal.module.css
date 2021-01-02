@@ -55,6 +55,23 @@
   background-color: inherit;
 }
 
+.actions button {
+  display: block;
+  border: none;
+  color: black;
+  background-color: white;
+  margin-bottom: 5px;
+  text-align: left;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.actions button:hover {
+  background-color: var(--highlight-colour);
+  color: white;
+}
+
 .modalActions {
   margin-top: 10px;
   display: flex;
