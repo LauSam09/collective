@@ -1,4 +1,4 @@
-import React, { FormEvent, useRef, useState } from "react"
+import React, { FormEvent, useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -41,7 +41,13 @@ export default function Lists() {
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
   const [modalOpen, setModalOpen] = useState(false)
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
-  const [hideCompleted, setHideCompleted] = useState(false)
+  const [hideCompleted, setHideCompleted] = useState(
+    localStorage.getItem("hideCompleted") === "true"
+  )
+
+  useEffect(() => {
+    localStorage.setItem("hideCompleted", String(hideCompleted))
+  }, [hideCompleted])
 
   // TODO If an item has a category that no longer exists, this list will filter it out incorrectly
   const categorisedItems = items
