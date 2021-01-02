@@ -1,6 +1,7 @@
-import { AuthenticationContext } from "authentication/AuthenticationContext"
 import React, { PropsWithChildren, useContext } from "react"
 import { Route, Redirect, RouteProps } from "react-router-dom"
+
+import { AuthenticationContext } from "authentication"
 
 type PrivateRouteProps = RouteProps & PropsWithChildren<unknown>
 

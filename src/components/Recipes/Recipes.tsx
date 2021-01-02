@@ -3,11 +3,11 @@ import { useSelector } from "react-redux"
 import { faCircleNotch, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+import RecipeModal from "./RecipeModal"
 import { Button, Pill } from "components"
 import { useRecipes } from "hooks"
-import RecipeModal from "./RecipeModal"
 import { Recipe } from "models"
-import { RootState } from "store/reducers"
+import { RootState } from "store"
 
 import classes from "./Recipes.module.css"
 

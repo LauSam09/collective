@@ -5,7 +5,7 @@ import firebase from "firebase/app"
 
 import { ErrorBoundary, Home, Lists, PrivateRoute, Recipes } from "components"
 import { ListItem, upsertItem, removeItem as removeItemAction } from "store"
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 
 import classes from "./Main.module.css"
 

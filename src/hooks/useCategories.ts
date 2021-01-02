@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import firebase from "firebase/app"
 
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 import { getCategories, ListCategory } from "store"
 
 export default function useList() {

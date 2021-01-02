@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons"
 
 import { Main, Navigation } from "components"
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 
 import classes from "./App.module.css"
 

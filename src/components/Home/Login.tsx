@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import GoogleButton from "react-google-button"
 
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 
 import classes from "./Login.module.css"
 

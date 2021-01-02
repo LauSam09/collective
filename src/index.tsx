@@ -6,7 +6,7 @@ import LogRocket from "logrocket"
 
 import App from "./App"
 import * as serviceWorker from "./serviceWorker"
-import { AuthenticationContextProvider } from "./authentication/AuthenticationContext"
+import { AuthenticationContextProvider } from "./authentication"
 import store from "store"
 
 import "./index.css"

@@ -7,13 +7,13 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
 
-import { Button } from "components"
 import Item from "./Item"
-import EditModal from "../ItemModal"
-import { ItemIcon, Item as ItemModel } from "models"
-import { RootState } from "store"
 import CategoryModal from "../CategoryModal"
+import EditModal from "../ItemModal"
+import { Button } from "components"
+import { ItemIcon, Item as ItemModel } from "models"
 import { useItems, useCategories } from "hooks"
+import { RootState } from "store"
 
 import classes from "./List.module.css"
 

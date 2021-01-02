@@ -3,14 +3,14 @@ import { useDispatch } from "react-redux"
 import firebase from "firebase/app"
 
 import { Recipe } from "models"
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 import {
   addRecipe as addRecipeAction,
   editRecipe as editRecipeAction,
   deleteRecipe as deleteRecipeAction,
   setRecipeDays,
   fetchRecipes,
-} from "store/actions"
+} from "store"
 
 export default function useRecipes() {
   const dispatch = useDispatch()

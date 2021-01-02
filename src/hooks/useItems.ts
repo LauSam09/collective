@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import firebase from "firebase/app"
 
 import { RootState } from "store"
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 import { Item, ItemEntity } from "models"
 
 export default function useItems() {

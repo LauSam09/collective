@@ -6,7 +6,7 @@ import {
   FETCH_RECIPES,
   RecipeActionTypes,
   SET_RECIPE_DAYS,
-} from "store/actions"
+} from "../actions"
 
 type RecipeState = {
   recipes: Recipe[]

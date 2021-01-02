@@ -1,8 +1,4 @@
-import {
-  CategoryActionTypes,
-  GET_CATEGORIES,
-  ListCategory,
-} from "store/actions/category.action"
+import { CategoryActionTypes, GET_CATEGORIES, ListCategory } from "../actions"
 
 interface CategoryState {
   categories: ListCategory[]

@@ -8,7 +8,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons"
 
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 
 import classes from "./Navigation.module.css"
 

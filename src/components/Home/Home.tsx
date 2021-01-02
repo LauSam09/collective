@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import { Redirect } from "react-router-dom"
 
 import Login from "./Login"
-import { AuthenticationContext } from "authentication/AuthenticationContext"
+import { AuthenticationContext } from "authentication"
 import { UserState } from "models"
 
 import classes from "./Home.module.css"
