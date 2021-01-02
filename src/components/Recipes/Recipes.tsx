@@ -4,11 +4,10 @@ import { faCircleNotch, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button, Pill } from "components"
+import { useRecipes } from "hooks"
 import RecipeModal from "./RecipeModal"
 import { Recipe } from "models"
 import { RootState } from "store/reducers"
-
-import useRecipes from "./useRecipes"
 
 import classes from "./Recipes.module.css"
 
