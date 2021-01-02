@@ -81,8 +81,14 @@ export default function RecipeModal(props: RecipeModalProps) {
   }
 
   async function handleDeleteRecipe() {
-    await deleteRecipe()
-    close()
+    if (
+      window.confirm(
+        `Are you sure you want to delete your recipe for '${name}'?`
+      )
+    ) {
+      await deleteRecipe()
+      close()
+    }
   }
 
   return (
