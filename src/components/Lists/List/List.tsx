@@ -3,6 +3,8 @@ import { useSelector } from "react-redux"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faCircleNotch,
+  faEye,
+  faEyeSlash,
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
@@ -39,6 +41,7 @@ export default function Lists() {
   const [itemBeingEdited, setItemBeingEdited] = useState<ItemModel>()
   const [modalOpen, setModalOpen] = useState(false)
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
+  const [hideCompleted, setHideCompleted] = useState(false)
 
   // TODO If an item has a category that no longer exists, this list will filter it out incorrectly
   const categorisedItems = items
@@ -53,6 +56,10 @@ export default function Lists() {
             .sort((a, b) => a.name.localeCompare(b.name))
         )
     )
+
+  const hiddenItems = categorisedItems.filter(
+    (i) => i.completed && hideCompleted
+  )
 
   const valid = !getMatchingItem(name)
 
@@ -120,9 +127,24 @@ export default function Lists() {
                   : items.length}
               </span>
             </div>
-            <Button onClick={() => inputRef.current?.focus()}>
+            <Button title="Add item" onClick={() => inputRef.current?.focus()}>
               <FontAwesomeIcon icon={faPlus} size="1x" />
             </Button>
+            {hideCompleted ? (
+              <Button
+                title="Show completed"
+                onClick={() => setHideCompleted((v) => !v)}
+              >
+                <FontAwesomeIcon icon={faEye} size="1x" />
+              </Button>
+            ) : (
+              <Button
+                title="Hide completed"
+                onClick={() => setHideCompleted((v) => !v)}
+              >
+                <FontAwesomeIcon icon={faEyeSlash} size="1x" />
+              </Button>
+            )}
             <Button
               onClick={removeAllCompleted}
               title="Clear completed"
@@ -135,28 +157,33 @@ export default function Lists() {
             </Button>
           </div>
           <>
+            {hiddenItems.length > 0 && (
+              <small>({hiddenItems.length} hidden)</small>
+            )}
             {categorisedItems.length ? (
               <ul className={classes.list}>
-                {categorisedItems.map((item) => (
-                  <li key={item.id}>
-                    <Item
-                      item={item}
-                      categories={categories}
-                      toggleComplete={(status) =>
-                        setCompletionStatus(item.id, status)
-                      }
-                      icon={iconToRender}
-                      open={() => {
-                        setItemBeingEdited(item)
-                        setModalOpen(true)
-                      }}
-                      selectCategory={() => {
-                        setItemBeingEdited(item)
-                        setCategoryModalOpen(true)
-                      }}
-                    />
-                  </li>
-                ))}
+                {categorisedItems
+                  .filter((item) => !hideCompleted || !item.completed)
+                  .map((item) => (
+                    <li key={item.id}>
+                      <Item
+                        item={item}
+                        categories={categories}
+                        toggleComplete={(status) =>
+                          setCompletionStatus(item.id, status)
+                        }
+                        icon={iconToRender}
+                        open={() => {
+                          setItemBeingEdited(item)
+                          setModalOpen(true)
+                        }}
+                        selectCategory={() => {
+                          setItemBeingEdited(item)
+                          setCategoryModalOpen(true)
+                        }}
+                      />
+                    </li>
+                  ))}
               </ul>
             ) : (
               <p>No items added yet</p>
