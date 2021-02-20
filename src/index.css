@@ -5,14 +5,28 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --page-width: 800px;
+  --spacing-lg: 20px;
 }
 
 body[data-theme="light"] {
   --colour-primary: black;
+  --colour-hover: darkgrey;
   --colour-background: white;
 }
 
 body[data-theme="dark"] {
   --colour-primary: white;
+  --colour-hover: lightgrey;
   --colour-background: black;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  color: var(--colour-hover);
 }
