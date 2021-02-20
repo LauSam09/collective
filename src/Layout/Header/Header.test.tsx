@@ -1,7 +1,14 @@
 import { render, screen } from "@testing-library/react"
+import renderer from "react-test-renderer"
+
 import Header from "."
 
 describe("<Header />", () => {
+  test("matches snapshot", () => {
+    const json = renderer.create(<Header />).toJSON()
+    expect(json).toMatchSnapshot()
+  })
+
   test("renders name of application", () => {
     render(<Header />)
     expect(screen.getByText(/collective/i)).toBeInTheDocument()
