@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import classes from "./App.module.css"
 
 function App() {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") ?? "light")
-  const nextTheme = theme === "light" ? "dark" : "light"
-
   useEffect(() => {
-    document.body.dataset.theme = theme
-  }, [theme])
+    document.body.dataset.theme = "light"
+  })
 
-  return (
-    <>
-      <div className={classes.app}>Collective</div>
-      <button onClick={() => setTheme(nextTheme)}>
-        Change to {nextTheme} mode
-      </button>
-    </>
-  )
+  return <div className={classes.app}>Collective</div>
 }
 
 export default App
