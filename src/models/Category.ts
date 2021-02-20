@@ -1,6 +1,0 @@
-export default interface Category {
-  id: string
-  name: string
-  colour: string
-  order: number
-}
