@@ -8,6 +8,7 @@ body {
 
   --page-width: 800px;
   --spacing-lg: 20px;
+  --spacing-md: 10px;
 }
 
 body[data-theme="light"] {

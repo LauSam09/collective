@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-import { Footer, Header } from "./Layout"
+import { Content, Footer, Header } from "./Layout"
 import classes from "./App.module.css"
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
   return (
     <div className={classes.app}>
       <Header />
+      <Content />
       <Footer />
     </div>
   )

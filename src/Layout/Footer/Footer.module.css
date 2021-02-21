@@ -1,5 +1,9 @@
 .footer {
   max-width: var(--page-width);
-  margin: 0 auto;
+  padding: 0 auto;
+  box-sizing: border-box;
   text-align: right;
+  padding: var(--spacing-md);
+  width: 100%;
+  margin: 0 auto;
 }
