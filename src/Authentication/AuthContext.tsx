@@ -25,4 +25,4 @@ function AuthProvider(props: AuthProviderProps) {
 
 const useAuth = () => useContext(AuthContext)
 
-export { AuthProvider, useAuth }
+export { AuthContext, AuthProvider, useAuth }
