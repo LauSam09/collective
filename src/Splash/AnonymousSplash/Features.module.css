@@ -1,0 +1,11 @@
+.features {
+  color: var(--colour-secondary);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: 5px;
+  background-color: var(--colour-background-secondary);
+}
+
+.features > h4 {
+  margin: var(--spacing-sm);
+}

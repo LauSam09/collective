@@ -1,5 +1,7 @@
 import { useAuth } from "Authentication"
+
 import GoogleLoginButton from "./GoogleLoginButton"
+import Features from "./Features"
 
 import classes from "./AnonymousSplash.module.css"
 
@@ -13,6 +15,10 @@ export default function AnonymousSplash() {
       <div className={classes.login}>
         <GoogleLoginButton onClick={login} />
       </div>
+
+      <section>
+        <Features />
+      </section>
     </article>
   )
 }
