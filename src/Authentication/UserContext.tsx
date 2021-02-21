@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useContext } from "react"
 
 import { useAuth } from "."
+import User from "./models/user"
 
-type UserContextType = { firstName: string } | undefined
+type UserContextType = User | undefined
 
 const UserContext = createContext<UserContextType>(undefined)
 

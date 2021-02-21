@@ -1,10 +1,23 @@
-import { createContext, ReactNode, useContext } from "react"
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
+import firebase from "firebase/app"
+import "firebase/auth"
+import "firebase/firestore"
+
+import fbConfig from "../config/firebase.json"
+import User from "./models/user"
+
+const googleProvider = new firebase.auth.GoogleAuthProvider()
 
 type AuthContextType = {
-  login: () => void
-  logout: () => void
-  register: () => void
-  user?: { firstName: string }
+  login: () => Promise<void>
+  logout: () => Promise<void>
+  user?: User
 }
 
 const AuthContext = createContext<Partial<AuthContextType>>({})
@@ -14,13 +27,41 @@ type AuthProviderProps = {
 }
 
 function AuthProvider(props: AuthProviderProps) {
-  function login() {}
+  const [fbInitialised, setFbInitialised] = useState(false)
+  const [user, setUser] = useState<User>()
 
-  function logout() {}
+  useEffect(() => {
+    firebase.initializeApp(fbConfig)
+    firebase.firestore().enablePersistence({ synchronizeTabs: true })
 
-  function register() {}
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser({ displayName: user.displayName ?? undefined })
+      } else {
+        setUser(undefined)
+      }
 
-  return <AuthContext.Provider value={{ login, logout, register }} {...props} />
+      setFbInitialised(true)
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  async function login() {
+    await firebase.auth().signInWithPopup(googleProvider)
+  }
+
+  async function logout() {
+    await firebase.auth().signOut()
+  }
+
+  if (!fbInitialised) {
+    return <span>Loading</span>
+  }
+
+  return <AuthContext.Provider value={{ login, logout, user }} {...props} />
 }
 
 const useAuth = () => useContext(AuthContext)
