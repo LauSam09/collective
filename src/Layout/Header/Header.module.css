@@ -1,7 +1,11 @@
 .header {
-  max-width: var(--page-width);
-  margin: 0 auto;
+  background-color: var(--colour-background);
+}
+
+.header nav {
   padding: var(--spacing-lg);
-  width: 100%;
   box-sizing: border-box;
+  max-width: var(--page-width);
+  width: 100%;
+  margin: 0 auto;
 }
