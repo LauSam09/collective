@@ -1,4 +1,4 @@
-import { useAuth, useIsAuthenticated, useUser } from "../../Authentication"
+import { useAuth, useIsAuthenticated, useUser } from "Authentication"
 import classes from "./Content.module.css"
 
 export default function Content() {

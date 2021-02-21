@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-import { Content, Footer, Header } from "./Layout"
+import { Content, Footer, Header } from "Layout"
 import classes from "./App.module.css"
 
 function App() {

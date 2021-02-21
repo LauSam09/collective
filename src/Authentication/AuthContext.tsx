@@ -9,7 +9,7 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-import fbConfig from "../config/firebase.json"
+import fbConfig from "Config/firebase.json"
 import User from "./models/user"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
