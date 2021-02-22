@@ -6,10 +6,9 @@ export default function Features() {
       <h4>Features</h4>
       <ul>
         <li>Share shopping items in real-time</li>
-        <li>Categorise items to make shopping easier</li>
         <li>Works entirely offline</li>
-        <li>Bookmark recipes that you don't want to forget</li>
-        <li>Save ingredients and quick-add ingredients</li>
+        <li>Bookmark recipes</li>
+        <li>Save and quick-add ingredients</li>
       </ul>
     </div>
   )

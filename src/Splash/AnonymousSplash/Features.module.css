@@ -1,6 +1,6 @@
 .features {
   color: var(--colour-secondary);
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-lg);
   padding: var(--spacing-md);
   border-radius: 5px;
   background-color: var(--colour-background-secondary);

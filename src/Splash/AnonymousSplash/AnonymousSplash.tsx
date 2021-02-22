@@ -9,7 +9,7 @@ export default function AnonymousSplash() {
   const { login } = useAuth()
 
   return (
-    <article>
+    <article className={classes.splash}>
       <h1>Welcome to Collective</h1>
       <h4>The app for managing and sharing shopping &amp; recipes</h4>
 
