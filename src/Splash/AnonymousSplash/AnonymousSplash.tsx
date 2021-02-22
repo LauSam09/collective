@@ -7,6 +7,7 @@ import classes from "./AnonymousSplash.module.css"
 
 export default function AnonymousSplash() {
   const { login } = useAuth()
+
   return (
     <article>
       <h1>Welcome to Collective</h1>
