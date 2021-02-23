@@ -1,9 +1,10 @@
-import { useAuth, useUser } from "Authentication"
+import { useAuth, useUser, useIsRegistered } from "Authentication"
 import Register from "Register"
 
 export default function AuthenticatedContent() {
   const { logout } = useAuth()
-  const { user, isRegistered } = useUser()
+  const user = useUser()
+  const isRegistered = useIsRegistered()
 
   return (
     <>

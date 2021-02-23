@@ -28,7 +28,14 @@ function UserProvider(props: UserProviderProps) {
   )
 }
 
-const useUser = () => useContext(UserContext)
-const useIsAuthenticated = () => Boolean(useUser().user)
+const useUser = () => useContext(UserContext).user
+const useIsAuthenticated = () => Boolean(useUser())
+const useIsRegistered = () => useContext(UserContext).isRegistered
 
-export { UserContext, UserProvider, useUser, useIsAuthenticated }
+export {
+  UserContext,
+  UserProvider,
+  useUser,
+  useIsAuthenticated,
+  useIsRegistered,
+}

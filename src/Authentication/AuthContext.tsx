@@ -9,8 +9,9 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-import fbConfig from "Config/firebase.json"
 import User from "./models/user"
+
+import "Config/database"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
@@ -31,12 +32,9 @@ function AuthProvider(props: AuthProviderProps) {
   const [user, setUser] = useState<User>()
 
   useEffect(() => {
-    firebase.initializeApp(fbConfig)
-    firebase.firestore().enablePersistence({ synchronizeTabs: true })
-
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        setUser({ displayName: user.displayName ?? undefined })
+        setUser({ id: user.uid, displayName: user.displayName ?? undefined })
       } else {
         setUser(undefined)
       }

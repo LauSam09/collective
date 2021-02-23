@@ -3,13 +3,15 @@ import { act, render, screen } from "@testing-library/react"
 import Register from "./Register"
 import { UserContext } from "Authentication"
 
+jest.mock("./CreateGroupForm/CreateGroupForm.service", () => {})
+
 describe("<Register />", () => {
   test("renders welcome message", async () => {
     await act(async () => {
       render(
         <UserContext.Provider
           value={{
-            user: { displayName: "John Falstaff" },
+            user: { displayName: "John Falstaff", id: "1" },
           }}
         >
           <Register />
