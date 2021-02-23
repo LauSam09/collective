@@ -11,18 +11,14 @@ body {
 }
 
 body[data-theme="light"] {
+  /* Text */
   --colour-primary: black;
   --colour-secondary: white;
   --colour-hover: darkgrey;
-  --colour-background: white;
-  --colour-background-secondary: rgb(66, 133, 244);
-}
+  --colour-error: darkred;
 
-body[data-theme="dark"] {
-  --colour-primary: white;
-  --colour-secondary: white;
-  --colour-hover: lightgrey;
-  --colour-background: black;
+  /* Background */
+  --colour-background: white;
   --colour-background-secondary: rgb(66, 133, 244);
 }
 

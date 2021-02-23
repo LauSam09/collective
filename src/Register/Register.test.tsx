@@ -1,19 +1,21 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 
 import Register from "./Register"
 import { UserContext } from "Authentication"
 
 describe("<Register />", () => {
-  test("renders welcome message", () => {
-    render(
-      <UserContext.Provider
-        value={{
-          user: { displayName: "John Falstaff" },
-        }}
-      >
-        <Register />
-      </UserContext.Provider>
-    )
+  test("renders welcome message", async () => {
+    await act(async () => {
+      render(
+        <UserContext.Provider
+          value={{
+            user: { displayName: "John Falstaff" },
+          }}
+        >
+          <Register />
+        </UserContext.Provider>
+      )
+    })
 
     expect(screen.getByRole(/article/)).toBeInTheDocument()
     expect(

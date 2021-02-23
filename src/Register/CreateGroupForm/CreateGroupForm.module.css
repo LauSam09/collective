@@ -1,0 +1,11 @@
+.formGroup > * {
+  display: block;
+}
+
+.error {
+  color: var(--colour-error);
+}
+
+.submit {
+  margin-top: var(--spacing-md);
+}
