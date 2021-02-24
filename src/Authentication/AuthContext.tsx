@@ -5,15 +5,22 @@ import {
   useEffect,
   useState,
 } from "react"
+import { env } from "process"
 import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
 import User from "./models/user"
 
-import "Config/database"
+import fbConfig from "Config/firebase.json"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
+
+firebase.initializeApp(fbConfig)
+
+if (env.NODE_ENV !== "test") {
+  firebase.firestore().enablePersistence({ synchronizeTabs: true })
+}
 
 type AuthContextType = {
   login: () => Promise<void>
