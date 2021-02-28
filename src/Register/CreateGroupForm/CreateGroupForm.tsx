@@ -31,21 +31,27 @@ export default function CreateGroupForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(handleCreateGroup)}>
-      <div className={classes.formGroup}>
-        <label htmlFor="name">Name*</label>
-        <input
-          id="name"
-          name="name"
-          ref={register({ required: "You must provide a name" })}
-        />
-        <span className={classes.error}>
-          {errors?.name ? errors.name.message : null}
-        </span>
-      </div>
-      <button type="submit" disabled={!isValid} className={classes.submit}>
-        Create
-      </button>
-    </form>
+    <div>
+      <p>
+        If you're the first in your household to sign up, then create a new
+        household below.
+      </p>
+      <form onSubmit={handleSubmit(handleCreateGroup)}>
+        <div className={classes.formGroup}>
+          <label htmlFor="name">Name*</label>
+          <input
+            id="name"
+            name="name"
+            ref={register({ required: "You must provide a name" })}
+          />
+          <span className={classes.error}>
+            {errors?.name ? errors.name.message : null}
+          </span>
+        </div>
+        <button type="submit" disabled={!isValid} className={classes.submit}>
+          Create
+        </button>
+      </form>
+    </div>
   )
 }

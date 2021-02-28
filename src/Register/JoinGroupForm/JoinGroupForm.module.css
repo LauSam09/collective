@@ -1,0 +1,12 @@
+/* TODO Factor our - duplicated with CreateGroupForm */
+.formGroup > * {
+  display: block;
+}
+
+.submit {
+  margin-top: var(--spacing-md);
+}
+
+.error {
+  color: var(--colour-error);
+}
