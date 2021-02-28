@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 
 import App from "App"
-import { AppProviders } from "Authentication"
+import { AppProviders } from "./AppProviders"
 import reportWebVitals from "reportWebVitals"
 import "index.css"
 

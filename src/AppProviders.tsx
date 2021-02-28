@@ -1,12 +1,11 @@
 import { ReactNode } from "react"
-import { AuthProvider, UserProvider } from "."
-import { GroupProvider } from "./GroupContext"
+import { AuthProvider, GroupProvider, UserProvider } from "Authentication"
 
 type AppProvidersProps = {
   children?: ReactNode
 }
 
-export default function AppProviders({ children }: AppProvidersProps) {
+export function AppProviders({ children }: AppProvidersProps) {
   return (
     <AuthProvider>
       <UserProvider>
