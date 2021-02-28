@@ -24,9 +24,10 @@ type GroupProviderProps = {
   children?: ReactNode
 }
 
+const db = firebase.firestore()
+
 function GroupProvider(props: GroupProviderProps) {
   const user = useUser()
-  const db = firebase.firestore()
   const [group, setGroup] = useState<UserGroup>()
   const [isRegistered, setIsRegistered] = useState<boolean>()
 
@@ -41,7 +42,7 @@ function GroupProvider(props: GroupProviderProps) {
           !group && setGroup(dbUser?.group)
         })
     }
-  }, [db, user, group])
+  }, [user, group])
 
   if (isRegistered === undefined) {
     return <FullPageSpinner />
