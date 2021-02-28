@@ -1,7 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-import { Group } from "Authentication"
+import { Group, UserGroup } from "Authentication"
 import { Category } from "Lists/models"
 
 const db = firebase.firestore()
@@ -47,7 +47,7 @@ const defaultCategories: Category[] = [
   { name: "Frozen", colour: "#0384fc", order: 8 },
 ]
 
-export async function createGroup(group: Group) {
+export async function createGroup(group: Group): Promise<UserGroup> {
   const groupDoc = await db.collection("groups").add(group)
   const listDoc = await groupDoc.collection("lists").add({ name: "shopping" })
 
@@ -60,14 +60,15 @@ export async function createGroup(group: Group) {
 
   await batch.commit()
 
-  await db
-    .collection("users")
-    .doc(group.users[0])
-    .update({
-      group: {
-        id: groupDoc.id,
-        name: group.name,
-        defaultList: listDoc.id,
-      },
-    })
+  const userGroup: UserGroup = {
+    id: groupDoc.id,
+    name: group.name,
+    defaultList: listDoc.id,
+  }
+
+  await db.collection("users").doc(group.users[0]).update({
+    group: userGroup,
+  })
+
+  return userGroup
 }

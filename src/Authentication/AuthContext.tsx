@@ -10,7 +10,7 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-import User from "./models/user"
+import { User } from "./models"
 
 import fbConfig from "Config/firebase.json"
 

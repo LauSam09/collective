@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import { AuthProvider, UserProvider } from "."
+import { GroupProvider } from "./GroupContext"
 
 type AppProvidersProps = {
   children?: ReactNode
@@ -8,7 +9,9 @@ type AppProvidersProps = {
 export default function AppProviders({ children }: AppProvidersProps) {
   return (
     <AuthProvider>
-      <UserProvider>{children}</UserProvider>
+      <UserProvider>
+        <GroupProvider>{children}</GroupProvider>
+      </UserProvider>
     </AuthProvider>
   )
 }

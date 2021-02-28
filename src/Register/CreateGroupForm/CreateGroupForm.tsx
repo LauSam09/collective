@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 
-import { useUser } from "Authentication"
+import { useGroupContext, useUser } from "Authentication"
 import { createGroup } from "./CreateGroupForm.service"
 
 import classes from "./CreateGroupForm.module.css"
@@ -17,6 +17,7 @@ export default function CreateGroupForm() {
     mode: "onChange",
   })
   const user = useUser()
+  const { setGroup } = useGroupContext()
 
   if (!user) {
     throw new Error("Must be authenticated to use CreateGroupForm")
@@ -24,12 +25,13 @@ export default function CreateGroupForm() {
 
   const { errors, isValid } = formState
 
+  async function handleCreateGroup(data: Form) {
+    const group = await createGroup({ ...data, users: [user?.id ?? ""] })
+    setGroup && setGroup(group)
+  }
+
   return (
-    <form
-      onSubmit={handleSubmit((data: Form) =>
-        createGroup({ ...data, users: [user.id] })
-      )}
-    >
+    <form onSubmit={handleSubmit(handleCreateGroup)}>
       <div className={classes.formGroup}>
         <label htmlFor="name">Name*</label>
         <input

@@ -1,11 +1,10 @@
 import { createContext, ReactNode, useContext } from "react"
 
 import { useAuth } from "."
-import User from "./models/user"
+import { User } from "./models"
 
 type UserContextType = {
   user: User | undefined
-  isRegistered: boolean
 }
 
 const UserContext = createContext<Partial<UserContextType>>({})
@@ -21,7 +20,6 @@ function UserProvider(props: UserProviderProps) {
     <UserContext.Provider
       value={{
         user,
-        isRegistered: false,
       }}
       {...props}
     />
@@ -30,12 +28,5 @@ function UserProvider(props: UserProviderProps) {
 
 const useUser = () => useContext(UserContext).user
 const useIsAuthenticated = () => Boolean(useUser())
-const useIsRegistered = () => useContext(UserContext).isRegistered
 
-export {
-  UserContext,
-  UserProvider,
-  useUser,
-  useIsAuthenticated,
-  useIsRegistered,
-}
+export { UserContext, UserProvider, useUser, useIsAuthenticated }
