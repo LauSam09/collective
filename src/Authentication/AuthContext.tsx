@@ -13,6 +13,7 @@ import "firebase/firestore"
 import { User } from "./models"
 
 import fbConfig from "Config/firebase.json"
+import { FullPageSpinner } from "Common"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
@@ -63,7 +64,7 @@ function AuthProvider(props: AuthProviderProps) {
   }
 
   if (!fbInitialised) {
-    return <span>Loading</span>
+    return <FullPageSpinner />
   }
 
   return <AuthContext.Provider value={{ login, logout, user }} {...props} />

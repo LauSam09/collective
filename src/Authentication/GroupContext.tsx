@@ -10,6 +10,7 @@ import "firebase/firestore"
 
 import { User, UserGroup } from "./models"
 import { useUser } from "./UserContext"
+import { FullPageSpinner } from "Common"
 
 type GroupContextType = {
   group: UserGroup | undefined
@@ -43,7 +44,7 @@ function GroupProvider(props: GroupProviderProps) {
   }, [db, user, group])
 
   if (isRegistered === undefined) {
-    return <span>Loading</span>
+    return <FullPageSpinner />
   }
 
   return (
