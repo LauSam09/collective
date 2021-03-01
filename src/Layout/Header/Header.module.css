@@ -11,3 +11,22 @@
   display: flex;
   justify-content: space-between;
 }
+
+.links a {
+  padding: 0 var(--spacing-sm);
+}
+
+.links a:last-of-type {
+  margin-right: var(--spacing-lg);
+}
+
+.logout {
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logout:hover {
+  color: var(--colour-hover);
+}
