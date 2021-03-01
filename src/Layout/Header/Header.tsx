@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
 
-import { useAuth, useIsAuthenticated } from "Authentication"
+import { useAuth, useIsRegistered } from "Authentication"
 
 import classes from "./Header.module.css"
 
@@ -11,11 +12,18 @@ export default function Header() {
   return (
     <header className={classes.header}>
       <nav>
-        <a href="/">Collective</a>
-        {useIsAuthenticated() ? (
-          <button onClick={logout} title="Log out" className={classes.logout}>
-            <FontAwesomeIcon icon={faSignOutAlt} size="lg" />
-          </button>
+        <Link to="/">
+          <h3 className={classes.brand}>Collective</h3>
+        </Link>
+        {useIsRegistered() ? (
+          <div className={classes.links}>
+            <Link to="/household" title="Household">
+              Household
+            </Link>
+            <button onClick={logout} title="Log out" className={classes.logout}>
+              <FontAwesomeIcon icon={faSignOutAlt} size="lg" />
+            </button>
+          </div>
         ) : null}
       </nav>
     </header>
