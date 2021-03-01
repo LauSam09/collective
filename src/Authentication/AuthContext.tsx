@@ -10,7 +10,7 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-import { User } from "./models"
+import { AuthUser } from "./models"
 
 import fbConfig from "Config/firebase.json"
 import { FullPageSpinner } from "Common"
@@ -26,7 +26,7 @@ if (env.NODE_ENV !== "test") {
 type AuthContextType = {
   login: () => Promise<void>
   logout: () => Promise<void>
-  user?: User
+  user?: AuthUser
 }
 
 const AuthContext = createContext<Partial<AuthContextType>>({})
@@ -37,7 +37,7 @@ type AuthProviderProps = {
 
 function AuthProvider(props: AuthProviderProps) {
   const [fbInitialised, setFbInitialised] = useState(false)
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useState<AuthUser>()
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -71,5 +71,6 @@ function AuthProvider(props: AuthProviderProps) {
 }
 
 const useAuth = () => useContext(AuthContext)
+const useIsAuthenticated = () => Boolean(useContext(AuthContext).user)
 
-export { AuthContext, AuthProvider, useAuth }
+export { AuthContext, AuthProvider, useAuth, useIsAuthenticated }

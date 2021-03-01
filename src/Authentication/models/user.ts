@@ -1,13 +1,35 @@
-export interface User {
-  id: string
-  displayName?: string
-  group?: {
-    id: string
-    name: string
-    defaultList: string
-  }
+export enum UserState {
+  Unregistered = "Unregistered",
+  Registered = "Registered",
 }
 
+/** The object exposed by firebase authentication */
+export interface AuthUser {
+  id: string
+  displayName?: string
+}
+
+/**
+ * The object stored in the database
+ */
+export interface DatabaseUser {
+  added: string // Timestamp
+  email: string
+  state: UserState
+  group?: UserGroup
+}
+
+/**
+ * The object used throughout the application
+ */
+export interface User {
+  id: string
+  displayName: string
+  state: UserState
+  group?: UserGroup
+}
+
+/** The nested group data stored on a user */
 export interface UserGroup {
   id: string
   name: string

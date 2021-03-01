@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { AuthProvider, GroupProvider, UserProvider } from "Authentication"
+import { AuthProvider, UserProvider } from "Authentication"
 
 type AppProvidersProps = {
   children?: ReactNode
@@ -8,9 +8,7 @@ type AppProvidersProps = {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <AuthProvider>
-      <UserProvider>
-        <GroupProvider>{children}</GroupProvider>
-      </UserProvider>
+      <UserProvider>{children}</UserProvider>
     </AuthProvider>
   )
 }

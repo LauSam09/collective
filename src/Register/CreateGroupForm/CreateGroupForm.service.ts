@@ -1,7 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-import { Group, UserGroup } from "Authentication"
+import { DatabaseUser, Group, UserGroup, UserState } from "Authentication"
 import { Category } from "Lists/models"
 
 const db = firebase.firestore()
@@ -65,10 +65,12 @@ export async function createGroup(group: Group): Promise<UserGroup> {
     name: group.name,
     defaultList: listDoc.id,
   }
-
-  await db.collection("users").doc(group.users[0]).update({
+  const user: Partial<DatabaseUser> = {
+    state: UserState.Registered,
     group: userGroup,
-  })
+  }
+
+  await db.collection("users").doc(group.users[0]).update(user)
 
   return userGroup
 }
