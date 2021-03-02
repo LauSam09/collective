@@ -30,3 +30,16 @@ a {
 a:hover {
   color: var(--colour-hover);
 }
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-inline-start: 0;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}

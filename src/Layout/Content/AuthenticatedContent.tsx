@@ -2,12 +2,13 @@ import { Redirect, Route, Switch } from "react-router-dom"
 
 import { useUser, useIsRegistered } from "Authentication"
 import Register from "Register"
+import { Household } from "Household"
 
 function RegisteredContent() {
   return (
     <Switch>
       <Route path="/household">
-        <span>Household</span>
+        <Household />
       </Route>
       <Route path="/">
         <span>Welcome back, {useUser()?.displayName}</span>
