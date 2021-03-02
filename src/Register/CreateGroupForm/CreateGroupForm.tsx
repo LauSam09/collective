@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form"
 
 import { useUser, useUserContext } from "Authentication"
+import { FullPageSpinner } from "Common"
+
 import { createGroup } from "./CreateGroupForm.service"
 
 import classes from "./CreateGroupForm.module.css"
@@ -23,7 +25,7 @@ export default function CreateGroupForm() {
     throw new Error("Must be authenticated to use CreateGroupForm")
   }
 
-  const { errors, isValid } = formState
+  const { errors, isValid, isSubmitting } = formState
 
   async function handleCreateGroup(data: Form) {
     const group = await createGroup({ ...data, users: [user?.id ?? ""] })
@@ -31,27 +33,34 @@ export default function CreateGroupForm() {
   }
 
   return (
-    <div>
-      <p>
-        If you're the first in your household to sign up, then create a new
-        household below.
-      </p>
-      <form onSubmit={handleSubmit(handleCreateGroup)}>
-        <div className={classes.formGroup}>
-          <label htmlFor="name">Name*</label>
-          <input
-            id="name"
-            name="name"
-            ref={register({ required: "You must provide a name" })}
-          />
-          <span className={classes.error}>
-            {errors?.name ? errors.name.message : null}
-          </span>
-        </div>
-        <button type="submit" disabled={!isValid} className={classes.submit}>
-          Create
-        </button>
-      </form>
-    </div>
+    <>
+      {isSubmitting ? <FullPageSpinner /> : null}
+      <div>
+        <p>
+          If you're the first in your household to sign up, then create a new
+          household below.
+        </p>
+        <form onSubmit={handleSubmit(handleCreateGroup)}>
+          <div className={classes.formGroup}>
+            <label htmlFor="name">Name*</label>
+            <input
+              id="name"
+              name="name"
+              ref={register({ required: "You must provide a name" })}
+            />
+            <span className={classes.error}>
+              {errors?.name ? errors.name.message : null}
+            </span>
+          </div>
+          <button
+            type="submit"
+            disabled={!isValid || isSubmitting}
+            className={classes.submit}
+          >
+            Create
+          </button>
+        </form>
+      </div>
+    </>
   )
 }
