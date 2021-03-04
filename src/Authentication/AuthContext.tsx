@@ -42,7 +42,11 @@ function AuthProvider(props: AuthProviderProps) {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        setUser({ id: user.uid, displayName: user.displayName ?? undefined })
+        setUser({
+          id: user.uid,
+          displayName: user.displayName ?? undefined,
+          email: user.email || "",
+        })
       } else {
         setUser(undefined)
       }

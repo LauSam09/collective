@@ -11,7 +11,7 @@ import "firebase/firestore"
 import { FullPageSpinner } from "Common"
 
 import { useAuth } from "./AuthContext"
-import { DatabaseUser, User, UserGroup, UserState } from "./models"
+import { AuthUser, DatabaseUser, User, UserGroup, UserState } from "./models"
 
 const db = firebase.firestore()
 
@@ -33,20 +33,34 @@ function UserProvider(props: UserProviderProps) {
   const authUser = useAuth().user
   const [user, setUser] = useState<User>()
 
+  /** Retrieves the user, or if it is their first login then create a new user object. */
+  async function getOrCreateUser(authUser: AuthUser): Promise<DatabaseUser> {
+    const doc = await db.collection("users").doc(authUser.id).get()
+
+    if (doc.exists) {
+      return doc.data() as DatabaseUser
+    }
+
+    const newUser: DatabaseUser = {
+      added: firebase.firestore.FieldValue.serverTimestamp(),
+      email: authUser.email,
+      state: UserState.Unregistered,
+    }
+    await db.collection("users").doc(authUser.id).set(newUser)
+
+    return newUser
+  }
+
   useEffect(() => {
     if (authUser) {
       // TODO handle error case
-      db.collection("users")
-        .doc(authUser.id)
-        .get()
-        .then((doc) => {
-          const dbUser = doc.data() as DatabaseUser
-          setUser({
-            ...dbUser,
-            id: authUser.id,
-            displayName: authUser.displayName || dbUser.email,
-          })
+      getOrCreateUser(authUser).then((dbUser) =>
+        setUser({
+          ...dbUser,
+          id: authUser.id,
+          displayName: authUser.displayName || dbUser.email,
         })
+      )
     } else {
       setUser(undefined)
     }

@@ -6,6 +6,7 @@ export enum UserState {
 /** The object exposed by firebase authentication */
 export interface AuthUser {
   id: string
+  email: string
   displayName?: string
 }
 
@@ -13,7 +14,7 @@ export interface AuthUser {
  * The object stored in the database
  */
 export interface DatabaseUser {
-  added: string // Timestamp
+  added: any // Timestamp
   email: string
   state: UserState
   group?: UserGroup
