@@ -1,5 +1,4 @@
 import CreateGroupForm from "./CreateGroupForm"
-import { JoinGroupForm } from "./JoinGroupForm"
 
 import classes from "./Register.module.css"
 
@@ -10,7 +9,10 @@ export default function Register() {
       <section>
         <CreateGroupForm />
         <div className={classes.divider} />
-        <JoinGroupForm />
+        <span>
+          Alternatively, ask to be invited to a household. They'll send you a
+          link which will allow you to join.
+        </span>
       </section>
     </article>
   )
