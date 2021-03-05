@@ -28,7 +28,11 @@ export default function CreateGroupForm() {
   const { errors, isValid, isSubmitting } = formState
 
   async function handleCreateGroup(data: Form) {
-    const group = await createGroup({ ...data, users: [user?.id ?? ""] })
+    if (!user) {
+      throw new Error("Should not be able to create group if user is undefined")
+    }
+
+    const group = await createGroup(data.name, user.id, user.displayName)
     setUserGroup(group)
   }
 

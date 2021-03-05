@@ -47,8 +47,16 @@ const defaultCategories: Category[] = [
   { name: "Frozen", colour: "#0384fc", order: 8 },
 ]
 
-export async function createGroup(group: Group): Promise<UserGroup> {
-  const groupDoc = await db.collection("groups").add(group)
+export async function createGroup(
+  groupName: string,
+  userId: string,
+  displayName: string
+): Promise<UserGroup> {
+  const groupDoc = await db.collection("groups").add({
+    name: groupName,
+    users: [userId],
+    userDetails: [{ id: userId, name: displayName }],
+  })
   const listDoc = await groupDoc.collection("lists").add({ name: "shopping" })
 
   const batch = db.batch()
@@ -62,7 +70,7 @@ export async function createGroup(group: Group): Promise<UserGroup> {
 
   const userGroup: UserGroup = {
     id: groupDoc.id,
-    name: group.name,
+    name: groupName,
     defaultList: listDoc.id,
   }
   const user: Partial<DatabaseUser> = {
@@ -70,7 +78,10 @@ export async function createGroup(group: Group): Promise<UserGroup> {
     group: userGroup,
   }
 
-  await db.collection("users").doc(group.users[0]).update(user)
+  await groupDoc.update({
+    defaultList: listDoc.id,
+  })
+  await db.collection("users").doc(userId).update(user)
 
   return userGroup
 }

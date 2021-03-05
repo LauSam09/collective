@@ -14,6 +14,7 @@ export interface AuthUser {
  * The object stored in the database
  */
 export interface DatabaseUser {
+  name: string
   added: any // Timestamp
   email: string
   state: UserState
