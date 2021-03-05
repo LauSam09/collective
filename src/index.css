@@ -16,6 +16,7 @@ body[data-theme="light"] {
   --colour-secondary: white;
   --colour-hover: darkgrey;
   --colour-error: darkred;
+  --colour-success: green;
 
   /* Background */
   --colour-background: white;

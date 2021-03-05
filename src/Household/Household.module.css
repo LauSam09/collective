@@ -1,0 +1,17 @@
+.inviteButton {
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.inviteButton:hover {
+  color: var(--colour-hover);
+}
+
+.inviteButton:focus {
+  outline: none;
+}
+
+.copied {
+  color: var(--colour-success);
+}
