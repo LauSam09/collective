@@ -46,7 +46,7 @@ function UserProvider(props: UserProviderProps) {
 
     const newUser: DatabaseUser = {
       name: authUser.displayName || authUser.email || "",
-      added: firebase.firestore.FieldValue.serverTimestamp(),
+      added: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
       email: authUser.email,
       state: UserState.Unregistered,
     }

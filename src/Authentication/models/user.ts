@@ -1,3 +1,5 @@
+import firebase from "firebase/app"
+
 export enum UserState {
   Unregistered = "Unregistered",
   Registered = "Registered",
@@ -15,7 +17,7 @@ export interface AuthUser {
  */
 export interface DatabaseUser {
   name: string
-  added: any // Timestamp
+  added: firebase.firestore.Timestamp
   email: string
   state: UserState
   group?: UserGroup

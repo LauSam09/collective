@@ -9,5 +9,5 @@ export interface Invitation {
     id: string
     name: string
   }
-  created: firebase.firestore.Timestamp // TODO add type to user as well
+  created: firebase.firestore.Timestamp
 }
