@@ -92,15 +92,12 @@ function InviteMember() {
           Click the icon below to copy a link to your clipboard that is valid
           for one hour.
         </p>
-        <button
-          onClick={handleClickCopy}
-          className={classnames(classes.button, { success: copied })}
-        >
-          <FontAwesomeIcon icon={faLink} size="2x" />
-        </button>
-        {copied ? (
-          <small className={classes.success}>copied to clipboard</small>
-        ) : null}
+        <div className={classnames(classes.link, { success: copied })}>
+          <button onClick={handleClickCopy} className={classes.button}>
+            <FontAwesomeIcon icon={faLink} size="2x" />
+          </button>
+          {copied ? <small>copied to clipboard</small> : null}
+        </div>
       </>
     )
   }

@@ -12,6 +12,14 @@
   outline: none;
 }
 
+.link {
+  text-align: center;
+}
+
 .success {
+  color: var(--colour-success);
+}
+
+.success button {
   color: var(--colour-success);
 }
