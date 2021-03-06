@@ -17,6 +17,7 @@ body[data-theme="light"] {
   --colour-hover: darkgrey;
   --colour-error: darkred;
   --colour-success: green;
+  --colour-action: #1e79c3;
 
   /* Background */
   --colour-background: white;
@@ -25,7 +26,7 @@ body[data-theme="light"] {
 
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--colour-action);
 }
 
 a:hover {

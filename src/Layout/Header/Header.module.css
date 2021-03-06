@@ -34,6 +34,7 @@
   background-color: inherit;
   cursor: pointer;
   padding: 0;
+  color: var(--colour-action);
 }
 
 .logout:hover {

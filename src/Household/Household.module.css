@@ -2,6 +2,7 @@
   border: none;
   background-color: inherit;
   cursor: pointer;
+  color: var(--colour-action);
 }
 
 .button:hover {
