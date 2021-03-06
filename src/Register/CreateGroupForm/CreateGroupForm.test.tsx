@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react"
 import { UserContext } from "Authentication"
 
-import CreateGroupForm from "./CreateGroupForm"
+import { CreateGroupForm } from "./CreateGroupForm"
 
 jest.mock("./CreateGroupForm.service", () => {})
 

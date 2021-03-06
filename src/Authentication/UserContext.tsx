@@ -62,7 +62,7 @@ function UserProvider(props: UserProviderProps) {
       setUser({
         ...user,
         id: authUser.id,
-        displayName: user.name,
+        name: user.name,
       })
     } else {
       setUser(undefined)

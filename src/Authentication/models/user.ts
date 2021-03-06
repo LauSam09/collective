@@ -28,7 +28,7 @@ export interface DatabaseUser {
  */
 export interface User {
   id: string
-  displayName: string
+  name: string
   state: UserState
   group?: UserGroup
 }

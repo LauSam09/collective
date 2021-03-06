@@ -32,7 +32,7 @@ export function CreateGroupForm() {
       throw new Error("Should not be able to create group if user is undefined")
     }
 
-    const group = await createGroup(data.name, user.id, user.displayName)
+    const group = await createGroup(data.name, user.id, user.name)
     setUserGroup(group)
   }
 

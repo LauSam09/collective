@@ -11,7 +11,7 @@ function RegisteredContent() {
         <Household />
       </Route>
       <Route path="/">
-        <span>Welcome back, {useUser()?.displayName}</span>
+        <span>Welcome back, {useUser()?.name}</span>
       </Route>
     </Switch>
   )

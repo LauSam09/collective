@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import renderer from "react-test-renderer"
 
-import Footer from "."
+import { Footer } from "./Footer"
 
 describe("<Footer />", () => {
   test("matches snapshot", () => {

@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
 
-import Content from "."
+import { Content } from "./Content"
 
 describe("<Content />", () => {
   test("renders", () => {

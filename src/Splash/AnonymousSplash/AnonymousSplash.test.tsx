@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react"
-import { AuthContext } from "Authentication/AuthContext"
-import AnonymousSplash from "./AnonymousSplash"
+import { AuthContext } from "Authentication"
+import { AnonymousSplash } from "./AnonymousSplash"
 
 describe("<AnonymousSplash />", () => {
   test("renders article", () => {

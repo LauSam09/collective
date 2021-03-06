@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react"
 
-import Register from "./Register"
-import { UserContext } from "Authentication"
+import { Register } from "./Register"
+import { UserContext, UserState } from "Authentication"
 
 jest.mock("./CreateGroupForm/CreateGroupForm.service", () => {})
 
@@ -11,7 +11,13 @@ describe("<Register />", () => {
       render(
         <UserContext.Provider
           value={{
-            user: { displayName: "John Falstaff", id: "1" },
+            user: {
+              name: "John Falstaff",
+              id: "1",
+              state: UserState.Unregistered,
+            },
+            setUserGroup: () => null,
+            refreshUser: () => Promise.resolve(),
           }}
         >
           <Register />

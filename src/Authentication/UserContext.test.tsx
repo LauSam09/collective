@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react"
 import renderer from "react-test-renderer"
+import { AuthContext } from "./AuthContext"
 
 import { UserProvider } from "./UserContext"
 
@@ -9,12 +10,14 @@ describe("UserContext", () => {
       render(<UserProvider />)
     })
 
-    test("renders children", () => {
+    test("renders children when application is initialised", () => {
       const json = renderer
         .create(
-          <UserProvider>
-            <span>test</span>
-          </UserProvider>
+          <AuthContext.Provider value={{ initialised: true }}>
+            <UserProvider>
+              <span>test</span>
+            </UserProvider>
+          </AuthContext.Provider>
         )
         .toJSON()
 
