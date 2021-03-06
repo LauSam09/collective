@@ -15,7 +15,7 @@ function ListSummary() {
   return (
     <section className={classes.section}>
       <div>You have 15 items in Shopping</div>
-      <Link to="/lists">Go to list</Link>
+      <Link to="/list">Go to list</Link>
     </section>
   )
 }
