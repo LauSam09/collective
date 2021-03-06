@@ -3,8 +3,6 @@ import admin = require("firebase-admin")
 
 import { Invitation, Group, User } from "./models"
 
-admin.initializeApp()
-
 export const acceptInvitation = functions.https.onCall(
   async (data, context) => {
     if (!context.auth) {

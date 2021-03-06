@@ -1,4 +1,5 @@
-import * as functions from "firebase-functions"
+import admin = require("firebase-admin")
+admin.initializeApp()
 
 export * from "./acceptInvitation"
 export * from "./createInvitation"
