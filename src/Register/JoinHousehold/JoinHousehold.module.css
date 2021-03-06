@@ -1,8 +1,11 @@
-.spinner {
-  margin: auto;
+.error {
+  color: var(--colour-error);
 }
 
 .accept {
   text-align: center;
+}
+
+.accept button {
   margin: var(--spacing-lg);
 }

@@ -17,25 +17,9 @@ const createInvitation = functions.httpsCallable("createInvitation")
 
 export function Household() {
   const group = useGroup()
-  const [working, setWorking] = useState(false)
-  const [success, setSuccess] = useState<boolean | undefined>(undefined)
 
   if (!group) {
     throw new Error("Should not use household if group is not defined.")
-  }
-
-  const handleClick = async () => {
-    try {
-      setWorking(true)
-      const { data: inviteId } = await createInvitation({ groupId: group.id })
-      navigator.clipboard.writeText(
-        `${window.location.origin}/join/${inviteId}`
-      )
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setWorking(false)
-    }
   }
 
   return (
@@ -98,9 +82,7 @@ function InviteMember() {
   }
 
   if (error) {
-    return (
-      <span>It looks like something went wrong... Please try again later.</span>
-    )
+    return <span>It looks like something went wrong... {error}</span>
   }
 
   if (url) {
