@@ -1,6 +1,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -18,11 +19,13 @@ const db = firebase.firestore()
 type UserContextType = {
   user: User | undefined
   setUserGroup: (group: UserGroup) => void
+  refreshUser: () => Promise<void>
 }
 
 const UserContext = createContext<UserContextType>({
   user: undefined,
   setUserGroup: () => null,
+  refreshUser: () => Promise.resolve(),
 })
 
 type UserProviderProps = {
@@ -52,20 +55,23 @@ function UserProvider(props: UserProviderProps) {
     return newUser
   }
 
-  useEffect(() => {
+  const refreshUser = useCallback(async () => {
     if (authUser) {
       // TODO handle error case
-      getOrCreateUser(authUser).then((dbUser) =>
-        setUser({
-          ...dbUser,
-          id: authUser.id,
-          displayName: authUser.displayName || dbUser.email,
-        })
-      )
+      const user = await getOrCreateUser(authUser)
+      setUser({
+        ...user,
+        id: authUser.id,
+        displayName: user.name,
+      })
     } else {
       setUser(undefined)
     }
   }, [authUser])
+
+  useEffect(() => {
+    refreshUser()
+  }, [refreshUser])
 
   /** Used to update the user once they have registered */
   const setUserGroup = (group: UserGroup) => {
@@ -87,6 +93,7 @@ function UserProvider(props: UserProviderProps) {
       value={{
         user,
         setUserGroup,
+        refreshUser,
       }}
       {...props}
     />

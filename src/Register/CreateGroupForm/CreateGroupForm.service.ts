@@ -1,7 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-import { DatabaseUser, Group, UserGroup, UserState } from "Authentication"
+import { DatabaseUser, UserGroup, UserState } from "Authentication"
 import { Category } from "Lists/models"
 
 const db = firebase.firestore()

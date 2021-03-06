@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom"
 
 import { useUser, useIsRegistered } from "Authentication"
-import Register from "Register"
+import Register, { JoinHousehold } from "Register"
 import { Household } from "Household"
 
 function RegisteredContent() {
@@ -20,6 +20,9 @@ function RegisteredContent() {
 function UnregisteredContent() {
   return (
     <Switch>
+      <Route path="/join/:id" exact>
+        <JoinHousehold />
+      </Route>
       <Route path="/register" exact>
         <Register />
       </Route>

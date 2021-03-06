@@ -1,0 +1,8 @@
+.spinner {
+  margin: auto;
+}
+
+.accept {
+  text-align: center;
+  margin: var(--spacing-lg);
+}
