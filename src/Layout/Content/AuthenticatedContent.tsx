@@ -1,8 +1,9 @@
 import { Redirect, Route, Switch } from "react-router-dom"
 
-import { useUser, useIsRegistered } from "Authentication"
+import { useIsRegistered } from "Authentication"
 import { JoinHousehold, Register } from "Register"
 import { Household } from "Household"
+import { RegisteredSplash } from "Splash"
 
 function RegisteredContent() {
   return (
@@ -11,7 +12,7 @@ function RegisteredContent() {
         <Household />
       </Route>
       <Route path="/">
-        <span>Welcome back, {useUser()?.name}</span>
+        <RegisteredSplash />
       </Route>
     </Switch>
   )
