@@ -1,27 +1,41 @@
 import { useState } from "react"
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons"
+import firebase from "firebase/app"
+import { faLink, faUserPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import cx from "classnames/bind"
+import "firebase/functions"
 
 import { useGroup } from "Authentication"
+import { Spinner } from "Common"
 
 import classes from "./Household.module.css"
 
 const classnames = cx.bind(classes)
 
+const functions = firebase.functions()
+const createInvitation = functions.httpsCallable("createInvitation")
+
 export function Household() {
   const group = useGroup()
-  const [copied, setCopied] = useState(false)
+  const [working, setWorking] = useState(false)
+  const [success, setSuccess] = useState<boolean | undefined>(undefined)
 
   if (!group) {
     throw new Error("Should not use household if group is not defined.")
   }
 
-  const url = `${window.location.origin}/join/${group.id}`
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(url)
-    setCopied(true)
+  const handleClick = async () => {
+    try {
+      setWorking(true)
+      const { data: inviteId } = await createInvitation({ groupId: group.id })
+      navigator.clipboard.writeText(
+        `${window.location.origin}/join/${inviteId}`
+      )
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setWorking(false)
+    }
   }
 
   return (
@@ -31,13 +45,87 @@ export function Household() {
         <dt>Name</dt>
         <dd>{useGroup()?.name}</dd>
       </dl>
-      <h4>Invite someone to join by sharing this url (click to copy)</h4>
-      <button
-        onClick={copyToClipboard}
-        className={classnames(classes.inviteButton, { copied: copied })}
-      >
-        <FontAwesomeIcon icon={faUserPlus} size="2x" />
-      </button>
+      <h4>Invite Member</h4>
+      <InviteMember />
     </article>
+  )
+}
+
+function InviteMember() {
+  const group = useGroup()
+  const [working, setWorking] = useState(false)
+  const [error, setError] = useState<string>()
+  const [url, setUrl] = useState<string>()
+  const [copied, setCopied] = useState(false)
+
+  if (!group) {
+    throw new Error("Should not use household if group is not defined.")
+  }
+
+  const handleClick = async () => {
+    try {
+      setWorking(true)
+      const { data: inviteId } = await createInvitation({ groupId: group.id })
+      setUrl(`${window.location.origin}/join/${inviteId}`)
+    } catch (err) {
+      console.error(err)
+      setError(err)
+    } finally {
+      setWorking(false)
+    }
+  }
+
+  const handleClickCopy = () => {
+    if (!url) {
+      return
+    }
+    try {
+      navigator.clipboard.writeText(url)
+      setCopied(true)
+    } catch (err) {
+      console.error(err)
+      setError(err)
+    }
+  }
+
+  if (working) {
+    return (
+      <>
+        <span>Creating invitation...</span>
+        <Spinner className={classes.spinner} />{" "}
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <span>It looks like something went wrong... Please try again later.</span>
+    )
+  }
+
+  if (url) {
+    return (
+      <>
+        <p>
+          Click the icon below to copy a link to your clipboard that is valid
+          for one hour.
+        </p>
+        <button
+          onClick={handleClickCopy}
+          className={classnames(classes.button, { success: copied })}
+        >
+          <FontAwesomeIcon icon={faLink} size="2x" />
+        </button>
+        {copied ? (
+          <span className={classes.success}>Copied to clipboard</span>
+        ) : null}
+      </>
+    )
+  }
+
+  return (
+    <button onClick={handleClick} className={classnames(classes.button)}>
+      <FontAwesomeIcon icon={faUserPlus} size="2x" />
+    </button>
   )
 }
