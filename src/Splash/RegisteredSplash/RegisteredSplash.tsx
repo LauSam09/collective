@@ -15,6 +15,7 @@ export function RegisteredSplash() {
 
 function ListSummary() {
   const addedItems = useListItems()
+
   return (
     <section className={classes.section}>
       <div>
