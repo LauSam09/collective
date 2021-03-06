@@ -17,6 +17,9 @@ export function Header() {
         </Link>
         {useIsRegistered() ? (
           <div className={classes.links}>
+            <Link to="/list" title="List">
+              List
+            </Link>
             <Link to="/household" title="Household">
               Household
             </Link>
