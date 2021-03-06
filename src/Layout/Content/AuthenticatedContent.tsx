@@ -26,9 +26,7 @@ function UnregisteredContent() {
       <Route path="/register" exact>
         <Register />
       </Route>
-      <Route path="/">
-        <Redirect to="/register" />
-      </Route>
+      <Redirect to="/register" />
     </Switch>
   )
 }
