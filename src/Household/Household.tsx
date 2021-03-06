@@ -99,7 +99,7 @@ function InviteMember() {
           <FontAwesomeIcon icon={faLink} size="2x" />
         </button>
         {copied ? (
-          <span className={classes.success}>Copied to clipboard</span>
+          <small className={classes.success}>copied to clipboard</small>
         ) : null}
       </>
     )
