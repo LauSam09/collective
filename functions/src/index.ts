@@ -76,6 +76,7 @@ export const joinHousehold = functions.https.onCall(async (data, context) => {
         name: group.name,
         defaultList: group.defaultList,
       },
+      state: "Registered",
     })
 
   return 0
