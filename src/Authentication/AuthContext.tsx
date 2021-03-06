@@ -44,7 +44,7 @@ function AuthProvider(props: AuthProviderProps) {
       if (user) {
         setUser({
           id: user.uid,
-          displayName: user.displayName ?? undefined,
+          name: user.displayName ?? undefined,
           email: user.email || "",
         })
       } else {

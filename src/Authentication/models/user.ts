@@ -9,7 +9,7 @@ export enum UserState {
 export interface AuthUser {
   id: string
   email: string
-  displayName?: string
+  name?: string
 }
 
 /**
