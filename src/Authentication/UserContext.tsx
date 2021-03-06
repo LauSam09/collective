@@ -33,7 +33,7 @@ type UserProviderProps = {
 }
 
 function UserProvider(props: UserProviderProps) {
-  const authUser = useAuth().user
+  const { user: authUser, initialised } = useAuth()
   const [user, setUser] = useState<User>()
 
   /** Retrieves the user, or if it is their first login then create a new user object. */
@@ -84,7 +84,7 @@ function UserProvider(props: UserProviderProps) {
 
   const fetching = authUser && !user
 
-  if (fetching) {
+  if (!initialised || fetching) {
     return <FullPageSpinner />
   }
 

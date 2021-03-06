@@ -26,7 +26,8 @@ if (env.NODE_ENV !== "test") {
 type AuthContextType = {
   login: () => Promise<void>
   logout: () => Promise<void>
-  user?: AuthUser
+  user: AuthUser | undefined
+  initialised: boolean
 }
 
 const AuthContext = createContext<Partial<AuthContextType>>({})
@@ -36,7 +37,7 @@ type AuthProviderProps = {
 }
 
 function AuthProvider(props: AuthProviderProps) {
-  const [fbInitialised, setFbInitialised] = useState(false)
+  const [initialised, setFbInitialised] = useState(false)
   const [user, setUser] = useState<AuthUser>()
 
   useEffect(() => {
@@ -67,11 +68,12 @@ function AuthProvider(props: AuthProviderProps) {
     await firebase.auth().signOut()
   }
 
-  if (!fbInitialised) {
-    return <FullPageSpinner />
-  }
-
-  return <AuthContext.Provider value={{ login, logout, user }} {...props} />
+  return (
+    <AuthContext.Provider
+      value={{ login, logout, user, initialised }}
+      {...props}
+    />
+  )
 }
 
 const useAuth = () => useContext(AuthContext)
