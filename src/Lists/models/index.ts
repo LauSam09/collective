@@ -1,1 +1,1 @@
-export type { default as Category } from "./category"
+export * from "./category"

@@ -4,7 +4,7 @@ type GoogleLoginButtonProps = {
   onClick?: () => void
 }
 
-export default function GoogleLoginButton(props: GoogleLoginButtonProps) {
+export function GoogleLoginButton(props: GoogleLoginButtonProps) {
   const { onClick } = props
 
   return (

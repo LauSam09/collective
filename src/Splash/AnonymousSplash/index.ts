@@ -1,1 +1,1 @@
-export { default } from "./AnonymousSplash"
+export * from "./AnonymousSplash"

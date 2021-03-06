@@ -1,11 +1,11 @@
 import { useAuth } from "Authentication"
 
-import GoogleLoginButton from "./GoogleLoginButton"
-import Features from "./Features"
+import { GoogleLoginButton } from "./GoogleLoginButton"
+import { Features } from "./Features"
 
 import classes from "./AnonymousSplash.module.css"
 
-export default function AnonymousSplash() {
+export function AnonymousSplash() {
   const { login } = useAuth()
 
   return (

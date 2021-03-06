@@ -1,1 +1,1 @@
-export { default } from "./CreateGroupForm"
+export * from "./CreateGroupForm"

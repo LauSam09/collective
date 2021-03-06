@@ -11,7 +11,7 @@ type Form = {
   name: string
 }
 
-export default function CreateGroupForm() {
+export function CreateGroupForm() {
   const { formState, handleSubmit, register } = useForm<Form>({
     defaultValues: {
       name: "",

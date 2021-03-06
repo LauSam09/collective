@@ -1,6 +1,6 @@
 import classes from "./Features.module.css"
 
-export default function Features() {
+export function Features() {
   return (
     <div className={classes.features}>
       <h4>Features</h4>

@@ -1,2 +1,2 @@
-export { default } from "./Register"
+export * from "./Register"
 export * from "./JoinHousehold"

@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom"
 
 import { useUser, useIsRegistered } from "Authentication"
-import Register, { JoinHousehold } from "Register"
+import { JoinHousehold, Register } from "Register"
 import { Household } from "Household"
 
 function RegisteredContent() {
@@ -31,6 +31,6 @@ function UnregisteredContent() {
   )
 }
 
-export default function AuthenticatedContent() {
+export function AuthenticatedContent() {
   return useIsRegistered() ? <RegisteredContent /> : <UnregisteredContent />
 }

@@ -1,8 +1,8 @@
-import CreateGroupForm from "./CreateGroupForm"
+import { CreateGroupForm } from "./CreateGroupForm"
 
 import classes from "./Register.module.css"
 
-export default function Register() {
+export function Register() {
   return (
     <article>
       <h1>Welcome to Collective, it looks like you're new here!</h1>

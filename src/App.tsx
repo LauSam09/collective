@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { Content, Footer, Header } from "Layout"
 import classes from "./App.module.css"
 
-function App() {
+export function App() {
   useEffect(() => {
     document.body.dataset.theme = "light"
   })
@@ -16,5 +16,3 @@ function App() {
     </div>
   )
 }
-
-export default App

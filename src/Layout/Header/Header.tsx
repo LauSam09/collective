@@ -6,7 +6,7 @@ import { useAuth, useIsRegistered } from "Authentication"
 
 import classes from "./Header.module.css"
 
-export default function Header() {
+export function Header() {
   const { logout } = useAuth()
 
   return (

@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom"
 import { AnonymousSplash } from "Splash"
 
-export default function AnonymousContent() {
+export function AnonymousContent() {
   return (
     <Switch>
       <Route path="/" exact>
