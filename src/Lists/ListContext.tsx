@@ -39,7 +39,7 @@ export function ListContextProvider(props: ListContextProviderProps) {
     {
       name: "Eggs",
       lowerName: "eggs",
-      category: "Dairy",
+      category: "2",
       count: 2,
       notes: undefined,
       added: true,
@@ -52,6 +52,12 @@ export function ListContextProvider(props: ListContextProviderProps) {
       name: "Fruit & Vegetables",
       colour: "#74ac72",
       order: 0,
+    },
+    {
+      id: "2",
+      name: "Dairy",
+      colour: "#fcf403",
+      order: 1,
     },
   ])
 

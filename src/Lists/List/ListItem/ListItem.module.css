@@ -43,11 +43,11 @@ small {
   border-radius: var(--spacing-radius);
   background-color: inherit;
   padding: var(--spacing-md);
+  color: var(--colour-secondary);
 }
 
 .container button:hover {
   background-color: var(--colour-hover) !important;
-  color: white !important;
 }
 
 .container button:focus {

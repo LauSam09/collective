@@ -1,6 +1,7 @@
 .category {
   padding: var(--spacing-md);
   border-radius: var(--spacing-radius);
+  margin-bottom: var(--spacing-md);
 }
 
 .list > * {
