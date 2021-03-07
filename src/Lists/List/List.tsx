@@ -6,11 +6,28 @@ import classes from "./List.module.css"
 export function List() {
   const addedItems = useListItems()
   const categories = useListCategories()
+  const uncategorisedItems = addedItems.filter(
+    (i) => !i.category || categories.findIndex((c) => c.id === i.category) < 0
+  )
+  const groupedItems = [...categories]
+    .sort((a, b) => a.order - b.order)
+    .map((c) => ({
+      ...c,
+      items: addedItems
+        .filter((i) => i.category === c.id)
+        .sort((a, b) => a.lowerName.localeCompare(b.lowerName)),
+    }))
 
-  const groupedItems = categories.map((c) => ({
-    ...c,
-    items: addedItems.filter((i) => i.category === c.id),
-  }))
+  if (uncategorisedItems.length > 0) {
+    groupedItems.splice(0, 0, {
+      name: "Uncategorised",
+      order: -1,
+      colour: "#dedede",
+      items: uncategorisedItems.sort((a, b) =>
+        a.lowerName.localeCompare(b.lowerName)
+      ),
+    })
+  }
 
   return (
     <article>
