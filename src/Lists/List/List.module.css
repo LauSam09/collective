@@ -1,13 +1,24 @@
+.list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.list > * {
+  min-width: 300px;
+  margin-right: var(--spacing-md);
+}
+
 .category {
   padding: var(--spacing-md);
   border-radius: var(--spacing-radius);
   margin-bottom: var(--spacing-md);
 }
 
-.list > * {
+.items > * {
   margin: var(--spacing-sm) 0;
 }
 
-.list > *:last-child {
+.items > *:last-child {
   margin-bottom: 0;
 }

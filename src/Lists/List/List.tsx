@@ -38,7 +38,7 @@ export function List() {
         {addedItems.length === 0 ? (
           <span>Nothing added yet!</span>
         ) : (
-          <div>
+          <div className={classes.list}>
             {groupedItems.map((c) => (
               <div
                 key={c.id}
@@ -46,7 +46,7 @@ export function List() {
                 style={{ backgroundColor: `${c.colour}40` }}
               >
                 <small>{c.name.toLocaleUpperCase()}</small>
-                <div className={classes.list}>
+                <div className={classes.items}>
                   {c.items.map((item) => (
                     <ListItem key={item.name} item={item} category={c} />
                   ))}

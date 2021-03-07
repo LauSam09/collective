@@ -63,19 +63,34 @@ export function ListContextProvider(props: ListContextProviderProps) {
       added: true,
       completed: true,
     },
+    {
+      name: "Frozen peas",
+      lowerName: "frozen peas",
+      category: "3",
+      count: 3,
+      notes: "Fischer",
+      added: true,
+      completed: false,
+    },
   ])
   const [categories, setCategories] = useState<Category[]>([
     {
       id: "1",
       name: "Fruit & Vegetables",
       colour: "#74ac72",
-      order: 2,
+      order: 0,
     },
     {
       id: "2",
       name: "Dairy",
       colour: "#fcf403",
       order: 1,
+    },
+    {
+      id: "3",
+      name: "Frozen",
+      colour: "#0384fc",
+      order: 3,
     },
   ])
 
