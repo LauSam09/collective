@@ -1,0 +1,7 @@
+.list > * {
+  margin-bottom: var(--spacing-sm);
+}
+
+.list > *:last-child {
+  margin-bottom: 0;
+}

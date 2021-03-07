@@ -30,9 +30,18 @@ export function ListContextProvider(props: ListContextProviderProps) {
       lowerName: "spinach",
       category: "Fruit and Veg",
       count: 2,
-      notes: undefined,
+      notes: "Young leaf",
       added: true,
       completed: false,
+    },
+    {
+      name: "Eggs",
+      lowerName: "eggs",
+      category: "Dairy",
+      count: 2,
+      notes: undefined,
+      added: true,
+      completed: true,
     },
   ])
 

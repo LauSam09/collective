@@ -8,13 +8,15 @@ body {
   --spacing-lg: 20px;
   --spacing-md: 10px;
   --spacing-sm: 5px;
+
+  --spacing-radius: 5px;
 }
 
 body[data-theme="light"] {
   /* Text */
   --colour-primary: black;
   --colour-secondary: white;
-  --colour-hover: darkgrey;
+  --colour-hover: lightgrey;
   --colour-error: darkred;
   --colour-success: green;
   --colour-action: #1e79c3;
