@@ -1,5 +1,10 @@
+.category {
+  padding: var(--spacing-md);
+  border-radius: var(--spacing-radius);
+}
+
 .list > * {
-  margin-bottom: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
 }
 
 .list > *:last-child {
