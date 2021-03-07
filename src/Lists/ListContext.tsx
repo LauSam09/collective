@@ -9,14 +9,16 @@ import {
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-import { Item } from "./models"
+import { Category, Item } from "./models"
 
 type ListContextType = {
   addedItems: Item[]
+  categories: Category[]
 }
 
 export const ListContext = createContext<ListContextType>({
   addedItems: [],
+  categories: [],
 })
 
 type ListContextProviderProps = {
@@ -28,7 +30,7 @@ export function ListContextProvider(props: ListContextProviderProps) {
     {
       name: "Spinach",
       lowerName: "spinach",
-      category: "Fruit and Veg",
+      category: "1",
       count: 2,
       notes: "Young leaf",
       added: true,
@@ -44,9 +46,17 @@ export function ListContextProvider(props: ListContextProviderProps) {
       completed: true,
     },
   ])
+  const [categories, setCategories] = useState<Category[]>([
+    {
+      id: "1",
+      name: "Fruit & Vegetables",
+      colour: "#74ac72",
+      order: 0,
+    },
+  ])
 
   return (
-    <ListContext.Provider value={{ addedItems }}>
+    <ListContext.Provider value={{ addedItems, categories }}>
       {props.children}
     </ListContext.Provider>
   )
@@ -54,3 +64,4 @@ export function ListContextProvider(props: ListContextProviderProps) {
 
 export const useListContext = () => useContext(ListContext)
 export const useListItems = () => useListContext().addedItems
+export const useListCategories = () => useListContext().categories

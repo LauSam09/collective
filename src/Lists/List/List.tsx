@@ -1,10 +1,11 @@
-import { useListItems } from "../ListContext"
+import { useListCategories, useListItems } from "../ListContext"
 import { ListItem } from "./ListItem"
 
 import classes from "./List.module.css"
 
 export function List() {
   const addedItems = useListItems()
+  const categories = useListCategories()
 
   return (
     <article>
@@ -14,7 +15,11 @@ export function List() {
         ) : (
           <div className={classes.list}>
             {addedItems.map((item) => (
-              <ListItem key={item.name} item={item} />
+              <ListItem
+                key={item.name}
+                item={item}
+                category={categories.find((c) => c.id === item.category)}
+              />
             ))}
           </div>
         )}

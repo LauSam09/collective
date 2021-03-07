@@ -40,11 +40,12 @@ small {
   border: none;
   border-radius: var(--spacing-radius);
   background-color: inherit;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
 }
 
 .container button:hover {
-  background-color: var(--colour-hover);
+  background-color: var(--colour-hover) !important;
+  color: white !important;
 }
 
 .container button:focus {
