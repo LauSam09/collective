@@ -2,6 +2,7 @@ import { useListCategories, useListItems } from "../ListContext"
 import { ListItem } from "./ListItem"
 
 import classes from "./List.module.css"
+import { AddItem } from "./AddItem"
 
 export function List() {
   const addedItems = useListItems()
@@ -32,6 +33,8 @@ export function List() {
   return (
     <article>
       <section>
+        <h2>Shopping</h2>
+        <AddItem />
         {addedItems.length === 0 ? (
           <span>Nothing added yet!</span>
         ) : (
