@@ -1,4 +1,4 @@
-import { faShoppingBasket } from "@fortawesome/free-solid-svg-icons"
+import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Item } from "../../models"
@@ -20,7 +20,7 @@ export function ListItem(props: ListItemProps) {
         <small>{item.notes}</small>
       </div>
       <button>
-        <FontAwesomeIcon icon={faShoppingBasket} size="2x" />
+        <FontAwesomeIcon icon={faBars} size="2x" />
       </button>
     </div>
   )
