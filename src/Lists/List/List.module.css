@@ -5,8 +5,9 @@
 }
 
 .list > * {
-  min-width: 300px;
-  margin-right: var(--spacing-md);
+  min-width: 280px;
+  /* margin-right: var(--spacing-md); */
+  margin: 0 var(--spacing-sm);
 }
 
 .category {
