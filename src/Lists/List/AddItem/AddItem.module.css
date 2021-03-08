@@ -18,23 +18,13 @@
   margin-bottom: var(--spacing-sm);
 }
 
-.container .details {
-  flex: 1;
-  padding: var(--spacing-sm);
-  padding-left: 0;
-  border-radius: var(--spacing-radius);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  margin-right: var(--spacing-sm);
-}
-
-.container .details input {
+.container input {
   border: none;
+  margin-right: var(--spacing-sm);
+  flex: 1;
 }
 
-.container .details input:focus {
+.container input:focus {
   outline: none;
 }
 

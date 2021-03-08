@@ -7,9 +7,7 @@ export function AddItem() {
   return (
     <form onSubmit={(e) => e.preventDefault()} className={classes.form}>
       <div className={classes.container}>
-        <div className={classes.details}>
-          <input placeholder="Name #category" />
-        </div>
+        <input placeholder="Name #category" />
         <button
           style={{
             backgroundColor: "#dedede",
