@@ -24,6 +24,7 @@ body[data-theme="light"] {
   /* Background */
   --colour-background: white;
   --colour-background-secondary: rgb(66, 133, 244);
+  --colour-background-tertiary: lightgrey;
 }
 
 a {

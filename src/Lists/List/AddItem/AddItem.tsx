@@ -5,11 +5,10 @@ import classes from "./AddItem.module.css"
 
 export function AddItem() {
   return (
-    <form className={classes.form}>
+    <form onSubmit={(e) => e.preventDefault()} className={classes.form}>
       <div className={classes.container}>
         <div className={classes.details}>
-          <input placeholder="Name" />
-          <input placeholder="Notes" />
+          <input placeholder="Name #category" />
         </div>
         <button
           style={{
@@ -19,8 +18,13 @@ export function AddItem() {
           <FontAwesomeIcon icon={faBars} size="2x" />
         </button>
       </div>
-      <div className={classes.submit}>
-        <button className={classes.submit}>Add</button>
+      <div className={classes.actions}>
+        <button type="button" className={classes.clear}>
+          Clear
+        </button>
+        <button type="submit" className={classes.add}>
+          Add
+        </button>
       </div>
     </form>
   )

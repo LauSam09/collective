@@ -1,5 +1,11 @@
 .form {
+  border: 1px solid var(--colour-background-tertiary);
+  max-width: 300px;
+  min-width: 280px;
+  margin: auto;
   margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border-radius: var(--spacing-radius);
 }
 
 .container {
@@ -8,9 +14,8 @@
   min-height: 45px;
   border-radius: var(--spacing-radius);
   background-color: var(--colour-secondary);
-  max-width: 300px;
-  min-width: 280px;
   margin: auto;
+  margin-bottom: var(--spacing-sm);
 }
 
 .container .details {
@@ -25,8 +30,12 @@
   margin-right: var(--spacing-sm);
 }
 
-.container .details input:first-of-type {
-  margin-bottom: var(--spacing-sm);
+.container .details input {
+  border: none;
+}
+
+.container .details input:focus {
+  outline: none;
 }
 
 .form button {
@@ -46,13 +55,25 @@
   outline: none;
 }
 
-.form .submit {
-  text-align: center;
+.form .actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
-.form .submit button {
-  max-width: 300px;
-  width: 100%;
-  margin: auto;
-  background-color: var(--colour-success);
+.form .actions button {
+  min-width: 100px;
+}
+
+.form .actions .add {
+  background-color: var(--colour-action);
+}
+
+.form .actions .clear {
+  color: var(--colour-primary);
+  margin-right: var(--spacing-sm);
+}
+
+.form .actions .clear:hover {
+  color: var(--colour-secondary);
 }
