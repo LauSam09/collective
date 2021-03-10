@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  margin-right: var(--spacing-sm);
+}

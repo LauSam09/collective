@@ -8,23 +8,14 @@
   border-radius: var(--spacing-radius);
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  min-height: 45px;
-  border-radius: var(--spacing-radius);
-  background-color: var(--colour-secondary);
-  margin: auto;
-  margin-bottom: var(--spacing-sm);
-}
-
-.container input {
+.form input {
   border: none;
   margin-right: var(--spacing-sm);
-  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.container input:focus {
+.form input:focus {
   outline: none;
 }
 
@@ -49,6 +40,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  margin-top: var(--spacing-md);
 }
 
 .form .actions button {
