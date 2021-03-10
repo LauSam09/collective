@@ -38,6 +38,22 @@ export function ListContextProvider(props: ListContextProviderProps) {
   }
 
   useEffect(() => {
+    db.collection("groups")
+      .doc(id)
+      .collection("lists")
+      .doc(defaultList)
+      .collection("categories")
+      .get()
+      .then((querySnapshot) => {
+        setCategories(
+          querySnapshot.docs.map(
+            (doc) => ({ ...doc.data(), id: doc.id } as Category)
+          )
+        )
+      })
+  }, [defaultList, id])
+
+  useEffect(() => {
     const unsubscribe = db
       .collection("groups")
       .doc(id)
@@ -53,7 +69,6 @@ export function ListContextProvider(props: ListContextProviderProps) {
               added &&
                 items.push({
                   ...rest,
-                  completed: !!rest.completed,
                   id: change.doc.id,
                 } as Item)
               break
