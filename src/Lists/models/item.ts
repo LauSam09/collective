@@ -1,4 +1,5 @@
 export interface Item {
+  id: string
   added: boolean
   completed: boolean
   category: string
