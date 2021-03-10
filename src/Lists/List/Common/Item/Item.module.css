@@ -7,3 +7,20 @@
   flex: 1;
   margin-right: var(--spacing-sm);
 }
+
+.container button {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--spacing-radius);
+  background-color: inherit;
+  padding: var(--spacing-md);
+  color: var(--colour-secondary);
+}
+
+.container button:hover {
+  background-color: var(--colour-hover) !important;
+}
+
+.container button:focus {
+  outline: none;
+}
