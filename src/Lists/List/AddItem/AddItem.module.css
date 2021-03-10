@@ -19,23 +19,6 @@
   outline: none;
 }
 
-.form button {
-  cursor: pointer;
-  border: none;
-  border-radius: var(--spacing-radius);
-  background-color: inherit;
-  padding: var(--spacing-md);
-  color: var(--colour-secondary);
-}
-
-.form button:hover {
-  background-color: var(--colour-hover) !important;
-}
-
-.form button:focus {
-  outline: none;
-}
-
 .form .actions {
   display: flex;
   flex-wrap: wrap;
@@ -45,6 +28,20 @@
 
 .form .actions button {
   min-width: 100px;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--spacing-radius);
+  background-color: inherit;
+  padding: var(--spacing-md);
+  color: var(--colour-secondary);
+}
+
+.form .actions button:hover {
+  background-color: var(--colour-hover) !important;
+}
+
+.form .actions button:focus {
+  outline: none;
 }
 
 .form .actions .add {

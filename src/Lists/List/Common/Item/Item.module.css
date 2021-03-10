@@ -8,7 +8,7 @@
   margin-right: var(--spacing-sm);
 }
 
-.container button {
+.button {
   cursor: pointer;
   border: none;
   border-radius: var(--spacing-radius);
@@ -17,10 +17,10 @@
   color: var(--colour-secondary);
 }
 
-.container button:hover {
+.button:hover {
   background-color: var(--colour-hover) !important;
 }
 
-.container button:focus {
+.button:focus {
   outline: none;
 }

@@ -15,7 +15,10 @@ export function Item(props: ItemProps) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>{children}</div>
-      <button style={{ backgroundColor: buttonColour || "inherit" }}>
+      <button
+        className={classes.button}
+        style={{ backgroundColor: buttonColour || "inherit" }}
+      >
         <FontAwesomeIcon icon={faBars} size="2x" />
       </button>
     </div>
