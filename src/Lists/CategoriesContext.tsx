@@ -5,13 +5,10 @@ import {
   useEffect,
   useState,
 } from "react"
-import firebase from "firebase/app"
-import "firebase/firestore"
 
 import { Category } from "./models"
 import { useGroup } from "Authentication"
-
-const db = firebase.firestore()
+import { db } from "Config"
 
 type CategoriesContextType = {
   categories: Category[]

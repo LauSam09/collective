@@ -5,23 +5,22 @@ import {
   useEffect,
   useState,
 } from "react"
-import { env } from "process"
+// import { env } from "process"
 import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
 import { AuthUser } from "./models"
 
-import fbConfig from "Config/firebase.json"
-import { FullPageSpinner } from "Common"
+// import fbConfig from "Config/firebase.json"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
-firebase.initializeApp(fbConfig)
+// firebase.initializeApp(fbConfig)
 
-if (env.NODE_ENV !== "test") {
-  firebase.firestore().enablePersistence({ synchronizeTabs: true })
-}
+// if (env.NODE_ENV !== "test") {
+//   firebase.firestore().enablePersistence({ synchronizeTabs: true })
+// }
 
 type AuthContextType = {
   login: () => Promise<void>

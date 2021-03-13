@@ -1,10 +1,6 @@
-import firebase from "firebase/app"
-import "firebase/firestore"
-
 import { DatabaseUser, UserGroup, UserState } from "Authentication"
 import { Category } from "Lists/models"
-
-const db = firebase.firestore()
+import { db } from "Config"
 
 // For now hard-code the initial categories. These could be customisable in future.
 const defaultCategories: Category[] = [

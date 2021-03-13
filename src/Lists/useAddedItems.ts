@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react"
-import firebase from "firebase/app"
-import "firebase/firestore"
 
 import { Item } from "./models"
 import { useGroup } from "Authentication"
-
-const db = firebase.firestore()
+import { db } from "Config"
 
 export function useAddedItems() {
   const { defaultList, id } = useGroup() || {}
@@ -93,26 +90,5 @@ const fakeItems = [
     notes: "Fischer",
     added: true,
     completed: false,
-  },
-]
-
-const fakeCategories = [
-  {
-    id: "1",
-    name: "Fruit & Vegetables",
-    colour: "#74ac72",
-    order: 0,
-  },
-  {
-    id: "2",
-    name: "Dairy",
-    colour: "#fcf403",
-    order: 1,
-  },
-  {
-    id: "3",
-    name: "Frozen",
-    colour: "#0384fc",
-    order: 3,
   },
 ]

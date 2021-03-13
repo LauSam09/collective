@@ -10,11 +10,10 @@ import firebase from "firebase/app"
 import "firebase/firestore"
 
 import { FullPageSpinner } from "Common"
+import { db } from "Config"
 
 import { useAuth } from "./AuthContext"
 import { AuthUser, DatabaseUser, User, UserGroup, UserState } from "./models"
-
-const db = firebase.firestore()
 
 type UserContextType = {
   user: User | undefined

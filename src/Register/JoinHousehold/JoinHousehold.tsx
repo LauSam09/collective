@@ -6,6 +6,7 @@ import "firebase/functions"
 
 import { useUserContext } from "Authentication"
 import { FullPageSpinner } from "Common"
+import { db } from "Config"
 import { Invitation } from "../models"
 
 import classes from "./JoinHousehold.module.css"
@@ -14,7 +15,6 @@ type Params = {
   id: string
 }
 
-const db = firebase.firestore()
 const functions = firebase.functions()
 const acceptInvitation = functions.httpsCallable("acceptInvitation")
 

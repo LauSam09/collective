@@ -1,6 +1,3 @@
-import { faBars } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
 import { Category, Item as ItemModel } from "../../models"
 import { Item } from "../Common/Item"
 
