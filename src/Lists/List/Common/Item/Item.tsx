@@ -1,11 +1,11 @@
 import React from "react"
-import { faBars } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
+import { CategoryButton } from "../CategoryButton"
 
 import classes from "./Item.module.css"
 
 type ItemProps = {
-  buttonColour?: string
+  buttonColour: string
   children?: React.ReactNode
 }
 
@@ -15,16 +15,11 @@ export function Item(props: ItemProps) {
   return (
     <div className={classes.container}>
       <div className={classes.content}>{children}</div>
-      <button
-        className={classes.button}
-        style={{ backgroundColor: buttonColour || "inherit" }}
-      >
-        <FontAwesomeIcon icon={faBars} size="2x" />
-      </button>
+      <CategoryButton buttonColour={buttonColour} />
     </div>
   )
 }
 
 Item.defaultProps = {
-  buttonColour: "#dedede",
+  buttonColour: "var(--colour-background-tertiary)",
 }

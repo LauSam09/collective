@@ -1,0 +1,16 @@
+.button {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--spacing-radius);
+  background-color: inherit;
+  padding: var(--spacing-md);
+  color: var(--colour-secondary);
+}
+
+.button:hover {
+  background-color: var(--colour-hover) !important;
+}
+
+.button:focus {
+  outline: none;
+}
