@@ -1,8 +1,8 @@
 import { useCategories } from "../CategoriesContext"
-import { ListItem } from "./ListItem"
-
-import { AddItem } from "./AddItem"
 import { Item } from "../models"
+
+import { ListItem } from "./ListItem"
+import { AddItem } from "./AddItem"
 
 import classes from "./List.module.css"
 
