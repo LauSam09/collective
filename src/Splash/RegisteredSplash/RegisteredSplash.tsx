@@ -1,26 +1,33 @@
 import { Link } from "react-router-dom"
 
-import { useListItems } from "Lists"
-
 import classes from "./RegisteredSplash.module.css"
 
-export function RegisteredSplash() {
+type RegisteredSplashProps = {
+  itemCount: number
+}
+
+export function RegisteredSplash(props: RegisteredSplashProps) {
+  const { itemCount } = props
+
   return (
     <article>
-      <ListSummary />
+      <ListSummary itemCount={itemCount} />
       <MealPlanningSummary />
     </article>
   )
 }
 
-function ListSummary() {
-  const addedItems = useListItems()
+type ListSummaryProps = {
+  itemCount: number
+}
+
+function ListSummary(props: ListSummaryProps) {
+  const { itemCount } = props
 
   return (
     <section className={classes.section}>
       <div>
-        You have {addedItems.length} item{addedItems.length === 1 ? null : "s"}{" "}
-        in Shopping
+        You have {itemCount} item{itemCount === 1 ? null : "s"} in Shopping
       </div>
       <Link to="/list">Go to list</Link>
     </section>

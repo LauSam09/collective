@@ -1,12 +1,18 @@
-import { useListCategories, useListItems } from "../ListContext"
+import { useCategories } from "../CategoriesContext"
 import { ListItem } from "./ListItem"
 
-import classes from "./List.module.css"
 import { AddItem } from "./AddItem"
+import { Item } from "../models"
 
-export function List() {
-  const addedItems = useListItems()
-  const categories = useListCategories()
+import classes from "./List.module.css"
+
+export type ListProps = {
+  addedItems: Item[]
+}
+
+export function List(props: ListProps) {
+  const { addedItems } = props
+  const categories = useCategories()
   const uncategorisedItems = addedItems.filter(
     (i) => !i.category || categories.findIndex((c) => c.id === i.category) < 0
   )

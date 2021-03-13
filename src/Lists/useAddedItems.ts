@@ -1,57 +1,19 @@
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import { useEffect, useState } from "react"
 import firebase from "firebase/app"
 import "firebase/firestore"
 
-import { Category, Item } from "./models"
+import { Item } from "./models"
 import { useGroup } from "Authentication"
 
 const db = firebase.firestore()
 
-type ListContextType = {
-  addedItems: Item[]
-  categories: Category[]
-}
-
-export const ListContext = createContext<ListContextType>({
-  addedItems: [],
-  categories: [],
-})
-
-type ListContextProviderProps = {
-  children?: ReactNode
-}
-
-export function ListContextProvider(props: ListContextProviderProps) {
+export function useAddedItems() {
   const { defaultList, id } = useGroup() || {}
   const [addedItems, setAddedItems] = useState<Item[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
 
   if (!defaultList || !id) {
     throw new Error("Group not defined for user.")
   }
-
-  useEffect(() => {
-    db.collection("groups")
-      .doc(id)
-      .collection("lists")
-      .doc(defaultList)
-      .collection("categories")
-      .get()
-      .then((querySnapshot) => {
-        setCategories(
-          querySnapshot.docs.map(
-            (doc) => ({ ...doc.data(), id: doc.id } as Category)
-          )
-        )
-      })
-  }, [defaultList, id])
 
   useEffect(() => {
     const unsubscribe = db
@@ -83,11 +45,7 @@ export function ListContextProvider(props: ListContextProviderProps) {
     }
   }, [defaultList, id])
 
-  return (
-    <ListContext.Provider value={{ addedItems, categories }}>
-      {props.children}
-    </ListContext.Provider>
-  )
+  return { addedItems }
 }
 
 const fakeItems = [
@@ -158,7 +116,3 @@ const fakeCategories = [
     order: 3,
   },
 ]
-
-export const useListContext = () => useContext(ListContext)
-export const useListItems = () => useListContext().addedItems
-export const useListCategories = () => useListContext().categories
