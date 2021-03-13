@@ -36,12 +36,13 @@
   color: var(--colour-secondary);
 }
 
-.form .actions button:hover {
-  background-color: var(--colour-hover) !important;
+.form .actions button:disabled {
+  cursor: default;
+  color: var(--colour-disabled);
 }
 
-.form .actions button:focus {
-  outline: none;
+.form .actions button:hover:enabled {
+  background-color: var(--colour-hover) !important;
 }
 
 .form .actions .add {
@@ -53,6 +54,6 @@
   margin-right: var(--spacing-sm);
 }
 
-.form .actions .clear:hover {
+.form .actions .clear:hover:enabled {
   color: var(--colour-secondary);
 }

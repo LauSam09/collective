@@ -20,6 +20,7 @@ body[data-theme="light"] {
   --colour-error: darkred;
   --colour-success: green;
   --colour-action: #1e79c3;
+  --colour-disabled: lightgrey;
 
   /* Background */
   --colour-background: white;
