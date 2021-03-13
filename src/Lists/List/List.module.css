@@ -6,7 +6,6 @@
 
 .list > * {
   min-width: 280px;
-  /* margin-right: var(--spacing-md); */
   margin: 0 var(--spacing-sm);
 }
 
