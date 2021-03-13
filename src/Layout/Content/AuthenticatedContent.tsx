@@ -12,15 +12,16 @@ function RegisteredContent() {
   return (
     <CategoriesContextProvider>
       <Switch>
-        <Route path="/household">
+        <Route path="/household" exact>
           <Household />
         </Route>
-        <Route path="/list">
+        <Route path="/list" exact>
           <List addedItems={addedItems} />
         </Route>
-        <Route path="/">
+        <Route path="/" exact>
           <RegisteredSplash itemCount={addedItems.length} />
         </Route>
+        <Redirect to="/" />
       </Switch>
     </CategoriesContextProvider>
   )
