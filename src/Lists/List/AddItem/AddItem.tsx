@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { singular } from "pluralize"
 
 import { useUserContext } from "Authentication"
@@ -17,10 +17,24 @@ export function AddItem(props: AddItemsProps) {
   const [saving, setSaving] = useState(false)
   const { getDefaultItemsCollection } = useUserContext()
   const inputRef = useRef<HTMLInputElement>(null)
+  const [unaddedItems, setUnaddedItems] = useState<ItemModel[]>([])
 
   const lowerName = singular(value.trim().toLowerCase())
   const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
   const isValid = Boolean(value) && !alreadyAdded && !saving
+
+  useEffect(() => {
+    getDefaultItemsCollection()
+      .where("added", "==", false)
+      .get()
+      .then((querySnapshot) =>
+        setUnaddedItems(
+          querySnapshot.docs.map(
+            (d) => ({ ...d.data(), id: d.id } as ItemModel)
+          )
+        )
+      )
+  }, [getDefaultItemsCollection])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -79,8 +93,14 @@ export function AddItem(props: AddItemsProps) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Item to add..."
+          list="items"
         />
       </Item>
+      <datalist id="items">
+        {unaddedItems.map((i) => (
+          <option key={i.id} value={i.name} />
+        ))}
+      </datalist>
       {alreadyAdded && !saving ? (
         <small className={classes.error}>
           {alreadyAdded.name} has already been added
