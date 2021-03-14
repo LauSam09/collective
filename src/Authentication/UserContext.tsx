@@ -19,12 +19,14 @@ type UserContextType = {
   user: User | undefined
   setUserGroup: (group: UserGroup) => void
   refreshUser: () => Promise<void>
+  getDefaultItemsCollection: () => firebase.firestore.CollectionReference<firebase.firestore.DocumentData>
 }
 
 const UserContext = createContext<UserContextType>({
   user: undefined,
   setUserGroup: () => null,
   refreshUser: () => Promise.resolve(),
+  getDefaultItemsCollection: () => null as any,
 })
 
 type UserProviderProps = {
@@ -81,6 +83,14 @@ function UserProvider(props: UserProviderProps) {
     setUser({ ...user, state: UserState.Registered, group })
   }
 
+  const getDefaultItemsCollection = () =>
+    db
+      .collection("groups")
+      .doc(user?.group?.id)
+      .collection("lists")
+      .doc(user?.group?.defaultList)
+      .collection("items")
+
   const fetching = authUser && !user
 
   if (!initialised || fetching) {
@@ -93,6 +103,7 @@ function UserProvider(props: UserProviderProps) {
         user,
         setUserGroup,
         refreshUser,
+        getDefaultItemsCollection,
       }}
       {...props}
     />

@@ -1,7 +1,7 @@
 import { useState } from "react"
+import { singular } from "pluralize"
 
-import { useGroup } from "Authentication"
-import { db } from "Config"
+import { useUserContext } from "Authentication"
 import { Item } from "../Common/Item"
 import { DatabaseItem } from "../../models"
 
@@ -10,31 +10,42 @@ import classes from "./AddItem.module.css"
 export function AddItem() {
   // TODO useForm
   const [value, setValue] = useState("")
-  const { defaultList, id } = useGroup() || {}
-
-  if (!defaultList || !id) {
-    throw new Error("Group not defined for user.")
-  }
+  const { getDefaultItemsCollection } = useUserContext()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    // TODO add logic to retrieve existing item
-    const item: DatabaseItem = {
-      added: true,
-      completed: false,
-      category: "",
-      name: value,
-      lowerName: value.toLowerCase(), // TODO use pluralize library
-      notes: "",
-      count: 1,
+    const itemsCollection = getDefaultItemsCollection()
+    const name = value.trim()
+    const lowerName = singular(name.toLowerCase())
+
+    const existing = await itemsCollection
+      .where("lowerName", "==", lowerName)
+      .limit(1)
+      .get()
+
+    let databaseItem: DatabaseItem
+
+    if (existing.empty) {
+      databaseItem = {
+        name,
+        lowerName,
+        added: true,
+        completed: false,
+        count: 1,
+        notes: "",
+        category: "",
+      }
+      await itemsCollection.add(databaseItem)
+    } else {
+      await itemsCollection.doc(existing.docs[0].id).update({
+        name,
+        added: true,
+        completed: false,
+        count: (existing.docs[0].data().count ?? 0) + 1,
+        notes: "",
+      })
     }
-    await db
-      .collection("groups")
-      .doc(id)
-      .collection("lists")
-      .doc(defaultList)
-      .collection("items")
-      .add(item)
+
     setValue("")
   }
 

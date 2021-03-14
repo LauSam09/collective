@@ -23,24 +23,21 @@ export function useAddedItems() {
         const addedItems: Item[] = []
         snapshot.docChanges().forEach((change) => {
           const { added, ...rest } = change.doc.data()
+          const item = { ...rest, id: change.doc.id } as Item
           switch (change.type) {
             case "added": {
-              added &&
-                addedItems.push({
-                  ...rest,
-                  id: change.doc.id,
-                } as Item)
+              added && addedItems.push(item)
               break
             }
             case "modified": {
               if (added) {
-                setAddedItems((old) =>
-                  old.map((i) =>
-                    i.id === change.doc.id
-                      ? ({ ...rest, id: change.doc.id } as Item)
-                      : i
-                  )
-                )
+                setAddedItems((old) => {
+                  if (old.filter((i) => i.id === item.id).length > 0) {
+                    return old.map((i) => (i.id === change.doc.id ? item : i))
+                  } else {
+                    return [...old, item]
+                  }
+                })
               } else {
                 setAddedItems((old) =>
                   old.filter((i) => i.id !== change.doc.id)
