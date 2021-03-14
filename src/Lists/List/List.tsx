@@ -40,7 +40,7 @@ export function List(props: ListProps) {
     <article>
       <section>
         <h2>Shopping</h2>
-        <AddItem />
+        <AddItem addedItems={addedItems} />
         {addedItems.length === 0 ? (
           <span>Nothing added yet!</span>
         ) : (

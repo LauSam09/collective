@@ -3,12 +3,16 @@ import { singular } from "pluralize"
 
 import { useUserContext } from "Authentication"
 import { Item } from "../Common/Item"
-import { DatabaseItem } from "../../models"
+import { DatabaseItem, Item as ItemModel } from "../../models"
 
 import classes from "./AddItem.module.css"
 
-export function AddItem() {
-  // TODO useForm
+type AddItemsProps = {
+  addedItems: ItemModel[]
+}
+
+export function AddItem(props: AddItemsProps) {
+  const { addedItems } = props
   const [value, setValue] = useState("")
   const { getDefaultItemsCollection } = useUserContext()
 
@@ -49,6 +53,10 @@ export function AddItem() {
     setValue("")
   }
 
+  const lowerName = singular(value.trim().toLowerCase())
+  const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
+  const isValid = Boolean(value) && !alreadyAdded
+
   return (
     <form onSubmit={handleSubmit} className={classes.form}>
       <Item>
@@ -58,6 +66,11 @@ export function AddItem() {
           placeholder="Item to add..."
         />
       </Item>
+      {alreadyAdded ? (
+        <small className={classes.error}>
+          {alreadyAdded.name} has already been added
+        </small>
+      ) : null}
       <div className={classes.actions}>
         <button
           type="button"
@@ -67,11 +80,7 @@ export function AddItem() {
         >
           Clear
         </button>
-        <button
-          type="submit"
-          disabled={!Boolean(value)}
-          className={classes.add}
-        >
+        <button type="submit" disabled={!isValid} className={classes.add}>
           Add
         </button>
       </div>

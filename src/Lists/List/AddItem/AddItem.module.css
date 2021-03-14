@@ -19,6 +19,10 @@
   outline: none;
 }
 
+.form .error {
+  color: var(--colour-error);
+}
+
 .form .actions {
   display: flex;
   flex-wrap: wrap;
