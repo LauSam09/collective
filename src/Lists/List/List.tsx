@@ -8,10 +8,11 @@ import classes from "./List.module.css"
 
 export type ListProps = {
   addedItems: Item[]
+  unaddedItems: Item[]
 }
 
 export function List(props: ListProps) {
-  const { addedItems } = props
+  const { addedItems, unaddedItems } = props
   const categories = useCategories()
   const uncategorisedItems = addedItems.filter(
     (i) => !i.category || categories.findIndex((c) => c.id === i.category) < 0
@@ -40,7 +41,7 @@ export function List(props: ListProps) {
     <article>
       <section>
         <h2>Shopping</h2>
-        <AddItem addedItems={addedItems} />
+        <AddItem addedItems={addedItems} unaddedItems={unaddedItems} />
         {addedItems.length === 0 ? (
           <span>Nothing added yet!</span>
         ) : (

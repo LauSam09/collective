@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { singular } from "pluralize"
 
 import { useUserContext } from "Authentication"
@@ -9,32 +9,19 @@ import classes from "./AddItem.module.css"
 
 type AddItemsProps = {
   addedItems: ItemModel[]
+  unaddedItems: ItemModel[]
 }
 
 export function AddItem(props: AddItemsProps) {
-  const { addedItems } = props
+  const { addedItems, unaddedItems } = props
   const [value, setValue] = useState("")
   const [saving, setSaving] = useState(false)
   const { getDefaultItemsCollection } = useUserContext()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [unaddedItems, setUnaddedItems] = useState<ItemModel[]>([])
 
   const lowerName = singular(value.trim().toLowerCase())
   const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
   const isValid = Boolean(value) && !alreadyAdded && !saving
-
-  useEffect(() => {
-    getDefaultItemsCollection()
-      .where("added", "==", false)
-      .get()
-      .then((querySnapshot) =>
-        setUnaddedItems(
-          querySnapshot.docs.map(
-            (d) => ({ ...d.data(), id: d.id } as ItemModel)
-          )
-        )
-      )
-  }, [getDefaultItemsCollection])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

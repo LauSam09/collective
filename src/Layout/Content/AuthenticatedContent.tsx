@@ -7,7 +7,7 @@ import { RegisteredSplash } from "Splash"
 import { CategoriesContextProvider, List, useAddedItems } from "Lists"
 
 function RegisteredContent() {
-  const { addedItems } = useAddedItems()
+  const { addedItems, unaddedItems } = useAddedItems()
 
   return (
     <CategoriesContextProvider>
@@ -16,7 +16,7 @@ function RegisteredContent() {
           <Household />
         </Route>
         <Route path="/list" exact>
-          <List addedItems={addedItems} />
+          <List addedItems={addedItems} unaddedItems={unaddedItems} />
         </Route>
         <Route path="/" exact>
           <RegisteredSplash itemCount={addedItems.length} />
