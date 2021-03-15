@@ -28,6 +28,7 @@ export function List(props: ListProps) {
 
   if (uncategorisedItems.length > 0) {
     groupedItems.splice(0, 0, {
+      id: "-1",
       name: "Uncategorised",
       order: -1,
       colour: "#dedede",
