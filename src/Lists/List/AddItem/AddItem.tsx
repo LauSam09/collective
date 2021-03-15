@@ -83,11 +83,14 @@ export function AddItem(props: AddItemsProps) {
           list="items"
         />
       </Item>
-      <datalist id="items">
-        {unaddedItems.map((i) => (
-          <option key={i.id} value={i.name} />
-        ))}
-      </datalist>
+      {value.length > 0 ? (
+        <datalist id="items">
+          {unaddedItems.map((i) => (
+            <option key={i.id} value={i.name} />
+          ))}
+        </datalist>
+      ) : null}
+
       {alreadyAdded && !saving ? (
         <small className={classes.error}>
           {alreadyAdded.name} has already been added
