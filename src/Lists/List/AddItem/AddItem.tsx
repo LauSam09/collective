@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { singular } from "pluralize"
 
 import { useUserContext } from "Authentication"
@@ -27,6 +27,13 @@ export function AddItem(props: AddItemsProps) {
   const lowerName = singular(value.trim().toLowerCase())
   const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
   const isValid = Boolean(value) && !alreadyAdded && !saving
+
+  useEffect(() => {
+    const preexisting = unaddedItems.find((i) => i.lowerName === lowerName)
+    if (preexisting) {
+      setCategory(preexisting.category)
+    }
+  }, [lowerName, unaddedItems])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -68,6 +75,7 @@ export function AddItem(props: AddItemsProps) {
 
   const handleClickCancel = () => {
     setValue("")
+    setCategory("")
     inputRef.current?.focus()
   }
 
@@ -102,7 +110,7 @@ export function AddItem(props: AddItemsProps) {
           <button
             type="button"
             onClick={handleClickCancel}
-            disabled={!Boolean(value) || saving}
+            disabled={(!Boolean(value) && !category) || saving}
             className={classes.clear}
           >
             Clear
