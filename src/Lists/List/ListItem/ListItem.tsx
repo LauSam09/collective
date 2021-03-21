@@ -8,10 +8,11 @@ import classes from "./ListItem.module.css"
 export type ListItemProps = {
   item: ItemModel
   category: Category | undefined
+  onClickCategory: () => void
 }
 
 export function ListItem(props: ListItemProps) {
-  const { item, category } = props
+  const { item, category, onClickCategory } = props
   const { defaultList, id } = useGroup() || {}
 
   if (!defaultList || !id) {
@@ -30,7 +31,7 @@ export function ListItem(props: ListItemProps) {
   }
 
   return (
-    <Item buttonColour={category?.colour}>
+    <Item onClickCategory={onClickCategory} buttonColour={category?.colour}>
       <div className={classes.content}>
         <input
           type="checkbox"

@@ -6,6 +6,7 @@ import { Item } from "../Common/Item"
 import { DatabaseItem, Item as ItemModel } from "../../models"
 
 import classes from "./AddItem.module.css"
+import { CategoryModal } from "../Common/CategoryModal"
 
 type AddItemsProps = {
   addedItems: ItemModel[]
@@ -15,9 +16,11 @@ type AddItemsProps = {
 export function AddItem(props: AddItemsProps) {
   const { addedItems, unaddedItems } = props
   const [value, setValue] = useState("")
+  const [category, setCategory] = useState<string>()
   const [saving, setSaving] = useState(false)
-  const { getDefaultItemsCollection } = useUserContext()
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { getDefaultItemsCollection } = useUserContext()
 
   const lowerName = singular(value.trim().toLowerCase())
   const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
@@ -73,42 +76,48 @@ export function AddItem(props: AddItemsProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={classes.form}>
-      <Item>
-        <input
-          ref={inputRef}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Item to add..."
-          list="items"
-        />
-      </Item>
-      {value.length > 0 ? (
-        <datalist id="items">
-          {unaddedItems.map((i) => (
-            <option key={i.id} value={i.name} />
-          ))}
-        </datalist>
-      ) : null}
-
-      {alreadyAdded && !saving ? (
-        <small className={classes.error}>
-          {alreadyAdded.name} has already been added
-        </small>
-      ) : null}
-      <div className={classes.actions}>
-        <button
-          type="button"
-          onClick={handleClickCancel}
-          disabled={!Boolean(value) || saving}
-          className={classes.clear}
-        >
-          Clear
-        </button>
-        <button type="submit" disabled={!isValid} className={classes.add}>
-          Add
-        </button>
-      </div>
-    </form>
+    <>
+      <form onSubmit={handleSubmit} className={classes.form}>
+        <Item onClickCategory={() => setIsModalOpen(true)}>
+          <input
+            ref={inputRef}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Item to add..."
+            list="items"
+          />
+        </Item>
+        {value.length > 0 ? (
+          <datalist id="items">
+            {unaddedItems.map((i) => (
+              <option key={i.id} value={i.name} />
+            ))}
+          </datalist>
+        ) : null}
+        {alreadyAdded && !saving ? (
+          <small className={classes.error}>
+            {alreadyAdded.name} has already been added
+          </small>
+        ) : null}
+        <div className={classes.actions}>
+          <button
+            type="button"
+            onClick={handleClickCancel}
+            disabled={!Boolean(value) || saving}
+            className={classes.clear}
+          >
+            Clear
+          </button>
+          <button type="submit" disabled={!isValid} className={classes.add}>
+            Add
+          </button>
+        </div>
+      </form>
+      <CategoryModal
+        isOpen={isModalOpen}
+        selectedCategoryId={category}
+        close={() => setIsModalOpen(false)}
+      />
+    </>
   )
 }

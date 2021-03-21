@@ -5,6 +5,8 @@ import { ListItem } from "./ListItem"
 import { AddItem } from "./AddItem"
 
 import classes from "./List.module.css"
+import { CategoryModal } from "./Common/CategoryModal"
+import { useState } from "react"
 
 export type ListProps = {
   addedItems: Item[]
@@ -14,6 +16,9 @@ export type ListProps = {
 export function List(props: ListProps) {
   const { addedItems, unaddedItems } = props
   const categories = useCategories()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<Item>()
+
   const uncategorisedItems = addedItems.filter(
     (i) => !i.category || categories.findIndex((c) => c.id === i.category) < 0
   )
@@ -38,6 +43,11 @@ export function List(props: ListProps) {
     })
   }
 
+  const handleCategoryClick = (item: Item) => {
+    setSelectedItem(item)
+    setIsModalOpen(true)
+  }
+
   return (
     <article>
       <section>
@@ -56,13 +66,23 @@ export function List(props: ListProps) {
                 <small>{c.name.toLocaleUpperCase()}</small>
                 <div className={classes.items}>
                   {c.items.map((item) => (
-                    <ListItem key={item.name} item={item} category={c} />
+                    <ListItem
+                      key={item.name}
+                      item={item}
+                      category={c}
+                      onClickCategory={() => handleCategoryClick(item)}
+                    />
                   ))}
                 </div>
               </div>
             ))}
           </div>
         )}
+        <CategoryModal
+          isOpen={isModalOpen}
+          selectedCategoryId={selectedItem?.category}
+          close={() => setIsModalOpen(false)}
+        />
       </section>
     </article>
   )

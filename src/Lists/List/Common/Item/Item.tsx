@@ -6,16 +6,17 @@ import classes from "./Item.module.css"
 
 type ItemProps = {
   buttonColour: string
+  onClickCategory?: () => void
   children?: React.ReactNode
 }
 
 export function Item(props: ItemProps) {
-  const { buttonColour, children } = props
+  const { buttonColour, onClickCategory, children } = props
 
   return (
     <div className={classes.container}>
       <div className={classes.content}>{children}</div>
-      <CategoryButton buttonColour={buttonColour} />
+      <CategoryButton buttonColour={buttonColour} onClick={onClickCategory} />
     </div>
   )
 }

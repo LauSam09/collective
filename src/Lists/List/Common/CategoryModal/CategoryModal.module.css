@@ -8,3 +8,13 @@
   background: rgb(255, 255, 255);
   border-radius: var(--spacing-radius);
 }
+
+.modal:focus {
+  outline: none;
+}
+
+.category {
+  text-align: center;
+  padding: var(--spacing-md);
+  margin: var(--spacing-sm) 0;
+}
