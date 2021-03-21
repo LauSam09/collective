@@ -7,6 +7,7 @@ import { DatabaseItem, Item as ItemModel } from "../../models"
 
 import classes from "./AddItem.module.css"
 import { CategoryModal } from "../Common/CategoryModal"
+import { useCategories } from "Lists/CategoriesContext"
 
 type AddItemsProps = {
   addedItems: ItemModel[]
@@ -21,6 +22,7 @@ export function AddItem(props: AddItemsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const { getDefaultItemsCollection } = useUserContext()
+  const categories = useCategories()
 
   const lowerName = singular(value.trim().toLowerCase())
   const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
@@ -40,26 +42,20 @@ export function AddItem(props: AddItemsProps) {
         .limit(1)
         .get()
 
-      let databaseItem: DatabaseItem
+      const fieldsToUpdate: Partial<DatabaseItem> = {
+        name,
+        added: true,
+        completed: false,
+        notes: "",
+        category,
+      }
 
       if (existing.empty) {
-        databaseItem = {
-          name,
-          lowerName,
-          added: true,
-          completed: false,
-          count: 1,
-          notes: "",
-          category: "",
-        }
-        await itemsCollection.add(databaseItem)
+        await itemsCollection.add({ ...fieldsToUpdate, lowerName, count: 1 })
       } else {
         await itemsCollection.doc(existing.docs[0].id).update({
-          name,
-          added: true,
-          completed: false,
+          ...fieldsToUpdate,
           count: (existing.docs[0].data().count ?? 0) + 1,
-          notes: "",
         })
       }
 
@@ -78,7 +74,10 @@ export function AddItem(props: AddItemsProps) {
   return (
     <>
       <form onSubmit={handleSubmit} className={classes.form}>
-        <Item onClickCategory={() => setIsModalOpen(true)}>
+        <Item
+          onClickCategory={() => setIsModalOpen(true)}
+          buttonColour={categories.find((c) => c.id === category)?.colour}
+        >
           <input
             ref={inputRef}
             value={value}
@@ -117,6 +116,10 @@ export function AddItem(props: AddItemsProps) {
         isOpen={isModalOpen}
         selectedCategoryId={category}
         close={() => setIsModalOpen(false)}
+        select={(category) => {
+          setCategory(category)
+          return Promise.resolve()
+        }}
       />
     </>
   )

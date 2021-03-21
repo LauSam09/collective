@@ -82,6 +82,7 @@ export function List(props: ListProps) {
           isOpen={isModalOpen}
           selectedCategoryId={selectedItem?.category}
           close={() => setIsModalOpen(false)}
+          select={() => Promise.resolve()}
         />
       </section>
     </article>
