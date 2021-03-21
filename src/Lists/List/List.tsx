@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useCategories } from "../CategoriesContext"
 import { Item } from "../models"
 
@@ -6,7 +7,7 @@ import { AddItem } from "./AddItem"
 
 import classes from "./List.module.css"
 import { CategoryModal } from "./Common/CategoryModal"
-import { useState } from "react"
+import { useUserContext } from "Authentication"
 
 export type ListProps = {
   addedItems: Item[]
@@ -18,6 +19,7 @@ export function List(props: ListProps) {
   const categories = useCategories()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<Item>()
+  const { getDefaultItemsCollection } = useUserContext()
 
   const uncategorisedItems = addedItems.filter(
     (i) => !i.category || categories.findIndex((c) => c.id === i.category) < 0
@@ -47,6 +49,9 @@ export function List(props: ListProps) {
     setSelectedItem(item)
     setIsModalOpen(true)
   }
+
+  const handleSelectCategory = (category: string) =>
+    getDefaultItemsCollection().doc(selectedItem?.id).update({ category })
 
   return (
     <article>
@@ -82,7 +87,7 @@ export function List(props: ListProps) {
           isOpen={isModalOpen}
           selectedCategoryId={selectedItem?.category}
           close={() => setIsModalOpen(false)}
-          select={() => Promise.resolve()}
+          select={handleSelectCategory}
         />
       </section>
     </article>

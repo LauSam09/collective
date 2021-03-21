@@ -47,7 +47,7 @@ export function AddItem(props: AddItemsProps) {
         added: true,
         completed: false,
         notes: "",
-        category,
+        category: category || "",
       }
 
       if (existing.empty) {
