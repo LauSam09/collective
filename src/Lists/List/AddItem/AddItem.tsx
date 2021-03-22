@@ -18,24 +18,40 @@ type AddItemsProps = {
 
 export function AddItem(props: AddItemsProps) {
   const { addedItems, unaddedItems } = props
+
   const [value, setValue] = useState("")
   const [category, setCategory] = useState<string>()
   const [saving, setSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [previouslyAdded, setPreviouslyAdded] = useState<ItemModel>()
+  const [alreadyAdded, setAlreadyAdded] = useState<ItemModel>()
+  const [isValid, setIsValid] = useState(false)
+
   const inputRef = useRef<HTMLInputElement>(null)
   const { getDefaultItemsCollection } = useUserContext()
   const categories = useCategories()
 
-  const lowerName = singular(value.trim().toLowerCase())
-  const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
-  const isValid = Boolean(value) && !alreadyAdded && !saving
+  useEffect(() => {
+    if (previouslyAdded) {
+      setCategory(previouslyAdded.category)
+    }
+  }, [previouslyAdded])
 
   useEffect(() => {
-    const preexisting = unaddedItems.find((i) => i.lowerName === lowerName)
-    if (preexisting) {
-      setCategory(preexisting.category)
+    const lowerName = singular(value.trim().toLowerCase())
+    const previouslyAdded = unaddedItems.find((i) => i.lowerName === lowerName)
+    setPreviouslyAdded(previouslyAdded)
+
+    if (previouslyAdded) {
+      setCategory(previouslyAdded.category)
     }
-  }, [lowerName, unaddedItems])
+
+    setAlreadyAdded(addedItems.find((i) => i.lowerName === lowerName))
+  }, [value, unaddedItems, addedItems])
+
+  useEffect(() => {
+    setIsValid(Boolean(value) && !alreadyAdded && !saving)
+  }, [value, alreadyAdded, saving])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -118,7 +134,7 @@ export function AddItem(props: AddItemsProps) {
             Clear
           </button>
           <button type="submit" disabled={!isValid} className={classes.add}>
-            Add
+            {previouslyAdded ? "Add" : "Add New"}
           </button>
         </div>
       </form>
