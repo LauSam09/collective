@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react"
 import { singular } from "pluralize"
 
 import { useUserContext } from "Authentication"
-import { Item } from "../Common/Item"
+
+import { useCategories } from "../../CategoriesContext"
 import { DatabaseItem, Item as ItemModel } from "../../models"
 
+import { Item } from "../Common/Item"
+import { CategoryModal } from "../CategoryModal"
+
 import classes from "./AddItem.module.css"
-import { CategoryModal } from "../Common/CategoryModal"
-import { useCategories } from "Lists/CategoriesContext"
 
 type AddItemsProps = {
   addedItems: ItemModel[]

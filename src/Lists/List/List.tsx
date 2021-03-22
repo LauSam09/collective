@@ -6,7 +6,7 @@ import { ListItem } from "./ListItem"
 import { AddItem } from "./AddItem"
 
 import classes from "./List.module.css"
-import { CategoryModal } from "./Common/CategoryModal"
+import { CategoryModal } from "./CategoryModal"
 import { useUserContext } from "Authentication"
 
 export type ListProps = {

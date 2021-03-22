@@ -1,5 +1,4 @@
-import { useGroup } from "Authentication"
-import { db } from "Config"
+import { useUserContext } from "Authentication"
 import { Category, Item as ItemModel } from "../../models"
 import { Item } from "../Common/Item"
 
@@ -13,19 +12,10 @@ export type ListItemProps = {
 
 export function ListItem(props: ListItemProps) {
   const { item, category, onClickCategory } = props
-  const { defaultList, id } = useGroup() || {}
-
-  if (!defaultList || !id) {
-    throw new Error("Group not defined for user.")
-  }
+  const { getDefaultItemsCollection } = useUserContext()
 
   const handleChange = async () => {
-    await db
-      .collection("groups")
-      .doc(id)
-      .collection("lists")
-      .doc(defaultList)
-      .collection("items")
+    await getDefaultItemsCollection()
       .doc(item.id)
       .update({ completed: !item.completed })
   }
