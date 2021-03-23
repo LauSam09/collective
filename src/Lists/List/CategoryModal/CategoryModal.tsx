@@ -33,7 +33,12 @@ export function CategoryModal(props: CategoryModalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={close} className={classes.modal}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={close}
+      closeTimeoutMS={250}
+      className={classes.modal}
+    >
       {categories
         .sort((a, b) => a.order - b.order)
         .map((c) => (

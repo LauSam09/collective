@@ -1,11 +1,14 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter as Router } from "react-router-dom"
+import Modal from "react-modal"
 
 import { App } from "App"
 import { AppProviders } from "./AppProviders"
 import { reportWebVitals } from "reportWebVitals"
 import "index.css"
+
+Modal.setAppElement("#root")
 
 ReactDOM.render(
   <React.StrictMode>
