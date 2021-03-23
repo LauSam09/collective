@@ -102,7 +102,10 @@ export function AddItem(props: AddItemsProps) {
       <form onSubmit={handleSubmit} className={classes.form}>
         <Item
           onClickCategory={() => setIsModalOpen(true)}
-          buttonColour={categories.find((c) => c.id === category)?.colour}
+          buttonColour={
+            categories.find((c) => c.id === category)?.colour ||
+            "var(--colour-uncategorised)"
+          }
         >
           <input
             ref={inputRef}

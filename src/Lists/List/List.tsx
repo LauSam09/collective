@@ -38,7 +38,7 @@ export function List(props: ListProps) {
       id: "-1",
       name: "Uncategorised",
       order: -1,
-      colour: "#dedede",
+      colour: "var(--colour-uncategorised)",
       items: uncategorisedItems.sort((a, b) =>
         a.lowerName.localeCompare(b.lowerName)
       ),

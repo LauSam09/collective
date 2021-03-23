@@ -10,6 +10,9 @@ body {
   --spacing-sm: 5px;
 
   --spacing-radius: 5px;
+
+  /* Background */
+  --colour-uncategorised: #dedede;
 }
 
 body[data-theme="light"] {
