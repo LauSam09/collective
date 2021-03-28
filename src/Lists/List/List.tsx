@@ -8,6 +8,7 @@ import { AddItem } from "./AddItem"
 import classes from "./List.module.css"
 import { CategoryModal } from "./CategoryModal"
 import { useUserContext } from "Authentication"
+import { ItemModal } from "./ItemModal"
 
 export type ListProps = {
   addedItems: Item[]
@@ -17,7 +18,8 @@ export type ListProps = {
 export function List(props: ListProps) {
   const { addedItems, unaddedItems } = props
   const categories = useCategories()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<Item>()
   const { getDefaultItemsCollection } = useUserContext()
 
@@ -47,7 +49,12 @@ export function List(props: ListProps) {
 
   const handleCategoryClick = (item: Item) => {
     setSelectedItem(item)
-    setIsModalOpen(true)
+    setIsCategoryModalOpen(true)
+  }
+
+  const handleItemClick = (item: Item) => {
+    setSelectedItem(item)
+    setIsItemModalOpen(true)
   }
 
   const handleSelectCategory = (category: string) =>
@@ -76,6 +83,7 @@ export function List(props: ListProps) {
                       item={item}
                       category={c}
                       onClickCategory={() => handleCategoryClick(item)}
+                      onClickItem={() => handleItemClick(item)}
                     />
                   ))}
                 </div>
@@ -84,10 +92,15 @@ export function List(props: ListProps) {
           </div>
         )}
         <CategoryModal
-          isOpen={isModalOpen}
+          isOpen={isCategoryModalOpen}
           selectedCategoryId={selectedItem?.category}
-          close={() => setIsModalOpen(false)}
+          close={() => setIsCategoryModalOpen(false)}
           select={handleSelectCategory}
+        />
+        <ItemModal
+          isOpen={isItemModalOpen}
+          item={selectedItem}
+          close={() => setIsItemModalOpen(false)}
         />
       </section>
     </article>

@@ -8,10 +8,11 @@ export type ListItemProps = {
   item: ItemModel
   category: Category | undefined
   onClickCategory: () => void
+  onClickItem: () => void
 }
 
 export function ListItem(props: ListItemProps) {
-  const { item, category, onClickCategory } = props
+  const { item, category, onClickCategory, onClickItem } = props
   const { getDefaultItemsCollection } = useUserContext()
 
   const handleChange = async () => {
@@ -28,7 +29,7 @@ export function ListItem(props: ListItemProps) {
           checked={item.completed}
           onChange={handleChange}
         />
-        <div className={classes.details}>
+        <div className={classes.details} onClick={onClickItem}>
           <span>{item.name}</span>
           <small>{item.notes}</small>
         </div>
