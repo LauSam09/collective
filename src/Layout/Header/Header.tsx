@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons"
 
@@ -17,12 +17,16 @@ export function Header() {
         </Link>
         {useIsRegistered() ? (
           <div className={classes.links}>
-            <Link to="/list" title="List">
+            <NavLink activeClassName={classes.active} to="/list" title="List">
               List
-            </Link>
-            <Link to="/household" title="Household">
+            </NavLink>
+            <NavLink
+              activeClassName={classes.active}
+              to="/household"
+              title="Household"
+            >
               Household
-            </Link>
+            </NavLink>
             <button onClick={logout} title="Log out" className={classes.logout}>
               <FontAwesomeIcon icon={faSignOutAlt} size="lg" />
             </button>

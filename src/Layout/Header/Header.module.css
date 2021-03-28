@@ -30,6 +30,10 @@
   margin-right: var(--spacing-lg);
 }
 
+.active {
+  font-weight: bold;
+}
+
 .logout {
   border: none;
   background-color: inherit;
