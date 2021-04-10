@@ -7,7 +7,7 @@ export function Recipes() {
 
   return (
     <>
-      <WeeklyRecipes />
+      <WeeklyRecipes recipes={recipes} />
       {/* TODO add filter */}
       <RecipeList recipes={recipes} />
     </>
