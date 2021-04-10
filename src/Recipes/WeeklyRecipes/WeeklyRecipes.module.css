@@ -1,0 +1,19 @@
+.dayButton {
+  flex: 1;
+  border: none;
+  height: 60px;
+  background: none;
+  outline: none;
+}
+
+.selected {
+  color: var(--colour-action);
+  border-bottom: 2px solid var(--colour-action);
+  font-weight: bold;
+}
+
+.dayButton:hover {
+  color: var(--colour-secondary);
+  background: var(--colour-hover);
+  cursor: pointer;
+}

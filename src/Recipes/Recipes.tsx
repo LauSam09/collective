@@ -1,3 +1,9 @@
+import { WeeklyRecipes } from "./WeeklyRecipes"
+
 export function Recipes() {
-  return <span>Placeholder</span>
+  return (
+    <>
+      <WeeklyRecipes />
+    </>
+  )
 }
