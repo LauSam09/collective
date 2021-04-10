@@ -63,7 +63,6 @@ export function List(props: ListProps) {
   return (
     <article>
       <section>
-        <h2 className={classes.header}>Shopping</h2>
         <AddItem addedItems={addedItems} unaddedItems={unaddedItems} />
         {addedItems.length === 0 ? (
           <span>Nothing added yet!</span>
