@@ -60,26 +60,5 @@ export function CategoriesContextProvider(
   )
 }
 
-const fakeCategories = [
-  {
-    id: "1",
-    name: "Fruit & Vegetables",
-    colour: "#74ac72",
-    order: 0,
-  },
-  {
-    id: "2",
-    name: "Dairy",
-    colour: "#fcf403",
-    order: 1,
-  },
-  {
-    id: "3",
-    name: "Frozen",
-    colour: "#0384fc",
-    order: 3,
-  },
-]
-
 export const useCategoriesContext = () => useContext(CategoriesContext)
 export const useCategories = () => useCategoriesContext().categories

@@ -1,8 +1,11 @@
-import { Item } from "Lists/models"
 import { useEffect, useState } from "react"
 import Modal from "react-modal"
 
+import { Item } from "Lists/models"
+
 import classes from "./ItemModal.module.css"
+import { useUserContext } from "Authentication"
+import { FullPageSpinner } from "Common"
 
 type ItemModalProps = {
   isOpen: boolean
@@ -13,10 +16,25 @@ type ItemModalProps = {
 export function ItemModal(props: ItemModalProps) {
   const { isOpen, item, close } = props
   const [notes, setNotes] = useState(item?.notes)
+  const { getDefaultItemsCollection } = useUserContext()
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
+    setSaving(false)
     setNotes(item?.notes)
-  }, [item])
+  }, [item, isOpen])
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    try {
+      await getDefaultItemsCollection().doc(item?.id).update({
+        notes,
+      })
+      close()
+    } catch {
+      setSaving(false)
+    }
+  }
 
   return (
     <Modal
@@ -26,22 +44,33 @@ export function ItemModal(props: ItemModalProps) {
       className={classes.modal}
     >
       <div className={classes.modalBody}>
+        {saving ? <FullPageSpinner /> : null}
         <h4>{item?.name}</h4>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>Notes</label>
-          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
+          <textarea
+            disabled={saving}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
           <h5>Actions</h5>
           <div>
-            <button type="button">Remove from list</button>
+            <button disabled={saving} type="button">
+              Remove from list
+            </button>
           </div>
           <div>
-            <button type="button">Delete permanently</button>
+            <button disabled={saving} type="button">
+              Delete permanently
+            </button>
           </div>
           <div className={classes.modalActions}>
             <button type="button" onClick={close}>
               Cancel
             </button>
-            <button>Save</button>
+            <button disabled={saving} type="submit">
+              Save
+            </button>
           </div>
         </form>
       </div>
