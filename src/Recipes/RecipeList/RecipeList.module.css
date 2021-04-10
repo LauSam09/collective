@@ -1,0 +1,9 @@
+.recipe {
+  padding: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.recipe:hover {
+  color: var(--colour-secondary);
+  background-color: var(--colour-hover);
+}

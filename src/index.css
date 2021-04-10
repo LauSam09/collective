@@ -53,6 +53,11 @@ label {
   font-weight: bold;
 }
 
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
 .ReactModal__Overlay {
   opacity: 0;
   transition: opacity 250ms ease-in-out;
