@@ -48,7 +48,7 @@ export function ItemModal(props: ItemModalProps) {
         <h4>{item?.name}</h4>
         <form onSubmit={handleSubmit}>
           <label>Notes</label>
-          <textarea
+          <input
             disabled={saving}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
