@@ -5,6 +5,7 @@ import { JoinHousehold, Register } from "Register"
 import { Household } from "Household"
 import { RegisteredSplash } from "Splash"
 import { CategoriesContextProvider, List, useAddedItems } from "Lists"
+import { Recipes } from "Recipes"
 
 function RegisteredContent() {
   const { addedItems, unaddedItems } = useAddedItems()
@@ -14,6 +15,9 @@ function RegisteredContent() {
       <Switch>
         <Route path="/household" exact>
           <Household />
+        </Route>
+        <Route path="/recipes" exact>
+          <Recipes />
         </Route>
         <Route path="/list" exact>
           <List addedItems={addedItems} unaddedItems={unaddedItems} />

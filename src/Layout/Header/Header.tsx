@@ -22,6 +22,13 @@ export function Header() {
             </NavLink>
             <NavLink
               activeClassName={classes.active}
+              to="/recipes"
+              title="Recipes"
+            >
+              Recipes
+            </NavLink>
+            <NavLink
+              activeClassName={classes.active}
               to="/household"
               title="Household"
             >
