@@ -3,9 +3,9 @@ import Modal from "react-modal"
 import firebase from "firebase"
 
 import { Item } from "Lists/models"
+import { useUserContext } from "Authentication"
 
 import classes from "./ItemModal.module.css"
-import { useUserContext } from "Authentication"
 
 type ItemModalProps = {
   isOpen: boolean
