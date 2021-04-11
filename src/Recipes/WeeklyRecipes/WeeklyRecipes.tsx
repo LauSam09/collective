@@ -33,10 +33,11 @@ function DayButton(props: DayButtonProps) {
 
 type WeeklyRecipesProps = {
   recipes: Recipe[]
+  onClickRecipe: (recipe: Recipe) => void
 }
 
 export function WeeklyRecipes(props: WeeklyRecipesProps) {
-  const { recipes } = props
+  const { recipes, onClickRecipe } = props
   const [selectedDay, setSelectedDay] = useState<number>()
   const recipesByDay: string[][] = days.map(() => [])
   recipes.forEach((r) => r.days.forEach((d) => recipesByDay[d].push(r.id)))
@@ -71,7 +72,13 @@ export function WeeklyRecipes(props: WeeklyRecipesProps) {
       {selectedDay === undefined ? null : (
         <ul>
           {selectedDayRecipes.map((r) => (
-            <WeeklyRecipeListItem onClickDelete={() => null} name={r.name} />
+            <li key={r.id}>
+              <WeeklyRecipeListItem
+                onClickRecipe={() => onClickRecipe(r)}
+                onClickDelete={() => null}
+                name={r.name}
+              />
+            </li>
           ))}
         </ul>
       )}

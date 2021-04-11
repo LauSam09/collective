@@ -6,14 +6,15 @@ import classes from "./WeeklyRecipeListItem.module.css"
 
 type WeeklyRecipeListItemProps = RecipeListItemProps & {
   onClickDelete: () => void
+  onClickRecipe: () => void
 }
 
 export function WeeklyRecipeListItem(props: WeeklyRecipeListItemProps) {
-  const { onClickDelete, ...listItemProps } = props
+  const { onClickDelete, onClickRecipe, ...listItemProps } = props
   return (
     <div className={classes.container}>
       <div className={classes.listItem}>
-        <RecipeListItem {...listItemProps} />
+        <RecipeListItem onClick={onClickRecipe} {...listItemProps} />
       </div>
       <button onClick={onClickDelete} className={classes.button}>
         <FontAwesomeIcon icon={faTrash} />
