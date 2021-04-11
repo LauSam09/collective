@@ -1,6 +1,8 @@
-import { useCategories } from "Lists/CategoriesContext"
 import { useState } from "react"
-import Modal from "react-modal"
+
+import { useCategories } from "Lists/CategoriesContext"
+
+import { Modal } from "Common"
 
 import classes from "./CategoryModal.module.css"
 
@@ -33,12 +35,7 @@ export function CategoryModal(props: CategoryModalProps) {
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={close}
-      closeTimeoutMS={250}
-      className={classes.modal}
-    >
+    <Modal isOpen={isOpen} onRequestClose={close}>
       {categories
         .sort((a, b) => a.order - b.order)
         .map((c) => (

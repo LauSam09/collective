@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import Modal from "react-modal"
 import firebase from "firebase"
 
+import { Modal } from "Common"
 import { Item } from "Lists/models"
 import { useUserContext } from "Authentication"
 
@@ -51,12 +51,7 @@ export function ItemModal(props: ItemModalProps) {
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={close}
-      closeTimeoutMS={250}
-      className={classes.modal}
-    >
+    <Modal isOpen={isOpen} onRequestClose={close}>
       <div className={classes.modalBody}>
         <h4>{item?.name}</h4>
         <form onSubmit={handleSubmit}>
