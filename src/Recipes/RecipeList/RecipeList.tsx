@@ -1,19 +1,6 @@
 import { Recipe } from "Recipes/models"
 
-import classes from "./RecipeList.module.css"
-
-type RecipeListItemProps = {
-  name: string
-}
-
-function RecipeListItem(props: RecipeListItemProps) {
-  const { name } = props
-  return (
-    <li className={classes.recipe}>
-      <span>{name}</span>
-    </li>
-  )
-}
+import { RecipeListItem } from "./RecipeListItem"
 
 type RecipeListProps = {
   recipes: Recipe[]

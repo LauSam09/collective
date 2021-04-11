@@ -1,6 +1,7 @@
 .recipe {
   padding: var(--spacing-sm);
   cursor: pointer;
+  border-radius: var(--spacing-radius);
 }
 
 .recipe:hover {
