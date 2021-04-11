@@ -9,7 +9,11 @@ import { WeeklyRecipes } from "./WeeklyRecipes"
 export function Recipes() {
   const { recipes } = useRecipes()
   const [modalOpen, setModalOpen] = useState(false)
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>({
+    name: "",
+    id: "",
+    days: [],
+  })
 
   function handleClickRecipe(recipe: Recipe) {
     setSelectedRecipe(recipe)
@@ -17,13 +21,16 @@ export function Recipes() {
   }
 
   function handleCloseRecipeModal() {
-    setSelectedRecipe(undefined)
     setModalOpen(false)
   }
 
   return (
     <>
-      <RecipeModal isOpen={modalOpen} close={handleCloseRecipeModal} />
+      <RecipeModal
+        isOpen={modalOpen}
+        close={handleCloseRecipeModal}
+        recipe={selectedRecipe}
+      />
       <WeeklyRecipes recipes={recipes} onClickRecipe={handleClickRecipe} />
       <RecipeList recipes={recipes} onClickRecipe={handleClickRecipe} />
     </>

@@ -1,5 +1,6 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faMinus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 import { RecipeListItem, RecipeListItemProps } from "../RecipeList"
 
 import classes from "./WeeklyRecipeListItem.module.css"
@@ -17,7 +18,7 @@ export function WeeklyRecipeListItem(props: WeeklyRecipeListItemProps) {
         <RecipeListItem onClick={onClickRecipe} {...listItemProps} />
       </div>
       <button onClick={onClickDelete} className={classes.button}>
-        <FontAwesomeIcon icon={faTrash} />
+        <FontAwesomeIcon icon={faMinus} />
       </button>
     </div>
   )
