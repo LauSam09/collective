@@ -27,13 +27,6 @@ export function Header() {
             >
               Recipes
             </NavLink>
-            <NavLink
-              activeClassName={classes.active}
-              to="/household"
-              title="Household"
-            >
-              Household
-            </NavLink>
             <button onClick={logout} title="Log out" className={classes.logout}>
               <FontAwesomeIcon icon={faSignOutAlt} size="lg" />
             </button>
