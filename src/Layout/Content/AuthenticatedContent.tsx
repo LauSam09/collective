@@ -4,11 +4,11 @@ import { useIsRegistered } from "Authentication"
 import { JoinHousehold, Register } from "Register"
 import { Household } from "Household"
 import { RegisteredSplash } from "Splash"
-import { CategoriesContextProvider, List, useAddedItems } from "Lists"
+import { CategoriesContextProvider, List, useItemSubscription } from "Lists"
 import { Recipes } from "Recipes"
 
 function RegisteredContent() {
-  const { addedItems, unaddedItems } = useAddedItems()
+  const { addedItems, unaddedItems } = useItemSubscription()
 
   return (
     <CategoriesContextProvider>
@@ -17,7 +17,7 @@ function RegisteredContent() {
           <Household />
         </Route>
         <Route path="/recipes" exact>
-          <Recipes />
+          <Recipes addedItems={addedItems} />
         </Route>
         <Route path="/list" exact>
           <List addedItems={addedItems} unaddedItems={unaddedItems} />

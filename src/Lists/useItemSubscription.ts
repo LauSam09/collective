@@ -4,7 +4,7 @@ import { Item } from "./models"
 import { useGroup } from "Authentication"
 import { db } from "Config"
 
-export function useAddedItems() {
+export function useItemSubscription() {
   const { defaultList, id } = useGroup() || {}
   const [items, setItems] = useState<Item[]>([])
   const [addedItems, setAddedItems] = useState<Item[]>([])
