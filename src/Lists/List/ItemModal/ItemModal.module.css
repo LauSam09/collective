@@ -1,16 +1,7 @@
-.modalBody {
-  padding: var(--spacing-md);
-}
-
-.modalBody input {
+.input {
   width: 100%;
   box-sizing: border-box;
   border-radius: var(--spacing-radius);
-}
-
-.modalBody h4,
-h5 {
-  margin: var(--spacing-sm) 0;
 }
 
 .modalActions {

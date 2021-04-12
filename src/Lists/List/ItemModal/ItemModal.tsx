@@ -47,11 +47,15 @@ export function ItemModal(props: ItemModalProps) {
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close}>
-      <div className={classes.modalBody}>
-        <h4>{item?.name}</h4>
+      <Modal.Body>
+        <Modal.Header>{item?.name}</Modal.Header>
         <form onSubmit={handleSubmit}>
           <label>Notes</label>
-          <input value={notes} onChange={(e) => setNotes(e.target.value)} />
+          <input
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className={classes.input}
+          />
           <h5>Actions</h5>
           <div>
             <button type="button" onClick={handleRemove}>
@@ -70,7 +74,7 @@ export function ItemModal(props: ItemModalProps) {
             <button type="submit">Save</button>
           </div>
         </form>
-      </div>
+      </Modal.Body>
     </Modal>
   )
 }

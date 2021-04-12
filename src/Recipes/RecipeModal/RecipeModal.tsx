@@ -6,8 +6,6 @@ import { Recipe } from "Recipes/models"
 
 import { Ingredient } from "./Ingredient"
 
-import classes from "./RecipeModal.module.css"
-
 type IngredientViewModel = {
   name: string
   added: boolean
@@ -45,9 +43,8 @@ export function RecipeModal(props: RecipeModalProps) {
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close}>
-      {/* TODO factor out Modal.Body, Modal.Header, etc. */}
-      <div className={classes.modalBody}>
-        <h4>{recipe.name}</h4>
+      <Modal.Body>
+        <Modal.Header>{recipe.name}</Modal.Header>
         {recipe.recipeUrl ? (
           <>
             <label>Recipe Url</label>
@@ -62,7 +59,7 @@ export function RecipeModal(props: RecipeModalProps) {
         ) : (
           viewIngredients.map((i) => <Ingredient {...i} />)
         )}
-      </div>
+      </Modal.Body>
     </Modal>
   )
 }

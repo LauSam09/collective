@@ -17,3 +17,7 @@
 .modal:focus {
   outline: none;
 }
+
+.modalBody {
+  padding: var(--spacing-md);
+}
