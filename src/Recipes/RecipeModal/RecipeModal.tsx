@@ -1,37 +1,47 @@
-import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { singular } from "pluralize"
+
 import { Modal } from "Common"
+import { Item, useItems } from "Lists"
 import { Recipe } from "Recipes/models"
+
+import { Ingredient } from "./Ingredient"
 
 import classes from "./RecipeModal.module.css"
 
-type IngredientProps = {
+type IngredientViewModel = {
   name: string
   added: boolean
-  toggle: () => void
-}
-
-function Ingredient(props: IngredientProps) {
-  const { added, name } = props
-
-  return (
-    <div>
-      {name}
-      <button>
-        <FontAwesomeIcon icon={added ? faCheck : faPlus} />
-      </button>
-    </div>
-  )
+  toggle: () => Promise<void>
 }
 
 type RecipeModalProps = {
   isOpen: boolean
   recipe: Recipe
+  addedItems: Item[]
   close: () => void
 }
 
 export function RecipeModal(props: RecipeModalProps) {
-  const { isOpen, recipe, close } = props
+  const { isOpen, recipe, addedItems, close } = props
+  const { addItem, removeItem } = useItems()
+
+  const sanitisedIngredients = (recipe.ingredients ?? []).map((i) =>
+    singular(i.toLowerCase())
+  )
+  const viewIngredients: IngredientViewModel[] = sanitisedIngredients.map(
+    (name) => {
+      const addedItem = addedItems.find((ai) => ai.lowerName === name)
+      const added = !!addedItem
+      return {
+        name,
+        added,
+        // TODO addItem will remove the category at the moment. Need to modify addItem.
+        toggle: addedItem
+          ? () => removeItem(addedItem.id)
+          : () => addItem(name),
+      }
+    }
+  )
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close}>
@@ -50,9 +60,7 @@ export function RecipeModal(props: RecipeModalProps) {
         {recipe.ingredients === undefined || recipe.ingredients.length === 0 ? (
           <span>No ingredients added</span>
         ) : (
-          recipe.ingredients.map((i) => (
-            <Ingredient name={i} added={false} toggle={() => null} />
-          ))
+          viewIngredients.map((i) => <Ingredient {...i} />)
         )}
       </div>
     </Modal>

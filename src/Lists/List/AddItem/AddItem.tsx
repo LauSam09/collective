@@ -19,7 +19,7 @@ export function AddItem(props: AddItemsProps) {
   const { addedItems, unaddedItems } = props
 
   const [value, setValue] = useState("")
-  const [category, setCategory] = useState<string>()
+  const [category, setCategory] = useState("")
   const [saving, setSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [previouslyAdded, setPreviouslyAdded] = useState<ItemModel>()
@@ -49,6 +49,7 @@ export function AddItem(props: AddItemsProps) {
     setAlreadyAdded(addedItems.find((i) => i.lowerName === lowerName))
   }, [value, unaddedItems, addedItems])
 
+  // TODO similarly here
   useEffect(() => {
     setIsValid(Boolean(value) && !alreadyAdded && !saving)
   }, [value, alreadyAdded, saving])

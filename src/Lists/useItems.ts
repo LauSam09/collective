@@ -7,7 +7,7 @@ import { DatabaseItem } from "./models"
 export function useItems() {
   const { getDefaultItemsCollection } = useUserContext()
 
-  async function addItem(value: string, category: string | undefined) {
+  async function addItem(value: string, category?: string) {
     const itemsCollection = getDefaultItemsCollection()
     const name = value.trim()
     const lowerName = singular(name.toLowerCase())
@@ -22,7 +22,11 @@ export function useItems() {
       added: true,
       completed: false,
       notes: "",
-      category: category || "",
+      // If undefined, then use existing category or "", otherwise use parameter category.
+      category:
+        category === undefined
+          ? existing.docs?.[0]?.data().category || ""
+          : category,
     }
 
     if (existing.empty) {

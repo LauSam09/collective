@@ -1,12 +1,19 @@
 import { useState } from "react"
 
+import { Item } from "Lists"
+
 import { Recipe } from "./models"
 import { RecipeList } from "./RecipeList"
 import { RecipeModal } from "./RecipeModal"
 import { useRecipes } from "./useRecipes"
 import { WeeklyRecipes } from "./WeeklyRecipes"
 
-export function Recipes() {
+type RecipesProps = {
+  addedItems: Item[]
+}
+
+export function Recipes(props: RecipesProps) {
+  const { addedItems } = props
   const { recipes } = useRecipes()
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>({
@@ -28,8 +35,9 @@ export function Recipes() {
     <>
       <RecipeModal
         isOpen={modalOpen}
-        close={handleCloseRecipeModal}
         recipe={selectedRecipe}
+        addedItems={addedItems}
+        close={handleCloseRecipeModal}
       />
       <WeeklyRecipes recipes={recipes} onClickRecipe={handleClickRecipe} />
       <RecipeList recipes={recipes} onClickRecipe={handleClickRecipe} />
