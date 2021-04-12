@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
-import firebase from "firebase"
 
 import { Modal } from "Common"
+import { useItems } from "Lists"
 import { Item } from "Lists/models"
-import { useUserContext } from "Authentication"
 
 import classes from "./ItemModal.module.css"
 
@@ -16,7 +15,7 @@ type ItemModalProps = {
 export function ItemModal(props: ItemModalProps) {
   const { isOpen, item, close } = props
   const [notes, setNotes] = useState(item?.notes)
-  const { getDefaultItemsCollection } = useUserContext()
+  const { deleteItem, removeItem, updateItem } = useItems()
 
   useEffect(() => {
     // Prevents old values being displayed when modal fades out.
@@ -28,8 +27,8 @@ export function ItemModal(props: ItemModalProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    if (notes !== item?.notes) {
-      await getDefaultItemsCollection().doc(item?.id).update({
+    if (notes !== item?.notes && item?.id) {
+      await updateItem(item.id, {
         notes,
       })
     }
@@ -37,16 +36,12 @@ export function ItemModal(props: ItemModalProps) {
   }
 
   async function handleRemove() {
-    await getDefaultItemsCollection().doc(item?.id).update({
-      completed: false,
-      added: false,
-      notes: firebase.firestore.FieldValue.delete(),
-    })
+    item?.id && (await removeItem(item.id))
     close()
   }
 
   async function handleDelete() {
-    await getDefaultItemsCollection().doc(item?.id).delete()
+    item?.id && (await deleteItem(item?.id))
     close()
   }
 

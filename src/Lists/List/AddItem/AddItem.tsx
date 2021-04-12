@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import { singular } from "pluralize"
 
-import { useUserContext } from "Authentication"
-
 import { useCategories } from "../../CategoriesContext"
-import { DatabaseItem, Item as ItemModel } from "../../models"
+import { Item as ItemModel } from "../../models"
 
 import { Item } from "../Common/Item"
 import { CategoryModal } from "../CategoryModal"
 
 import classes from "./AddItem.module.css"
+import { useItems } from "Lists/useItems"
 
 type AddItemsProps = {
   addedItems: ItemModel[]
@@ -26,9 +25,9 @@ export function AddItem(props: AddItemsProps) {
   const [previouslyAdded, setPreviouslyAdded] = useState<ItemModel>()
   const [alreadyAdded, setAlreadyAdded] = useState<ItemModel>()
   const [isValid, setIsValid] = useState(false)
+  const { addItem } = useItems()
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const { getDefaultItemsCollection } = useUserContext()
   const categories = useCategories()
 
   useEffect(() => {
@@ -37,6 +36,7 @@ export function AddItem(props: AddItemsProps) {
     }
   }, [previouslyAdded])
 
+  // TODO not sure an effect is required for this - could just move to function body
   useEffect(() => {
     const lowerName = singular(value.trim().toLowerCase())
     const previouslyAdded = unaddedItems.find((i) => i.lowerName === lowerName)
@@ -58,32 +58,7 @@ export function AddItem(props: AddItemsProps) {
 
     try {
       setSaving(true)
-      const itemsCollection = getDefaultItemsCollection()
-      const name = value.trim()
-      const lowerName = singular(name.toLowerCase())
-
-      const existing = await itemsCollection
-        .where("lowerName", "==", lowerName)
-        .limit(1)
-        .get()
-
-      const fieldsToUpdate: Partial<DatabaseItem> = {
-        name,
-        added: true,
-        completed: false,
-        notes: "",
-        category: category || "",
-      }
-
-      if (existing.empty) {
-        await itemsCollection.add({ ...fieldsToUpdate, lowerName, count: 1 })
-      } else {
-        await itemsCollection.doc(existing.docs[0].id).update({
-          ...fieldsToUpdate,
-          count: (existing.docs[0].data().count ?? 0) + 1,
-        })
-      }
-
+      await addItem(value, category)
       setValue("")
     } finally {
       setSaving(false)
