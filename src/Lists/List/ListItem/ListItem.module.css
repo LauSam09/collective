@@ -20,6 +20,11 @@
   margin: 0 var(--spacing-sm);
 }
 
+.details:hover {
+  color: var(--colour-secondary);
+  background-color: var(--colour-hover);
+}
+
 .details span,
 small {
   display: block;
