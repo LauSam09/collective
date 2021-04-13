@@ -5,16 +5,15 @@ import { Item } from "Lists"
 import { Recipe } from "./models"
 import { RecipeList } from "./RecipeList"
 import { RecipeModal } from "./RecipeModal"
-import { useRecipes } from "./useRecipes"
 import { WeeklyRecipes } from "./WeeklyRecipes"
 
 type RecipesProps = {
   addedItems: Item[]
+  recipes: Recipe[]
 }
 
 export function Recipes(props: RecipesProps) {
-  const { addedItems } = props
-  const { recipes } = useRecipes()
+  const { addedItems, recipes } = props
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>({
     name: "",

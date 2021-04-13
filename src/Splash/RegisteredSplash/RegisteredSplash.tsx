@@ -4,15 +4,16 @@ import classes from "./RegisteredSplash.module.css"
 
 type RegisteredSplashProps = {
   itemCount: number
+  planCount: number
 }
 
 export function RegisteredSplash(props: RegisteredSplashProps) {
-  const { itemCount } = props
+  const { itemCount, planCount } = props
 
   return (
     <article>
       <ListSummary itemCount={itemCount} />
-      <MealPlanningSummary />
+      <RecipeSummary planCount={planCount} />
     </article>
   )
 }
@@ -34,11 +35,17 @@ function ListSummary(props: ListSummaryProps) {
   )
 }
 
-function MealPlanningSummary() {
+type RecipeSummaryProps = {
+  planCount: number
+}
+
+function RecipeSummary(props: RecipeSummaryProps) {
+  const { planCount } = props
+
   return (
     <section className={classes.section}>
-      <div>You've planned meals for 3 days this week</div>
-      <Link to="/planning">Go to meal planning</Link>
+      <div>You've planned meals for {planCount} days this week</div>
+      <Link to="/recipes">Go to recipes & meal planning</Link>
     </section>
   )
 }
