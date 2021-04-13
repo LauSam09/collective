@@ -1,15 +1,15 @@
-import { singular } from "pluralize"
+import { useEffect, useState } from "react"
 
 import { Modal } from "Common"
-import { Item, useItems } from "Lists"
+import { Item } from "Lists"
 import { Recipe } from "Recipes/models"
 
-import { Ingredient } from "./Ingredient"
+import { ReadRecipe } from "./Read"
+import { WriteRecipe } from "./Write"
 
-type IngredientViewModel = {
-  name: string
-  added: boolean
-  toggle: () => Promise<void>
+enum Mode {
+  "Read",
+  "Edit",
 }
 
 type RecipeModalProps = {
@@ -21,43 +21,28 @@ type RecipeModalProps = {
 
 export function RecipeModal(props: RecipeModalProps) {
   const { isOpen, recipe, addedItems, close } = props
-  const { addItem, removeItem } = useItems()
+  const [mode, setMode] = useState(Mode.Read)
 
-  const sanitisedIngredients = (recipe.ingredients ?? []).map((i) =>
-    singular(i.toLowerCase())
-  )
-  const viewIngredients: IngredientViewModel[] = sanitisedIngredients.map(
-    (name) => {
-      const addedItem = addedItems.find((ai) => ai.lowerName === name)
-      const added = !!addedItem
-      return {
-        name,
-        added,
-        // TODO addItem will remove the category at the moment. Need to modify addItem.
-        toggle: addedItem
-          ? () => removeItem(addedItem.id)
-          : () => addItem(name),
-      }
-    }
-  )
+  useEffect(() => {
+    isOpen && setMode(Mode.Read)
+  }, [isOpen])
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close}>
       <Modal.Body>
-        <Modal.Header>{recipe.name}</Modal.Header>
-        {recipe.recipeUrl ? (
-          <>
-            <label>Recipe Url</label>
-            <a href={recipe.recipeUrl} target="_blank" rel="noreferrer">
-              {recipe.recipeUrl}
-            </a>
-          </>
-        ) : null}
-        <label>Ingredients</label>
-        {recipe.ingredients === undefined || recipe.ingredients.length === 0 ? (
-          <span>No ingredients added</span>
+        {mode === Mode.Read ? (
+          <ReadRecipe
+            recipe={recipe}
+            addedItems={addedItems}
+            close={close}
+            edit={() => setMode(Mode.Edit)}
+          />
         ) : (
-          viewIngredients.map((i) => <Ingredient {...i} />)
+          <WriteRecipe
+            recipe={recipe}
+            close={close}
+            read={() => setMode(Mode.Read)}
+          />
         )}
       </Modal.Body>
     </Modal>
