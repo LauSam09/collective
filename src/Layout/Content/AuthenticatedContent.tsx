@@ -5,11 +5,11 @@ import { JoinHousehold, Register } from "Register"
 import { Household } from "Household"
 import { RegisteredSplash } from "Splash"
 import { CategoriesContextProvider, List, useItemSubscription } from "Lists"
-import { Recipes, useRecipes } from "Recipes"
+import { Recipes, useRecipeSubscription } from "Recipes"
 
 function RegisteredContent() {
   const { addedItems, unaddedItems } = useItemSubscription()
-  const { recipes } = useRecipes()
+  const { recipes } = useRecipeSubscription()
 
   const plannedDays = new Set()
   recipes.forEach((r) => r.days.forEach((d) => plannedDays.add(d)))
