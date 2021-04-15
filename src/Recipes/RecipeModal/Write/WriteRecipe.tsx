@@ -1,5 +1,15 @@
+import { useFieldArray, useForm } from "react-hook-form"
+
 import { Modal } from "Common"
 import { Recipe } from "Recipes/models"
+
+interface RecipeFormModel {
+  name: string
+  recipeUrl?: string
+  ingredients?: {
+    name: string
+  }[]
+}
 
 type WriteRecipeProps = {
   recipe: Recipe
@@ -9,20 +19,73 @@ type WriteRecipeProps = {
 
 export function WriteRecipe(props: WriteRecipeProps) {
   const { recipe, close, read } = props
+  const {
+    control,
+    formState,
+    handleSubmit,
+    register,
+  } = useForm<RecipeFormModel>({
+    mode: "onChange",
+    defaultValues: {
+      ...recipe,
+      ingredients: recipe.ingredients?.map((i) => ({ name: i })) || [],
+    },
+  })
+  const { fields, append, remove } = useFieldArray({
+    control: control,
+    name: "ingredients",
+  })
+  const { isValid, isDirty } = formState
+
+  const saveDisabled = !isValid || !isDirty
+
+  const saveRecipe = (data: RecipeFormModel) => {
+    const modifiedRecipe: Recipe = {
+      ...recipe,
+      ...data,
+      ingredients: data.ingredients?.map((i) => i.name),
+    }
+
+    if (recipe.id) {
+      // update
+    } else {
+      // create
+    }
+
+    read()
+  }
 
   return (
     <>
       <Modal.Header>{recipe.name}</Modal.Header>
-      <label>Recipe Url</label>
-      <input value={recipe.recipeUrl} />
-      <label>Ingredients</label>
-      {(recipe.ingredients ?? []).length > 0 ? (
-        recipe.ingredients?.map((i, index) => <input value={i} key={index} />)
-      ) : (
-        <span>No ingredients added</span>
-      )}
-      <button onClick={close}>Close</button>
-      <button onClick={read}>Save</button>
+      <form onSubmit={handleSubmit(saveRecipe)}>
+        <label htmlFor="name">Name</label>
+        <input id="name" ref={register({ required: true })} name="name" />
+        <label htmlFor="recipeUrl">Recipe Url</label>
+        <input id="recipeUrl" ref={register} name="recipeUrl" />
+        <label>Ingredients</label>
+        <button type="button" onClick={append}>
+          Add
+        </button>
+        {fields.map((field, index) => (
+          <div key={field.id}>
+            <input
+              ref={register({ required: true })}
+              name={`ingredients[${index}].name`}
+              defaultValue={field.name}
+            />
+            <button type="button" onClick={() => remove(index)}>
+              Remove
+            </button>
+          </div>
+        ))}
+        <button onClick={close} type="button">
+          Close
+        </button>
+        <button disabled={saveDisabled} type="submit">
+          Save
+        </button>
+      </form>
     </>
   )
 }
