@@ -5,6 +5,7 @@ import { Recipe } from "Recipes/models"
 import { WeeklyRecipeListItem } from "./WeeklyRecipeListItem"
 
 import classes from "./WeeklyRecipes.module.css"
+import { useRecipes } from "Recipes/useRecipes"
 
 const classnames = cx.bind(classes)
 
@@ -39,6 +40,8 @@ type WeeklyRecipesProps = {
 export function WeeklyRecipes(props: WeeklyRecipesProps) {
   const { recipes, onClickRecipe } = props
   const [selectedDay, setSelectedDay] = useState<number>()
+  const { assignRecipe } = useRecipes()
+
   const recipesByDay: string[][] = days.map(() => [])
   recipes.forEach((r) => r.days.forEach((d) => recipesByDay[d].push(r.id)))
 
@@ -55,6 +58,13 @@ export function WeeklyRecipes(props: WeeklyRecipesProps) {
             return recipe
           }
         })
+
+  async function handleClickRemove(recipe: Recipe) {
+    assignRecipe(
+      recipe.id,
+      recipe.days.filter((d) => d !== selectedDay)
+    )
+  }
 
   return (
     <>
@@ -74,9 +84,9 @@ export function WeeklyRecipes(props: WeeklyRecipesProps) {
           {selectedDayRecipes.map((r) => (
             <li key={r.id}>
               <WeeklyRecipeListItem
-                onClickRecipe={() => onClickRecipe(r)}
-                onClickDelete={() => null}
                 name={r.name}
+                onClickRecipe={() => onClickRecipe(r)}
+                onClickRemove={() => handleClickRemove(r)}
               />
             </li>
           ))}

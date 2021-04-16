@@ -25,5 +25,11 @@ export function useRecipes() {
     await recipesCollection.doc(recipe.id).update(dbRecipe)
   }
 
-  return { addRecipe, updateRecipe }
+  async function assignRecipe(id: string, days: number[]) {
+    await recipesCollection.doc(id).update({
+      days,
+    })
+  }
+
+  return { addRecipe, assignRecipe, updateRecipe }
 }

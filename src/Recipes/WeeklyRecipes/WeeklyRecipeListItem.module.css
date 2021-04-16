@@ -16,4 +16,5 @@
 .button:hover {
   background-color: var(--colour-hover);
   border-radius: var(--spacing-radius);
+  color: var(--colour-secondary);
 }

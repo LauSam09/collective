@@ -2,7 +2,7 @@ import { useFieldArray, useForm } from "react-hook-form"
 
 import { Modal } from "Common"
 import { Recipe } from "Recipes/models"
-import { useRecipes } from "../useRecipes"
+import { useRecipes } from "Recipes"
 
 interface RecipeFormModel {
   name: string
