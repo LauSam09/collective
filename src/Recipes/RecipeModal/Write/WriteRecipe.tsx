@@ -2,6 +2,7 @@ import { useFieldArray, useForm } from "react-hook-form"
 
 import { Modal } from "Common"
 import { Recipe } from "Recipes/models"
+import { useRecipes } from "../useRecipes"
 
 interface RecipeFormModel {
   name: string
@@ -14,11 +15,11 @@ interface RecipeFormModel {
 type WriteRecipeProps = {
   recipe: Recipe
   close: () => void
-  read: () => void
+  onSave: (recipe: Recipe) => void
 }
 
 export function WriteRecipe(props: WriteRecipeProps) {
-  const { recipe, close, read } = props
+  const { recipe, close, onSave } = props
   const {
     control,
     formState,
@@ -32,27 +33,28 @@ export function WriteRecipe(props: WriteRecipeProps) {
     },
   })
   const { fields, append, remove } = useFieldArray({
-    control: control,
+    control,
     name: "ingredients",
   })
+  const { updateRecipe } = useRecipes()
   const { isValid, isDirty } = formState
 
   const saveDisabled = !isValid || !isDirty
 
-  const saveRecipe = (data: RecipeFormModel) => {
+  const saveRecipe = async (data: RecipeFormModel) => {
     const modifiedRecipe: Recipe = {
       ...recipe,
       ...data,
-      ingredients: data.ingredients?.map((i) => i.name),
+      ingredients: data.ingredients?.map((i) => i.name) ?? [],
     }
 
     if (recipe.id) {
-      // update
+      await updateRecipe(modifiedRecipe)
     } else {
       // create
     }
 
-    read()
+    onSave(modifiedRecipe)
   }
 
   return (

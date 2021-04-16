@@ -20,12 +20,22 @@ type RecipeModalProps = {
 }
 
 export function RecipeModal(props: RecipeModalProps) {
-  const { isOpen, recipe, addedItems, close } = props
+  const { isOpen, recipe: initialRecipe, addedItems, close } = props
   const [mode, setMode] = useState(Mode.Read)
+  const [recipe, setRecipe] = useState(initialRecipe)
 
   useEffect(() => {
     isOpen && setMode(Mode.Read)
   }, [isOpen])
+
+  useEffect(() => {
+    setRecipe(initialRecipe)
+  }, [initialRecipe])
+
+  function handleSave(recipe: Recipe) {
+    setRecipe(recipe)
+    setMode(Mode.Read)
+  }
 
   return (
     <Modal isOpen={isOpen} onRequestClose={close}>
@@ -38,11 +48,7 @@ export function RecipeModal(props: RecipeModalProps) {
             edit={() => setMode(Mode.Edit)}
           />
         ) : (
-          <WriteRecipe
-            recipe={recipe}
-            close={close}
-            read={() => setMode(Mode.Read)}
-          />
+          <WriteRecipe recipe={recipe} close={close} onSave={handleSave} />
         )}
       </Modal.Body>
     </Modal>

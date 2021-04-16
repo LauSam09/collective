@@ -5,3 +5,10 @@ export interface Recipe {
   recipeUrl?: string
   ingredients?: string[]
 }
+
+export interface DatabaseRecipe {
+  name: string
+  days: number[]
+  recipeUrl?: string
+  ingredients?: string[]
+}
