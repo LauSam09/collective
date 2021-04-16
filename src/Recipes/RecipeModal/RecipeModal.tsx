@@ -9,7 +9,7 @@ import { WriteRecipe } from "./Write"
 
 enum Mode {
   "Read",
-  "Edit",
+  "Write",
 }
 
 type RecipeModalProps = {
@@ -25,8 +25,8 @@ export function RecipeModal(props: RecipeModalProps) {
   const [recipe, setRecipe] = useState(initialRecipe)
 
   useEffect(() => {
-    isOpen && setMode(Mode.Read)
-  }, [isOpen])
+    isOpen && (recipe.id ? setMode(Mode.Read) : setMode(Mode.Write))
+  }, [isOpen, recipe])
 
   useEffect(() => {
     setRecipe(initialRecipe)
@@ -45,7 +45,7 @@ export function RecipeModal(props: RecipeModalProps) {
             recipe={recipe}
             addedItems={addedItems}
             close={close}
-            edit={() => setMode(Mode.Edit)}
+            edit={() => setMode(Mode.Write)}
           />
         ) : (
           <WriteRecipe recipe={recipe} close={close} onSave={handleSave} />

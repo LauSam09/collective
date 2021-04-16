@@ -25,20 +25,22 @@ export function ReadRecipe(props: ReadRecipeProps) {
   const { recipe, addedItems, close, edit } = props
   const { addItem, removeItem } = useItems()
 
-  const sanitisedIngredients = (recipe.ingredients ?? []).map((i) =>
-    singular(i.toLowerCase())
-  )
+  const sanitisedIngredients = (recipe.ingredients ?? []).map((i) => ({
+    sanitisedName: singular(i.toLowerCase()),
+    name: i,
+  }))
   const viewIngredients: IngredientViewModel[] = sanitisedIngredients.map(
-    (name) => {
-      const addedItem = addedItems.find((ai) => ai.lowerName === name)
+    (i) => {
+      const addedItem = addedItems.find(
+        (ai) => ai.lowerName === i.sanitisedName
+      )
       const added = !!addedItem
       return {
-        name,
+        name: i.name,
         added,
-        // TODO addItem will remove the category at the moment. Need to modify addItem.
         toggle: addedItem
           ? () => removeItem(addedItem.id)
-          : () => addItem(name),
+          : () => addItem(i.name),
       }
     }
   )

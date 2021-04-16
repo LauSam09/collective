@@ -36,8 +36,9 @@ export function WriteRecipe(props: WriteRecipeProps) {
     control,
     name: "ingredients",
   })
-  const { updateRecipe } = useRecipes()
+  const { addRecipe, updateRecipe } = useRecipes()
   const { isValid, isDirty } = formState
+  const adding = !recipe.id
 
   const saveDisabled = !isValid || !isDirty
 
@@ -48,18 +49,18 @@ export function WriteRecipe(props: WriteRecipeProps) {
       ingredients: data.ingredients?.map((i) => i.name) ?? [],
     }
 
-    if (recipe.id) {
-      await updateRecipe(modifiedRecipe)
+    if (adding) {
+      await addRecipe(modifiedRecipe)
+      close()
     } else {
-      // create
+      await updateRecipe(modifiedRecipe)
+      onSave(modifiedRecipe)
     }
-
-    onSave(modifiedRecipe)
   }
 
   return (
     <>
-      <Modal.Header>{recipe.name}</Modal.Header>
+      <Modal.Header>{adding ? "New recipe" : recipe.name}</Modal.Header>
       <form onSubmit={handleSubmit(saveRecipe)}>
         <label htmlFor="name">Name</label>
         <input id="name" ref={register({ required: true })} name="name" />

@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
 import { Item } from "Lists"
 
@@ -30,6 +32,15 @@ export function Recipes(props: RecipesProps) {
     setModalOpen(false)
   }
 
+  function handleClickAdd() {
+    setSelectedRecipe({
+      name: "",
+      id: "",
+      days: [],
+    })
+    setModalOpen(true)
+  }
+
   return (
     <>
       <RecipeModal
@@ -39,6 +50,9 @@ export function Recipes(props: RecipesProps) {
         close={handleCloseRecipeModal}
       />
       <WeeklyRecipes recipes={recipes} onClickRecipe={handleClickRecipe} />
+      <button onClick={handleClickAdd} type="button">
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
       <RecipeList recipes={recipes} onClickRecipe={handleClickRecipe} />
     </>
   )
