@@ -7,6 +7,7 @@ import { Item, useItems } from "Lists"
 import { Recipe } from "Recipes/models"
 
 import { Ingredient } from "./Ingredient"
+import { Days } from "./Days"
 
 type IngredientViewModel = {
   name: string
@@ -53,6 +54,7 @@ export function ReadRecipe(props: ReadRecipeProps) {
           <FontAwesomeIcon icon={faEdit} />
         </button>
       </Modal.Header>
+      <Days id={recipe.id} recipeDays={recipe.days} />
       {recipe.recipeUrl ? (
         <>
           <label>Recipe Url</label>
