@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  margin-bottom: var(--spacing-md);
+}
+
+.button {
+  flex: 1;
+  border: none;
+  background-color: var(--colour-background);
+  padding: var(--spacing-sm) 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.button:hover {
+  background-color: var(--colour-hover);
+  color: var(--colour-secondary);
+}
+
+.selected {
+  background-color: var(--colour-selected);
+  color: var(--colour-secondary);
+}

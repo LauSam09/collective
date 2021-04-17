@@ -1,8 +1,12 @@
 import { useState } from "react"
+import cx from "classnames/bind"
+
+import { weekDays } from "Constants"
 import { useRecipes } from "Recipes/useRecipes"
 
-// TODO duplicated in `WeeklyRecipes.tsx`
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+import classes from "./Days.module.css"
+
+const classnames = cx.bind(classes)
 
 type DaysProps = {
   id: string
@@ -31,14 +35,11 @@ export function Days(props: DaysProps) {
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className={classes.container}>
       {days.map((d, i) => (
         <button
           onClick={() => handleClick(i)}
-          style={{
-            flex: 1,
-            backgroundColor: d.selected ? "green" : "inherit",
-          }}
+          className={classnames("button", { selected: d.selected })}
         >
           {d.name}
         </button>
