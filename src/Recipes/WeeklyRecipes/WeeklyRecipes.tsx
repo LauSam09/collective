@@ -1,6 +1,7 @@
 import { useState } from "react"
 import cx from "classnames/bind"
 
+import { weekDays } from "Constants"
 import { Recipe } from "Recipes/models"
 import { WeeklyRecipeListItem } from "./WeeklyRecipeListItem"
 
@@ -8,8 +9,6 @@ import classes from "./WeeklyRecipes.module.css"
 import { useRecipes } from "Recipes/useRecipes"
 
 const classnames = cx.bind(classes)
-
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 type DayButtonProps = {
   day: string
@@ -42,8 +41,8 @@ export function WeeklyRecipes(props: WeeklyRecipesProps) {
   const [selectedDay, setSelectedDay] = useState<number>()
   const { assignRecipe } = useRecipes()
 
-  const recipesByDay: string[][] = days.map(() => [])
-  recipes.forEach((r) => r.days.forEach((d) => recipesByDay[d].push(r.id)))
+  const recipesByDay: string[][] = weekDays.map(() => [])
+  recipes.forEach((r) => r.days?.forEach((d) => recipesByDay[d].push(r.id)))
 
   const selectedDayRecipes =
     selectedDay === undefined
@@ -60,10 +59,7 @@ export function WeeklyRecipes(props: WeeklyRecipesProps) {
         })
 
   async function handleClickRemove(recipe: Recipe) {
-    assignRecipe(
-      recipe.id,
-      recipe.days.filter((d) => d !== selectedDay)
-    )
+    assignRecipe(recipe.id, recipe.days?.filter((d) => d !== selectedDay) ?? [])
   }
 
   return (
@@ -73,7 +69,7 @@ export function WeeklyRecipes(props: WeeklyRecipesProps) {
           <DayButton
             key={i}
             count={d.length}
-            day={days[i]}
+            day={weekDays[i]}
             onClick={() => setSelectedDay(i)}
             selected={i === selectedDay}
           />

@@ -12,7 +12,7 @@ function RegisteredContent() {
   const { recipes } = useRecipeSubscription()
 
   const plannedDays = new Set()
-  recipes.forEach((r) => r.days.forEach((d) => plannedDays.add(d)))
+  recipes.forEach((r) => r.days?.forEach((d) => plannedDays.add(d)))
 
   return (
     <CategoriesContextProvider>

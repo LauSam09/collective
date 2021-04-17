@@ -54,7 +54,7 @@ export function ReadRecipe(props: ReadRecipeProps) {
           <FontAwesomeIcon icon={faEdit} />
         </button>
       </Modal.Header>
-      <Days id={recipe.id} recipeDays={recipe.days} />
+      <Days id={recipe.id} recipeDays={recipe.days ?? []} />
       {recipe.recipeUrl ? (
         <>
           <label>Recipe Url</label>

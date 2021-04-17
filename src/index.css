@@ -24,6 +24,7 @@ body[data-theme="light"] {
   --colour-success: green;
   --colour-action: #1e79c3;
   --colour-disabled: lightgrey;
+  --colour-selected: #1e79c3;
 
   /* Background */
   --colour-background: white;
