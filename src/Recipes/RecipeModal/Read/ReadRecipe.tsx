@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEdit } from "@fortawesome/free-solid-svg-icons"
+import { faEdit, faTimes } from "@fortawesome/free-solid-svg-icons"
 import { singular } from "pluralize"
 
-import { Modal } from "Common"
+import { Button, FormGroup, Modal } from "Common"
 import { Item, useItems } from "Lists"
 import { Recipe } from "Recipes/models"
 
 import { Ingredient } from "./Ingredient"
 import { Days } from "./Days"
+import classes from "./ReadRecipe.module.css"
 
 type IngredientViewModel = {
   name: string
@@ -48,28 +49,41 @@ export function ReadRecipe(props: ReadRecipeProps) {
 
   return (
     <>
-      <Modal.Header>
-        {recipe.name}
-        <button onClick={edit} style={{ float: "right" }}>
-          <FontAwesomeIcon icon={faEdit} />
-        </button>
-      </Modal.Header>
+      <div className={classes.headerContainer}>
+        <Modal.Header>{recipe.name}</Modal.Header>
+        <Button title="Edit" onClick={edit} className={classes.editButton}>
+          <FontAwesomeIcon icon={faEdit} size="lg" />
+        </Button>
+      </div>
       <Days id={recipe.id} recipeDays={recipe.days ?? []} />
       {recipe.recipeUrl ? (
-        <>
+        <FormGroup>
           <label>Recipe Url</label>
-          <a href={recipe.recipeUrl} target="_blank" rel="noreferrer">
+          <a
+            href={recipe.recipeUrl}
+            target="_blank"
+            rel="noreferrer"
+            title={recipe.recipeUrl}
+            className={classes.recipeUrl}
+          >
             {recipe.recipeUrl}
           </a>
-        </>
+        </FormGroup>
       ) : null}
-      <label>Ingredients</label>
-      {recipe.ingredients === undefined || recipe.ingredients.length === 0 ? (
-        <span>No ingredients added</span>
-      ) : (
-        viewIngredients.map((i) => <Ingredient {...i} />)
-      )}
-      <button onClick={close}>Close</button>
+      <FormGroup>
+        <label>Ingredients</label>
+        {recipe.ingredients === undefined || recipe.ingredients.length === 0 ? (
+          <span>No ingredients added</span>
+        ) : (
+          viewIngredients.map((i) => <Ingredient {...i} />)
+        )}
+      </FormGroup>
+      <div className={classes.actions}>
+        <Button onClick={close} title="Close">
+          {/* <FontAwesomeIcon icon={faTimes} size="lg" /> */}
+          Close
+        </Button>
+      </div>
     </>
   )
 }

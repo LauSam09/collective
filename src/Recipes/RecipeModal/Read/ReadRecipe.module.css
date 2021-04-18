@@ -1,0 +1,30 @@
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editButton {
+  padding: var(--spacing-sm);
+  color: var(--colour-action);
+}
+
+.recipeUrl {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actions button {
+  padding: var(--spacing-md);
+  background-color: var(--colour-action);
+  color: var(--colour-secondary);
+  border-radius: var(--spacing-radius);
+}

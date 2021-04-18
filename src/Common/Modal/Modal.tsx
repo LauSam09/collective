@@ -1,16 +1,8 @@
 import RMModal from "react-modal"
 
+import { ModalHeader } from "./ModalHeader"
+
 import classes from "./Modal.module.css"
-
-type ModalHeaderProps = {
-  children?: React.ReactNode
-}
-
-function ModalHeader(props: ModalHeaderProps) {
-  const { children } = props
-
-  return <h4>{children}</h4>
-}
 
 type ModalBodyProps = {
   children?: React.ReactNode
