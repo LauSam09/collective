@@ -8,6 +8,7 @@ import { Recipe } from "./models"
 import { RecipeList } from "./RecipeList"
 import { RecipeModal } from "./RecipeModal"
 import { WeeklyRecipes } from "./WeeklyRecipes"
+import { RecipeListActions } from "./RecipeListActions"
 
 type RecipesProps = {
   addedItems: Item[]
@@ -50,9 +51,7 @@ export function Recipes(props: RecipesProps) {
         close={handleCloseRecipeModal}
       />
       <WeeklyRecipes recipes={recipes} onClickRecipe={handleClickRecipe} />
-      <button onClick={handleClickAdd} type="button">
-        <FontAwesomeIcon icon={faPlus} />
-      </button>
+      <RecipeListActions onClickAdd={handleClickAdd} />
       <RecipeList recipes={recipes} onClickRecipe={handleClickRecipe} />
     </>
   )

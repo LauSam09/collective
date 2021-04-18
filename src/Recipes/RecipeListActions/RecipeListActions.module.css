@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* TODO Factor our button component */
+.button {
+  border: none;
+  background-color: var(--colour-background);
+  border-radius: var(--spacing-radius);
+  cursor: pointer;
+  outline: none;
+  padding: var(--spacing-md);
+}
+
+.button:hover {
+  color: var(--colour-secondary);
+  background-color: var(--colour-hover);
+}
