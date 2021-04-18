@@ -1,0 +1,12 @@
+.button {
+  border: none;
+  background-color: var(--background-color);
+  border-radius: var(--spacing-radius);
+  cursor: pointer;
+  outline: none;
+}
+
+.button:hover {
+  background-color: var(--colour-hover);
+  color: var(--colour-secondary);
+}

@@ -1,5 +1,6 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Button } from "Common"
 
 import classes from "./RecipeListActions.module.css"
 
@@ -12,14 +13,14 @@ export function RecipeListActions(props: RecipeListActionsProps) {
 
   return (
     <div className={classes.container}>
-      <button
+      <Button
         onClick={onClickAdd}
         title="Add recipe"
         type="button"
         className={classes.button}
       >
         <FontAwesomeIcon icon={faPlus} size="lg" />
-      </button>
+      </Button>
     </div>
   )
 }
