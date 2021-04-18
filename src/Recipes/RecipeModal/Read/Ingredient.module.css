@@ -1,3 +1,7 @@
 .name {
   margin-right: var(--spacing-sm);
 }
+
+.toggle {
+  color: var(--colour-action);
+}

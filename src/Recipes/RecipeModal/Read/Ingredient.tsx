@@ -20,6 +20,7 @@ export function Ingredient(props: IngredientProps) {
       <Button
         title={added ? "Added to list (click to remove)" : "Add to list"}
         onClick={toggle}
+        className={classes.toggle}
       >
         <FontAwesomeIcon icon={added ? faCheck : faPlus} />
       </Button>

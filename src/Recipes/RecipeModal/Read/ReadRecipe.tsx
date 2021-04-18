@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEdit, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { faEdit } from "@fortawesome/free-solid-svg-icons"
 import { singular } from "pluralize"
 
 import { Button, FormGroup, Modal } from "Common"
@@ -8,6 +8,7 @@ import { Recipe } from "Recipes/models"
 
 import { Ingredient } from "./Ingredient"
 import { Days } from "./Days"
+
 import classes from "./ReadRecipe.module.css"
 
 type IngredientViewModel = {
@@ -80,7 +81,6 @@ export function ReadRecipe(props: ReadRecipeProps) {
       </FormGroup>
       <div className={classes.actions}>
         <Button onClick={close} title="Close">
-          {/* <FontAwesomeIcon icon={faTimes} size="lg" /> */}
           Close
         </Button>
       </div>
