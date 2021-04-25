@@ -4,10 +4,23 @@
   border-radius: var(--spacing-radius);
 }
 
+.actions {
+  margin: var(--spacing-sm) 0;
+}
+
 .modalActions {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modalActions .secondaryButton {
+  background-color: var(--colour-background-tertiary);
 }
 
 .modalActions button {
+  padding: var(--spacing-md);
+  background-color: var(--colour-action);
+  color: var(--colour-secondary);
+  border-radius: var(--spacing-radius);
   margin-left: var(--spacing-sm);
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-import { Modal } from "Common"
+import { Button, Modal } from "Common"
 import { useItems } from "Lists"
 import { Item } from "Lists/models"
 
@@ -53,25 +53,30 @@ export function ItemModal(props: ItemModalProps) {
           <label>Notes</label>
           <input
             value={notes}
+            placeholder="Notes"
             onChange={(e) => setNotes(e.target.value)}
             className={classes.input}
           />
-          <h5>Actions</h5>
+          <h5 className={classes.actions}>Actions</h5>
           <div>
-            <button type="button" onClick={handleRemove}>
+            <Button type="button" onClick={handleRemove}>
               Remove from list
-            </button>
+            </Button>
           </div>
           <div>
-            <button type="button" onClick={handleDelete}>
+            <Button type="button" onClick={handleDelete}>
               Delete permanently
-            </button>
+            </Button>
           </div>
           <div className={classes.modalActions}>
-            <button type="button" onClick={close}>
+            <Button
+              type="button"
+              onClick={close}
+              className={classes.secondaryButton}
+            >
               Cancel
-            </button>
-            <button type="submit">Save</button>
+            </Button>
+            <Button type="submit">Save</Button>
           </div>
         </form>
       </Modal.Body>
