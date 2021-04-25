@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
@@ -23,6 +23,7 @@ export function Recipes(props: RecipesProps) {
     id: "",
     days: [],
   })
+  const [filteredRecipes, setFilteredRecipes] = useState(recipes)
 
   function handleClickRecipe(recipe: Recipe) {
     setSelectedRecipe(recipe)
@@ -42,6 +43,20 @@ export function Recipes(props: RecipesProps) {
     setModalOpen(true)
   }
 
+  const handleFilterChanged = useCallback(
+    (filter: string) => {
+      const lowerFilter = filter.toLowerCase()
+      if (lowerFilter === "") {
+        setFilteredRecipes(recipes)
+      } else {
+        setFilteredRecipes(
+          recipes.filter((r) => r.name.toLowerCase().includes(lowerFilter))
+        )
+      }
+    },
+    [recipes]
+  )
+
   return (
     <>
       <RecipeModal
@@ -51,8 +66,11 @@ export function Recipes(props: RecipesProps) {
         close={handleCloseRecipeModal}
       />
       <WeeklyRecipes recipes={recipes} onClickRecipe={handleClickRecipe} />
-      <RecipeListActions onClickAdd={handleClickAdd} />
-      <RecipeList recipes={recipes} onClickRecipe={handleClickRecipe} />
+      <RecipeListActions
+        onClickAdd={handleClickAdd}
+        onFilterChange={handleFilterChanged}
+      />
+      <RecipeList recipes={filteredRecipes} onClickRecipe={handleClickRecipe} />
     </>
   )
 }

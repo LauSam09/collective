@@ -1,6 +1,8 @@
 .container {
+  margin: var(--spacing-lg) 0;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .button {
