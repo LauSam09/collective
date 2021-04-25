@@ -38,6 +38,7 @@ export function Days(props: DaysProps) {
     <div className={classes.container}>
       {days.map((d, i) => (
         <button
+          key={d.name}
           onClick={() => handleClick(i)}
           className={classnames("button", { selected: d.selected })}
         >

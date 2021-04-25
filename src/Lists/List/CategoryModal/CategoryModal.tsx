@@ -40,6 +40,7 @@ export function CategoryModal(props: CategoryModalProps) {
         .sort((a, b) => a.order - b.order)
         .map((c) => (
           <div
+            key={c.name}
             onClick={() => handleClick(c.id || "")}
             className={classes.category}
             style={{

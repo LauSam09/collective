@@ -76,7 +76,7 @@ export function ReadRecipe(props: ReadRecipeProps) {
         {recipe.ingredients === undefined || recipe.ingredients.length === 0 ? (
           <span>No ingredients added</span>
         ) : (
-          viewIngredients.map((i) => <Ingredient {...i} />)
+          viewIngredients.map((i, index) => <Ingredient key={index} {...i} />)
         )}
       </FormGroup>
       <div className={classes.actions}>

@@ -6,9 +6,9 @@ import { Item as ItemModel } from "../../models"
 
 import { Item } from "../Common/Item"
 import { CategoryModal } from "../CategoryModal"
+import { useItems } from "Lists/useItems"
 
 import classes from "./AddItem.module.css"
-import { useItems } from "Lists/useItems"
 
 type AddItemsProps = {
   addedItems: ItemModel[]
