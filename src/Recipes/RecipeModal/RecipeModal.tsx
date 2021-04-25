@@ -48,12 +48,7 @@ export function RecipeModal(props: RecipeModalProps) {
             edit={() => setMode(Mode.Write)}
           />
         ) : (
-          <WriteRecipe
-            recipe={recipe}
-            close={close}
-            onSave={handleSave}
-            cancel={() => setMode(Mode.Read)}
-          />
+          <WriteRecipe recipe={recipe} close={close} onSave={handleSave} />
         )}
       </Modal.Body>
     </Modal>

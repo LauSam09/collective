@@ -18,13 +18,12 @@ interface RecipeFormModel {
 
 type WriteRecipeProps = {
   recipe: Recipe
-  cancel: () => void
   close: () => void
   onSave: (recipe: Recipe) => void
 }
 
 export function WriteRecipe(props: WriteRecipeProps) {
-  const { recipe, cancel, close, onSave } = props
+  const { recipe, close, onSave } = props
   const {
     control,
     formState,
@@ -87,7 +86,7 @@ export function WriteRecipe(props: WriteRecipeProps) {
               validate: {
                 isUrl: (value: string) => {
                   try {
-                    new URL(value)
+                    value && new URL(value)
                   } catch (err) {
                     return "Invalid url"
                   }
@@ -128,15 +127,6 @@ export function WriteRecipe(props: WriteRecipeProps) {
           {fields.length === 0 ? <span>No ingredients added yet</span> : null}
         </FormGroup>
         <div className={classes.actions}>
-          {recipe.id ? (
-            <Button
-              onClick={cancel}
-              type="button"
-              className={classes.secondaryButton}
-            >
-              Cancel
-            </Button>
-          ) : null}
           <Button
             onClick={close}
             type="button"
