@@ -14,12 +14,13 @@ interface RecipeFormModel {
 
 type WriteRecipeProps = {
   recipe: Recipe
+  cancel: () => void
   close: () => void
   onSave: (recipe: Recipe) => void
 }
 
 export function WriteRecipe(props: WriteRecipeProps) {
-  const { recipe, close, onSave } = props
+  const { recipe, cancel, close, onSave } = props
   const {
     control,
     formState,
@@ -82,6 +83,9 @@ export function WriteRecipe(props: WriteRecipeProps) {
             </button>
           </div>
         ))}
+        <button onClick={cancel} type="button">
+          Cancel
+        </button>
         <button onClick={close} type="button">
           Close
         </button>
