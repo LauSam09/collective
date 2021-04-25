@@ -1,8 +1,12 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useFieldArray, useForm } from "react-hook-form"
 
-import { Modal } from "Common"
+import { Button, FormGroup, Modal } from "Common"
 import { Recipe } from "Recipes/models"
 import { useRecipes } from "Recipes"
+
+import classes from "./WriteRecipe.module.css"
 
 interface RecipeFormModel {
   name: string
@@ -38,16 +42,15 @@ export function WriteRecipe(props: WriteRecipeProps) {
     name: "ingredients",
   })
   const { addRecipe, updateRecipe } = useRecipes()
-  const { isValid, isDirty } = formState
+  const { errors } = formState
   const adding = !recipe.id
-
-  const saveDisabled = !isValid || !isDirty
 
   const saveRecipe = async (data: RecipeFormModel) => {
     const modifiedRecipe: Recipe = {
       ...recipe,
       ...data,
-      ingredients: data.ingredients?.map((i) => i.name) ?? [],
+      ingredients:
+        data.ingredients?.filter((i) => i.name !== "").map((i) => i.name) ?? [],
     }
 
     if (adding) {
@@ -63,35 +66,86 @@ export function WriteRecipe(props: WriteRecipeProps) {
     <>
       <Modal.Header>{adding ? "New recipe" : recipe.name}</Modal.Header>
       <form onSubmit={handleSubmit(saveRecipe)}>
-        <label htmlFor="name">Name</label>
-        <input id="name" ref={register({ required: true })} name="name" />
-        <label htmlFor="recipeUrl">Recipe Url</label>
-        <input id="recipeUrl" ref={register} name="recipeUrl" />
-        <label>Ingredients</label>
-        <button type="button" onClick={append}>
-          Add
-        </button>
-        {fields.map((field, index) => (
-          <div key={field.id}>
-            <input
-              ref={register({ required: true })}
-              name={`ingredients[${index}].name`}
-              defaultValue={field.name}
-            />
-            <button type="button" onClick={() => remove(index)}>
-              Remove
-            </button>
-          </div>
-        ))}
-        <button onClick={cancel} type="button">
-          Cancel
-        </button>
-        <button onClick={close} type="button">
-          Close
-        </button>
-        <button disabled={saveDisabled} type="submit">
-          Save
-        </button>
+        <FormGroup>
+          <label htmlFor="name">Name*</label>
+          <input
+            id="name"
+            placeholder="Name"
+            ref={register({ required: "Name is required" })}
+            name="name"
+          />
+          {errors.name ? (
+            <small className={classes.invalid}>{errors.name.message}</small>
+          ) : null}
+        </FormGroup>
+        <FormGroup>
+          <label htmlFor="recipeUrl">Recipe Url</label>
+          <input
+            id="recipeUrl"
+            placeholder="Recipe Url"
+            ref={register({
+              validate: {
+                isUrl: (value: string) => {
+                  try {
+                    new URL(value)
+                  } catch (err) {
+                    return "Invalid url"
+                  }
+                  return true
+                },
+              },
+            })}
+            name="recipeUrl"
+            className={classes.url}
+          />
+          {errors.recipeUrl ? (
+            <small className={classes.invalid}>
+              {errors.recipeUrl.message}
+            </small>
+          ) : null}
+        </FormGroup>
+        <FormGroup>
+          <label>
+            Ingredients
+            <Button type="button" onClick={append}>
+              <FontAwesomeIcon icon={faPlus} />
+            </Button>
+          </label>
+
+          {fields.map((field, index) => (
+            <div key={field.id} className={classes.ingredient}>
+              <input
+                ref={register()}
+                name={`ingredients[${index}].name`}
+                defaultValue={field.name}
+                placeholder={`Ingredient ${index + 1}`}
+              />
+              <Button type="button" onClick={() => remove(index)}>
+                <FontAwesomeIcon icon={faMinus} />
+              </Button>
+            </div>
+          ))}
+          {fields.length === 0 ? <span>No ingredients added yet</span> : null}
+        </FormGroup>
+        <div className={classes.actions}>
+          {recipe.id ? (
+            <Button
+              onClick={cancel}
+              type="button"
+              className={classes.secondaryButton}
+            >
+              Cancel
+            </Button>
+          ) : null}
+          <Button
+            onClick={close}
+            type="button"
+            className={classes.secondaryButton}
+          >
+            Close
+          </Button>
+          <Button type="submit">Save</Button>
+        </div>
       </form>
     </>
   )

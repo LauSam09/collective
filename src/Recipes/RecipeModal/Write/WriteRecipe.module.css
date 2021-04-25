@@ -1,0 +1,31 @@
+/* TODO move to form control */
+.invalid {
+  color: var(--colour-error);
+}
+
+.ingredient {
+  display: flex;
+}
+
+.url {
+  color: var(--colour-action);
+}
+
+/* TODO move to modal */
+.actions {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actions .secondaryButton {
+  background-color: var(--colour-background-tertiary);
+}
+
+.actions button {
+  padding: var(--spacing-md);
+  background-color: var(--colour-action);
+  color: var(--colour-secondary);
+  border-radius: var(--spacing-radius);
+  margin-left: var(--spacing-sm);
+}
