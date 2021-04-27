@@ -4,15 +4,17 @@ import { singular } from "pluralize"
 import { useUserContext } from "Authentication"
 import { DatabaseItem } from "./models"
 
+import { db } from "Config"
+
 export function useItems() {
   const { getDefaultItemsCollection } = useUserContext()
+  const collection = getDefaultItemsCollection()
 
   async function addItem(value: string, category?: string) {
-    const itemsCollection = getDefaultItemsCollection()
     const name = value.trim()
     const lowerName = singular(name.toLowerCase())
 
-    const existing = await itemsCollection
+    const existing = await collection
       .where("lowerName", "==", lowerName)
       .limit(1)
       .get()
@@ -30,9 +32,9 @@ export function useItems() {
     }
 
     if (existing.empty) {
-      await itemsCollection.add({ ...fieldsToUpdate, lowerName, count: 1 })
+      await collection.add({ ...fieldsToUpdate, lowerName, count: 1 })
     } else {
-      await itemsCollection.doc(existing.docs[0].id).update({
+      await collection.doc(existing.docs[0].id).update({
         ...fieldsToUpdate,
         count: (existing.docs[0].data().count ?? 0) + 1,
       })
@@ -40,11 +42,11 @@ export function useItems() {
   }
 
   function deleteItem(id: string) {
-    return getDefaultItemsCollection().doc(id).delete()
+    return collection.doc(id).delete()
   }
 
   function removeItem(id: string) {
-    return getDefaultItemsCollection().doc(id).update({
+    return collection.doc(id).update({
       completed: false,
       added: false,
       notes: firebase.firestore.FieldValue.delete(),
@@ -52,8 +54,23 @@ export function useItems() {
   }
 
   function updateItem(id: string, item: Partial<DatabaseItem>) {
-    return getDefaultItemsCollection().doc(id).update(item)
+    return collection.doc(id).update(item)
   }
 
-  return { addItem, deleteItem, removeItem, updateItem }
+  function batchRemoveItems(ids: string[]) {
+    const batch = db.batch()
+
+    for (const id of ids) {
+      const ref = collection.doc(id)
+      batch.update(ref, {
+        completed: false,
+        added: false,
+        notes: firebase.firestore.FieldValue.delete(),
+      })
+    }
+
+    return batch.commit()
+  }
+
+  return { addItem, batchRemoveItems, deleteItem, removeItem, updateItem }
 }

@@ -20,6 +20,8 @@ body[data-theme="light"] {
   --colour-primary: black;
   --colour-secondary: white;
   --colour-hover: lightgrey;
+  --colour-warn: #ffcc00;
+  --colour-danger: #bb2124;
   --colour-error: darkred;
   --colour-success: green;
   --colour-action: #1e79c3;

@@ -9,6 +9,8 @@ import classes from "./List.module.css"
 import { CategoryModal } from "./CategoryModal"
 import { useUserContext } from "Authentication"
 import { ItemModal } from "./ItemModal"
+import { ListActions } from "./ListActions"
+import { useItems } from "Lists/useItems"
 
 export type ListProps = {
   addedItems: Item[]
@@ -21,6 +23,8 @@ export function List(props: ListProps) {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [isItemModalOpen, setIsItemModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<Item>()
+  const [showCompleted, setShowCompleted] = useState(true)
+  const { batchRemoveItems } = useItems()
   const { getDefaultItemsCollection } = useUserContext()
 
   const uncategorisedItems = addedItems.filter(
@@ -47,6 +51,12 @@ export function List(props: ListProps) {
     })
   }
 
+  if (!showCompleted) {
+    groupedItems.forEach((c) => {
+      c.items = c.items.filter((i) => !i.completed)
+    })
+  }
+
   const handleCategoryClick = (item: Item) => {
     setSelectedItem(item)
     setIsCategoryModalOpen(true)
@@ -60,6 +70,11 @@ export function List(props: ListProps) {
   const handleSelectCategory = (category: string) =>
     getDefaultItemsCollection().doc(selectedItem?.id).update({ category })
 
+  const handleClearCompleted = async () => {
+    const addedIds = addedItems.filter((i) => i.completed).map((i) => i.id)
+    await batchRemoveItems(addedIds)
+  }
+
   return (
     <article>
       <section>
@@ -67,28 +82,35 @@ export function List(props: ListProps) {
         {addedItems.length === 0 ? (
           <span>Nothing added yet!</span>
         ) : (
-          <div className={classes.list}>
-            {groupedItems.map((c) => (
-              <div
-                key={c.id}
-                className={classes.category}
-                style={{ backgroundColor: `${c.colour}40` }}
-              >
-                <small>{c.name.toLocaleUpperCase()}</small>
-                <div className={classes.items}>
-                  {c.items.map((item) => (
-                    <ListItem
-                      key={item.name}
-                      item={item}
-                      category={c}
-                      onClickCategory={() => handleCategoryClick(item)}
-                      onClickItem={() => handleItemClick(item)}
-                    />
-                  ))}
+          <>
+            <ListActions
+              showCompleted={showCompleted}
+              setShowCompleted={setShowCompleted}
+              clearCompleted={handleClearCompleted}
+            />
+            <div className={classes.list}>
+              {groupedItems.map((c) => (
+                <div
+                  key={c.id}
+                  className={classes.category}
+                  style={{ backgroundColor: `${c.colour}40` }}
+                >
+                  <small>{c.name.toLocaleUpperCase()}</small>
+                  <div className={classes.items}>
+                    {c.items.map((item) => (
+                      <ListItem
+                        key={item.name}
+                        item={item}
+                        category={c}
+                        onClickCategory={() => handleCategoryClick(item)}
+                        onClickItem={() => handleItemClick(item)}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
         <CategoryModal
           isOpen={isCategoryModalOpen}

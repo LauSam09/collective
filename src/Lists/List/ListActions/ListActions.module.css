@@ -1,0 +1,19 @@
+.container {
+  max-width: 300px;
+  margin: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+}
+
+.container button {
+  padding: var(--spacing-sm);
+}
+
+.toggle {
+  color: var(--colour-action);
+}
+
+.clear {
+  color: var(--colour-action);
+}
