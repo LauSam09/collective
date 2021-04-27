@@ -25,9 +25,13 @@
   background-color: var(--colour-hover);
 }
 
+.details .flag {
+  color: var(--colour-danger);
+  margin-right: var(--spacing-sm);
+}
+
 .details span,
 small {
-  display: block;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

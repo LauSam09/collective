@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFlag } from "@fortawesome/free-solid-svg-icons"
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
 import cx from "classnames/bind"
 
 import { Button, Modal } from "Common"
@@ -70,7 +70,7 @@ export function ItemModal(props: ItemModalProps) {
               [classes.flagged]: flagged,
             })}
           >
-            <FontAwesomeIcon icon={faFlag} />
+            <FontAwesomeIcon icon={faExclamationCircle} size="lg" />
           </Button>
         </Modal.Header>
         <form onSubmit={handleSubmit}>

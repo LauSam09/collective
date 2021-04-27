@@ -1,3 +1,5 @@
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useUserContext } from "Authentication"
 import { Category, Item as ItemModel } from "../../models"
 import { Item } from "../Common/Item"
@@ -30,7 +32,15 @@ export function ListItem(props: ListItemProps) {
           onChange={handleChange}
         />
         <div className={classes.details} onClick={onClickItem}>
-          <span>{item.name}</span>
+          <span>
+            {item.flagged ? (
+              <FontAwesomeIcon
+                icon={faExclamationCircle}
+                className={classes.flag}
+              />
+            ) : null}
+            {item.name}
+          </span>
           <small>{item.notes}</small>
         </div>
       </div>
