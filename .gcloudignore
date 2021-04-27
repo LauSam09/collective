@@ -19,3 +19,8 @@ node_modules/
 # Ignore source and public folder
 src/
 public/
+
+.circleci/
+.vscode/
+functions/
+coverage/
