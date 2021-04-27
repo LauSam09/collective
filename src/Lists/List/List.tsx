@@ -26,6 +26,7 @@ export function List(props: ListProps) {
   const [showCompleted, setShowCompleted] = useState(true)
   const { batchRemoveItems } = useItems()
   const { getDefaultItemsCollection } = useUserContext()
+  const completedItems = addedItems.filter((i) => i.completed)
 
   const uncategorisedItems = addedItems.filter(
     (i) => !i.category || categories.findIndex((c) => c.id === i.category) < 0
@@ -71,7 +72,7 @@ export function List(props: ListProps) {
     getDefaultItemsCollection().doc(selectedItem?.id).update({ category })
 
   const handleClearCompleted = async () => {
-    const addedIds = addedItems.filter((i) => i.completed).map((i) => i.id)
+    const addedIds = completedItems.map((i) => i.id)
     await batchRemoveItems(addedIds)
   }
 
@@ -84,6 +85,7 @@ export function List(props: ListProps) {
         ) : (
           <>
             <ListActions
+              disableClearCompleted={completedItems.length === 0}
               showCompleted={showCompleted}
               setShowCompleted={setShowCompleted}
               clearCompleted={handleClearCompleted}

@@ -7,13 +7,19 @@ import { Button } from "Common"
 import classes from "./ListActions.module.css"
 
 type ListActionsProps = {
+  disableClearCompleted: boolean
   showCompleted: boolean
-  setShowCompleted: Dispatch<SetStateAction<boolean>>
   clearCompleted: () => void
+  setShowCompleted: Dispatch<SetStateAction<boolean>>
 }
 
 export function ListActions(props: ListActionsProps) {
-  const { showCompleted, clearCompleted, setShowCompleted } = props
+  const {
+    disableClearCompleted,
+    showCompleted,
+    clearCompleted,
+    setShowCompleted,
+  } = props
 
   return (
     <div className={classes.container}>
@@ -27,6 +33,7 @@ export function ListActions(props: ListActionsProps) {
       <Button
         title="Clear completed"
         onClick={clearCompleted}
+        disabled={disableClearCompleted}
         className={classes.clear}
       >
         <FontAwesomeIcon icon={faTrash} size="lg" />
