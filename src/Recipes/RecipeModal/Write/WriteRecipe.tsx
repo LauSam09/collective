@@ -63,7 +63,9 @@ export function WriteRecipe(props: WriteRecipeProps) {
 
   return (
     <>
-      <Modal.Header>{adding ? "New recipe" : recipe.name}</Modal.Header>
+      <Modal.Header>
+        <h4>{adding ? "New recipe" : recipe.name}</h4>
+      </Modal.Header>
       <form onSubmit={handleSubmit(saveRecipe)}>
         <FormGroup>
           <label htmlFor="name">Name*</label>

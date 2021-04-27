@@ -5,8 +5,9 @@ export interface Item {
   category: string
   name: string
   lowerName: string
-  notes: string | undefined
-  count: number | undefined
+  notes?: string
+  count?: number
+  flagged?: boolean
 }
 
 export interface DatabaseItem {
@@ -15,6 +16,7 @@ export interface DatabaseItem {
   category: string
   name: string
   lowerName: string
-  notes: string | undefined
-  count: number | undefined
+  notes?: string
+  count?: number
+  flagged?: boolean
 }

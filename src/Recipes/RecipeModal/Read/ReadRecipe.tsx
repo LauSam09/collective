@@ -51,7 +51,9 @@ export function ReadRecipe(props: ReadRecipeProps) {
   return (
     <>
       <div className={classes.headerContainer}>
-        <Modal.Header>{recipe.name}</Modal.Header>
+        <Modal.Header>
+          <h4>{recipe.name}</h4>
+        </Modal.Header>
         <Button title="Edit" onClick={edit} className={classes.editButton}>
           <FontAwesomeIcon icon={faEdit} size="lg" />
         </Button>

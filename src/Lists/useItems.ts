@@ -72,5 +72,18 @@ export function useItems() {
     return batch.commit()
   }
 
-  return { addItem, batchRemoveItems, deleteItem, removeItem, updateItem }
+  function setItemFlag(id: string, flagged: boolean) {
+    return collection.doc(id).update({
+      flagged,
+    })
+  }
+
+  return {
+    addItem,
+    batchRemoveItems,
+    deleteItem,
+    removeItem,
+    setItemFlag,
+    updateItem,
+  }
 }

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faFlag } from "@fortawesome/free-solid-svg-icons"
+import cx from "classnames/bind"
 
 import { Button, Modal } from "Common"
 import { useItems } from "Lists"
 import { Item } from "Lists/models"
 
 import classes from "./ItemModal.module.css"
+
+const classnames = cx.bind(classes)
 
 type ItemModalProps = {
   isOpen: boolean
@@ -15,12 +20,14 @@ type ItemModalProps = {
 export function ItemModal(props: ItemModalProps) {
   const { isOpen, item, close } = props
   const [notes, setNotes] = useState(item?.notes)
-  const { deleteItem, removeItem, updateItem } = useItems()
+  const [flagged, setFlagged] = useState(item?.flagged)
+  const { deleteItem, removeItem, setItemFlag, updateItem } = useItems()
 
   useEffect(() => {
     // Prevents old values being displayed when modal fades out.
     if (isOpen) {
       setNotes(item?.notes)
+      setFlagged(item?.flagged)
     }
   }, [item, isOpen])
 
@@ -45,10 +52,27 @@ export function ItemModal(props: ItemModalProps) {
     close()
   }
 
+  function handleFlag() {
+    setFlagged((f) => !f)
+    item?.id && setItemFlag(item.id, !flagged)
+  }
+
   return (
     <Modal isOpen={isOpen} onRequestClose={close}>
       <Modal.Body>
-        <Modal.Header>{item?.name}</Modal.Header>
+        <Modal.Header className={classes.header}>
+          <h4>{item?.name}</h4>
+          <Button
+            type="button"
+            title={flagged ? "Item flagged" : "Flag item"}
+            onClick={handleFlag}
+            className={classnames(classes.flagButton, {
+              [classes.flagged]: flagged,
+            })}
+          >
+            <FontAwesomeIcon icon={faFlag} />
+          </Button>
+        </Modal.Header>
         <form onSubmit={handleSubmit}>
           <label>Notes</label>
           <input
