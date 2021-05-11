@@ -1,13 +1,12 @@
 .list {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
   margin-top: var(--spacing-md);
 }
 
 .list > * {
   width: 280px;
-  margin: 0 var(--spacing-sm);
+  margin: auto;
 }
 
 .category {
