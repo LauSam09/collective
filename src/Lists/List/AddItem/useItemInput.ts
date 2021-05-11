@@ -20,6 +20,14 @@ export function useItemInput(addedItems: Item[], unaddedItems: Item[]) {
     }
   }, [previouslyAdded])
 
+  // TODO May want to improve this so that if the category is manually set
+  // then it isn't cleared so easily.
+  useEffect(() => {
+    if (value === "") {
+      setCategory("")
+    }
+  }, [value])
+
   const addItem = () => {
     baseAddItem(value, category)
     setValue("")
