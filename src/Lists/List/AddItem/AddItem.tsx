@@ -21,37 +21,20 @@ export function AddItem(props: AddItemsProps) {
   const [value, setValue] = useState("")
   const [category, setCategory] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [previouslyAdded, setPreviouslyAdded] = useState<ItemModel>()
-  const [alreadyAdded, setAlreadyAdded] = useState<ItemModel>()
-  const [isValid, setIsValid] = useState(false)
-  const { addItem } = useItems()
-
   const inputRef = useRef<HTMLInputElement>(null)
+  const { addItem } = useItems()
   const categories = useCategories()
+
+  const lowerName = singular(value.trim().toLowerCase())
+  const previouslyAdded = unaddedItems.find((i) => i.lowerName === lowerName)
+  const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
+  const isValid = Boolean(value) && !alreadyAdded
 
   useEffect(() => {
     if (previouslyAdded) {
       setCategory(previouslyAdded.category)
     }
   }, [previouslyAdded])
-
-  // TODO not sure an effect is required for this - could just move to function body
-  useEffect(() => {
-    const lowerName = singular(value.trim().toLowerCase())
-    const previouslyAdded = unaddedItems.find((i) => i.lowerName === lowerName)
-    setPreviouslyAdded(previouslyAdded)
-
-    if (previouslyAdded) {
-      setCategory(previouslyAdded.category)
-    }
-
-    setAlreadyAdded(addedItems.find((i) => i.lowerName === lowerName))
-  }, [value, unaddedItems, addedItems])
-
-  // TODO similarly here
-  useEffect(() => {
-    setIsValid(Boolean(value) && !alreadyAdded)
-  }, [value, alreadyAdded])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
