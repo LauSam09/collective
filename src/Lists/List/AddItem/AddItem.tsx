@@ -1,52 +1,42 @@
-import { useEffect, useRef, useState } from "react"
-import { singular } from "pluralize"
+import { useState } from "react"
 
 import { useCategories } from "../../CategoriesContext"
 import { Item as ItemModel } from "../../models"
 
 import { Item } from "../Common/Item"
 import { CategoryModal } from "../CategoryModal"
-import { useItems } from "Lists/useItems"
+import { useItemInput } from "./useItemInput"
 
 import classes from "./AddItem.module.css"
 
-type AddItemsProps = {
+export type AddItemsProps = {
   addedItems: ItemModel[]
   unaddedItems: ItemModel[]
 }
 
 export function AddItem(props: AddItemsProps) {
   const { addedItems, unaddedItems } = props
-
-  const [value, setValue] = useState("")
-  const [category, setCategory] = useState("")
+  const {
+    alreadyAdded,
+    category,
+    inputRef,
+    isValid,
+    previouslyAdded,
+    value,
+    addItem,
+    clear,
+    setCategory,
+    setValue,
+  } = useItemInput(addedItems, unaddedItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const { addItem } = useItems()
   const categories = useCategories()
-
-  const lowerName = singular(value.trim().toLowerCase())
-  const previouslyAdded = unaddedItems.find((i) => i.lowerName === lowerName)
-  const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
-  const isValid = Boolean(value) && !alreadyAdded
-
-  useEffect(() => {
-    if (previouslyAdded) {
-      setCategory(previouslyAdded.category)
-    }
-  }, [previouslyAdded])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    addItem(value, category)
-    setValue("")
-    inputRef.current?.focus()
+    addItem()
   }
 
-  const handleClickCancel = () => {
-    setValue("")
-    setCategory("")
-  }
+  const handleClickCancel = () => clear()
 
   return (
     <>
@@ -88,7 +78,7 @@ export function AddItem(props: AddItemsProps) {
             Clear
           </button>
           <button type="submit" disabled={!isValid} className={classes.add}>
-            {previouslyAdded ? "Add" : "Add New"}
+            {previouslyAdded || value === "" ? "Add" : "Add (New)"}
           </button>
         </div>
       </form>
