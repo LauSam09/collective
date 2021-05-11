@@ -80,40 +80,36 @@ export function List(props: ListProps) {
     <article>
       <section>
         <AddItem addedItems={addedItems} unaddedItems={unaddedItems} />
-        {addedItems.length === 0 ? (
-          <span>Nothing added yet!</span>
-        ) : (
-          <>
-            <ListActions
-              disableClearCompleted={completedItems.length === 0}
-              showCompleted={showCompleted}
-              setShowCompleted={setShowCompleted}
-              clearCompleted={handleClearCompleted}
-            />
-            <div className={classes.list}>
-              {groupedItems.map((c) => (
-                <div
-                  key={c.id}
-                  className={classes.category}
-                  style={{ backgroundColor: `${c.colour}40` }}
-                >
-                  <small>{c.name.toLocaleUpperCase()}</small>
-                  <div className={classes.items}>
-                    {c.items.map((item) => (
-                      <ListItem
-                        key={item.name}
-                        item={item}
-                        category={c}
-                        onClickCategory={() => handleCategoryClick(item)}
-                        onClickItem={() => handleItemClick(item)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
+        {addedItems.length > 0 ? (
+          <ListActions
+            disableClearCompleted={completedItems.length === 0}
+            showCompleted={showCompleted}
+            setShowCompleted={setShowCompleted}
+            clearCompleted={handleClearCompleted}
+          />
+        ) : null}
+        <div className={classes.list}>
+          {groupedItems.map((c) => (
+            <div
+              key={c.id}
+              className={classes.category}
+              style={{ backgroundColor: `${c.colour}40` }}
+            >
+              <small>{c.name.toLocaleUpperCase()}</small>
+              <div className={classes.items}>
+                {c.items.map((item) => (
+                  <ListItem
+                    key={item.name}
+                    item={item}
+                    category={c}
+                    onClickCategory={() => handleCategoryClick(item)}
+                    onClickItem={() => handleItemClick(item)}
+                  />
+                ))}
+              </div>
             </div>
-          </>
-        )}
+          ))}
+        </div>
         <CategoryModal
           isOpen={isCategoryModalOpen}
           selectedCategoryId={selectedItem?.category}
