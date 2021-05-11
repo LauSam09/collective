@@ -20,7 +20,6 @@ export function AddItem(props: AddItemsProps) {
 
   const [value, setValue] = useState("")
   const [category, setCategory] = useState("")
-  const [saving, setSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [previouslyAdded, setPreviouslyAdded] = useState<ItemModel>()
   const [alreadyAdded, setAlreadyAdded] = useState<ItemModel>()
@@ -51,20 +50,14 @@ export function AddItem(props: AddItemsProps) {
 
   // TODO similarly here
   useEffect(() => {
-    setIsValid(Boolean(value) && !alreadyAdded && !saving)
-  }, [value, alreadyAdded, saving])
+    setIsValid(Boolean(value) && !alreadyAdded)
+  }, [value, alreadyAdded])
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
-    try {
-      setSaving(true)
-      await addItem(value, category)
-      setValue("")
-    } finally {
-      setSaving(false)
-      inputRef.current?.focus()
-    }
+    addItem(value, category)
+    setValue("")
+    inputRef.current?.focus()
   }
 
   const handleClickCancel = () => {
@@ -97,7 +90,7 @@ export function AddItem(props: AddItemsProps) {
             ))}
           </datalist>
         ) : null}
-        {alreadyAdded && !saving ? (
+        {alreadyAdded ? (
           <small className={classes.error}>
             {alreadyAdded.name} has already been added
           </small>
@@ -106,7 +99,7 @@ export function AddItem(props: AddItemsProps) {
           <button
             type="button"
             onClick={handleClickCancel}
-            disabled={(!Boolean(value) && !category) || saving}
+            disabled={!Boolean(value) && !category}
             className={classes.clear}
           >
             Clear
