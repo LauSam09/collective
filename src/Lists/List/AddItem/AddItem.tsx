@@ -70,7 +70,6 @@ export function AddItem(props: AddItemsProps) {
   const handleClickCancel = () => {
     setValue("")
     setCategory("")
-    inputRef.current?.focus()
   }
 
   return (
