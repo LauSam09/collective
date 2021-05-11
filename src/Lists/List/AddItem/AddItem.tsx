@@ -11,23 +11,23 @@ import classes from "./AddItem.module.css"
 
 export type AddItemsProps = {
   addedItems: ItemModel[]
+  category: string
+  setCategory: React.Dispatch<React.SetStateAction<string>>
   unaddedItems: ItemModel[]
 }
 
 export function AddItem(props: AddItemsProps) {
-  const { addedItems, unaddedItems } = props
+  const { addedItems, category, setCategory, unaddedItems } = props
   const {
     alreadyAdded,
-    category,
     inputRef,
     isValid,
     previouslyAdded,
     value,
     addItem,
     clear,
-    setCategory,
     setValue,
-  } = useItemInput(addedItems, unaddedItems)
+  } = useItemInput(addedItems, category, setCategory, unaddedItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const categories = useCategories()
 

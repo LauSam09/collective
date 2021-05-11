@@ -3,9 +3,13 @@ import { Item } from "Lists/models"
 import { singular } from "pluralize"
 import { useEffect, useRef, useState } from "react"
 
-export function useItemInput(addedItems: Item[], unaddedItems: Item[]) {
+export function useItemInput(
+  addedItems: Item[],
+  category: string,
+  setCategory: React.Dispatch<React.SetStateAction<string>>,
+  unaddedItems: Item[]
+) {
   const [value, setValue] = useState("")
-  const [category, setCategory] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
   const { addItem: baseAddItem } = useItems()
 
@@ -18,7 +22,7 @@ export function useItemInput(addedItems: Item[], unaddedItems: Item[]) {
     if (previouslyAdded) {
       setCategory(previouslyAdded.category)
     }
-  }, [previouslyAdded])
+  }, [previouslyAdded, setCategory])
 
   // TODO May want to improve this so that if the category is manually set
   // then it isn't cleared so easily.
@@ -26,7 +30,7 @@ export function useItemInput(addedItems: Item[], unaddedItems: Item[]) {
     if (value === "") {
       setCategory("")
     }
-  }, [value])
+  }, [value, setCategory])
 
   const addItem = () => {
     baseAddItem(value, category)

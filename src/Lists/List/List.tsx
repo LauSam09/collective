@@ -1,16 +1,21 @@
 import { useState } from "react"
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
+import { useUserContext } from "Authentication"
+import { Button } from "Common"
+import { useItems } from "Lists/useItems"
+
 import { useCategories } from "../CategoriesContext"
 import { Item } from "../models"
 
 import { ListItem } from "./ListItem"
 import { AddItem } from "./AddItem"
-
-import classes from "./List.module.css"
 import { CategoryModal } from "./CategoryModal"
-import { useUserContext } from "Authentication"
 import { ItemModal } from "./ItemModal"
 import { ListActions } from "./ListActions"
-import { useItems } from "Lists/useItems"
+
+import classes from "./List.module.css"
 
 export type ListProps = {
   addedItems: Item[]
@@ -26,6 +31,8 @@ export function List(props: ListProps) {
   const [showCompleted, setShowCompleted] = useState(true)
   const { batchRemoveItems } = useItems()
   const { getDefaultItemsCollection } = useUserContext()
+  const [selectedCategory, setSelectedCategory] = useState("")
+
   const completedItems = addedItems.filter((i) => i.completed)
 
   const uncategorisedItems = addedItems.filter(
@@ -79,7 +86,12 @@ export function List(props: ListProps) {
   return (
     <article>
       <section>
-        <AddItem addedItems={addedItems} unaddedItems={unaddedItems} />
+        <AddItem
+          addedItems={addedItems}
+          category={selectedCategory}
+          setCategory={setSelectedCategory}
+          unaddedItems={unaddedItems}
+        />
         {addedItems.length > 0 ? (
           <ListActions
             disableClearCompleted={completedItems.length === 0}
@@ -95,7 +107,12 @@ export function List(props: ListProps) {
               className={classes.category}
               style={{ backgroundColor: `${c.colour}40` }}
             >
-              <small>{c.name.toLocaleUpperCase()}</small>
+              <div className={classes.categoryHeader}>
+                <small>{c.name.toLocaleUpperCase()} </small>
+                <Button onClick={() => setSelectedCategory(c.id ?? "")}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+              </div>
               <div className={classes.items}>
                 {c.items.map((item) => (
                   <ListItem

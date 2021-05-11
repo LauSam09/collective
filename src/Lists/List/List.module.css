@@ -15,6 +15,15 @@
   margin-bottom: var(--spacing-md);
 }
 
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.categoryHeader button {
+  padding: var(--spacing-sm);
+}
+
 .items > * {
   margin: var(--spacing-sm) 0;
 }
