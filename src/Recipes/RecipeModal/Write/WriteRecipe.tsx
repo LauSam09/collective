@@ -16,26 +16,22 @@ interface RecipeFormModel {
   }[]
 }
 
-type WriteRecipeProps = {
+interface WriteRecipeProps {
   recipe: Recipe
   close: () => void
   onSave: (recipe: Recipe) => void
 }
 
-export function WriteRecipe(props: WriteRecipeProps) {
+export const WriteRecipe = (props: WriteRecipeProps) => {
   const { recipe, close, onSave } = props
-  const {
-    control,
-    formState,
-    handleSubmit,
-    register,
-  } = useForm<RecipeFormModel>({
-    mode: "onChange",
-    defaultValues: {
-      ...recipe,
-      ingredients: recipe.ingredients?.map((i) => ({ name: i })) || [],
-    },
-  })
+  const { control, formState, handleSubmit, register } =
+    useForm<RecipeFormModel>({
+      mode: "onChange",
+      defaultValues: {
+        ...recipe,
+        ingredients: recipe.ingredients?.map((i) => ({ name: i })) || [],
+      },
+    })
   const { fields, append, remove } = useFieldArray({
     control,
     name: "ingredients",

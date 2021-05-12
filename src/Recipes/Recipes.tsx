@@ -1,6 +1,4 @@
 import { useCallback, useState } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
 import { Item } from "Lists"
 
@@ -10,12 +8,12 @@ import { RecipeModal } from "./RecipeModal"
 import { WeeklyRecipes } from "./WeeklyRecipes"
 import { RecipeListActions } from "./RecipeListActions"
 
-type RecipesProps = {
+interface RecipesProps {
   addedItems: Item[]
   recipes: Recipe[]
 }
 
-export function Recipes(props: RecipesProps) {
+export const Recipes = (props: RecipesProps) => {
   const { addedItems, recipes } = props
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>({

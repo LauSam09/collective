@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 
-type FilterRecipesProps = {
+interface FilterRecipesProps {
   onFilterChange: (filter: string) => void
 }
 
-export function FilterRecipes(props: FilterRecipesProps) {
+export const FilterRecipes = (props: FilterRecipesProps) => {
   const { onFilterChange } = props
   const [filter, setFilter] = useState("")
 

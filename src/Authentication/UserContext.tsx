@@ -15,7 +15,7 @@ import { db } from "Config"
 import { useAuth } from "./AuthContext"
 import { AuthUser, DatabaseUser, User, UserGroup, UserState } from "./models"
 
-type UserContextType = {
+interface UserContextType {
   user: User | undefined
   setUserGroup: (group: UserGroup) => void
   refreshUser: () => Promise<void>
@@ -31,11 +31,11 @@ const UserContext = createContext<UserContextType>({
   getRecipesCollection: () => null as any,
 })
 
-type UserProviderProps = {
+interface UserProviderProps {
   children?: ReactNode
 }
 
-function UserProvider(props: UserProviderProps) {
+const UserProvider = (props: UserProviderProps) => {
   const { user: authUser, initialised } = useAuth()
   const [user, setUser] = useState<User>()
 
@@ -49,7 +49,8 @@ function UserProvider(props: UserProviderProps) {
 
     const newUser: DatabaseUser = {
       name: authUser.name || authUser.email || "",
-      added: firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
+      added:
+        firebase.firestore.FieldValue.serverTimestamp() as firebase.firestore.Timestamp,
       email: authUser.email,
       state: UserState.Unregistered,
     }

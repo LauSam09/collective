@@ -11,20 +11,20 @@ import { Days } from "./Days"
 
 import classes from "./ReadRecipe.module.css"
 
-type IngredientViewModel = {
+interface IngredientViewModel {
   name: string
   added: boolean
   toggle: () => Promise<void>
 }
 
-type ReadRecipeProps = {
+interface ReadRecipeProps {
   recipe: Recipe
   addedItems: Item[]
   close: () => void
   edit: () => void
 }
 
-export function ReadRecipe(props: ReadRecipeProps) {
+export const ReadRecipe = (props: ReadRecipeProps) => {
   const { recipe, addedItems, close, edit } = props
   const { addItem, removeItem } = useItems()
 

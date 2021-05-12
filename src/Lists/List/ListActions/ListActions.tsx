@@ -6,14 +6,14 @@ import { Button } from "Common"
 
 import classes from "./ListActions.module.css"
 
-type ListActionsProps = {
+interface ListActionsProps {
   disableClearCompleted: boolean
   showCompleted: boolean
   clearCompleted: () => void
   setShowCompleted: Dispatch<SetStateAction<boolean>>
 }
 
-export function ListActions(props: ListActionsProps) {
+export const ListActions = (props: ListActionsProps) => {
   const {
     disableClearCompleted,
     showCompleted,

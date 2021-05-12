@@ -1,21 +1,18 @@
-import { useState } from "react"
-
 import { useCategories } from "Lists/CategoriesContext"
 
 import { Modal } from "Common"
 
 import classes from "./CategoryModal.module.css"
 
-type CategoryModalProps = {
+interface CategoryModalProps {
   isOpen: boolean
   selectedCategoryId: string | undefined
   close: () => void
   select: (categoryId: string) => Promise<void>
 }
 
-export function CategoryModal(props: CategoryModalProps) {
+export const CategoryModal = (props: CategoryModalProps) => {
   const { isOpen, selectedCategoryId, close, select } = props
-  const [saving, setSaving] = useState(false)
   const categories = useCategories()
 
   const handleClick = async (category: string) => {
@@ -24,13 +21,10 @@ export function CategoryModal(props: CategoryModalProps) {
     }
 
     try {
-      setSaving(true)
       await select(category)
-      setSaving(false)
       close()
     } catch (err) {
       console.error(err)
-      setSaving(false)
     }
   }
 

@@ -1,10 +1,10 @@
 import classes from "./GoogleLoginButton.module.css"
 
-type GoogleLoginButtonProps = {
+interface GoogleLoginButtonProps {
   onClick?: () => void
 }
 
-export function GoogleLoginButton(props: GoogleLoginButtonProps) {
+export const GoogleLoginButton = (props: GoogleLoginButtonProps) => {
   const { onClick } = props
 
   return (

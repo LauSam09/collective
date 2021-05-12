@@ -3,21 +3,21 @@ import cx from "classnames/bind"
 
 import { weekDays } from "Constants"
 import { Recipe } from "Recipes/models"
+import { useRecipes } from "Recipes/useRecipes"
 import { WeeklyRecipeListItem } from "./WeeklyRecipeListItem"
 
 import classes from "./WeeklyRecipes.module.css"
-import { useRecipes } from "Recipes/useRecipes"
 
 const classnames = cx.bind(classes)
 
-type DayButtonProps = {
+interface DayButtonProps {
   day: string
   count: number
   selected: boolean
   onClick: () => void
 }
 
-function DayButton(props: DayButtonProps) {
+const DayButton = (props: DayButtonProps) => {
   const { count, day, selected, onClick } = props
 
   return (
@@ -31,12 +31,12 @@ function DayButton(props: DayButtonProps) {
   )
 }
 
-type WeeklyRecipesProps = {
+interface WeeklyRecipesProps {
   recipes: Recipe[]
   onClickRecipe: (recipe: Recipe) => void
 }
 
-export function WeeklyRecipes(props: WeeklyRecipesProps) {
+export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
   const { recipes, onClickRecipe } = props
   const [selectedDay, setSelectedDay] = useState<number>()
   const { assignRecipe } = useRecipes()

@@ -7,6 +7,7 @@ import { App } from "App"
 import { AppProviders } from "./AppProviders"
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration"
 import { reportWebVitals } from "reportWebVitals"
+
 import "index.css"
 
 Modal.setAppElement("#root")

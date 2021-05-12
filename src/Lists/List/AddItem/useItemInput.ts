@@ -1,7 +1,8 @@
-import { useItems } from "Lists"
-import { Item } from "Lists/models"
 import { singular } from "pluralize"
 import { useEffect, useState } from "react"
+
+import { useItems } from "Lists"
+import { Item } from "Lists/models"
 
 export function useItemInput(
   addedItems: Item[],

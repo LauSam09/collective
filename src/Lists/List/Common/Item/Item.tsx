@@ -1,16 +1,16 @@
-import React from "react"
+import { ReactNode } from "react"
 
 import { CategoryButton } from "../CategoryButton"
 
 import classes from "./Item.module.css"
 
-type ItemProps = {
+interface ItemProps {
   buttonColour: string
   onClickCategory?: () => void
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-export function Item(props: ItemProps) {
+export const Item = (props: ItemProps) => {
   const { buttonColour, onClickCategory, children } = props
 
   return (

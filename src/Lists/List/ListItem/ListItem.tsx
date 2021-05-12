@@ -6,14 +6,14 @@ import { Item } from "../Common/Item"
 
 import classes from "./ListItem.module.css"
 
-export type ListItemProps = {
+export interface ListItemProps {
   item: ItemModel
   category: Category | undefined
   onClickCategory: () => void
   onClickItem: () => void
 }
 
-export function ListItem(props: ListItemProps) {
+export const ListItem = (props: ListItemProps) => {
   const { item, category, onClickCategory, onClickItem } = props
   const { getDefaultItemsCollection } = useUserContext()
 

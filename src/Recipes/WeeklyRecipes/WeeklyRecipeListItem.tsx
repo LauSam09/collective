@@ -5,12 +5,12 @@ import { RecipeListItem, RecipeListItemProps } from "../RecipeList"
 
 import classes from "./WeeklyRecipeListItem.module.css"
 
-type WeeklyRecipeListItemProps = RecipeListItemProps & {
+interface WeeklyRecipeListItemProps extends RecipeListItemProps {
   onClickRemove: () => void
   onClickRecipe: () => void
 }
 
-export function WeeklyRecipeListItem(props: WeeklyRecipeListItemProps) {
+export const WeeklyRecipeListItem = (props: WeeklyRecipeListItemProps) => {
   const { onClickRemove, onClickRecipe, ...listItemProps } = props
 
   return (

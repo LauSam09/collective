@@ -11,7 +11,7 @@ import { useGroup } from "Authentication"
 import { db } from "Config"
 import { FullPageSpinner } from "Common"
 
-type CategoriesContextType = {
+interface CategoriesContextType {
   categories: Category[]
 }
 
@@ -19,13 +19,13 @@ export const CategoriesContext = createContext<CategoriesContextType>({
   categories: [],
 })
 
-type CategoriesContextProviderProps = {
+interface CategoriesContextProviderProps {
   children?: ReactNode
 }
 
-export function CategoriesContextProvider(
+export const CategoriesContextProvider = (
   props: CategoriesContextProviderProps
-) {
+) => {
   const { defaultList, id } = useGroup() || {}
   const [categories, setCategories] = useState<Category[]>()
 

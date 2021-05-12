@@ -13,7 +13,7 @@ import { AuthUser } from "./models"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 
-type AuthContextType = {
+interface AuthContextType {
   login: () => Promise<void>
   logout: () => Promise<void>
   user: AuthUser | undefined
@@ -22,11 +22,11 @@ type AuthContextType = {
 
 const AuthContext = createContext<Partial<AuthContextType>>({})
 
-type AuthProviderProps = {
+interface AuthProviderProps {
   children?: ReactNode
 }
 
-function AuthProvider(props: AuthProviderProps) {
+const AuthProvider = (props: AuthProviderProps) => {
   const [initialised, setFbInitialised] = useState(false)
   const [user, setUser] = useState<AuthUser>()
 

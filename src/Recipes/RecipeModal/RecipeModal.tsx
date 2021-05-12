@@ -12,14 +12,14 @@ enum Mode {
   "Write",
 }
 
-type RecipeModalProps = {
+interface RecipeModalProps {
   isOpen: boolean
   recipe: Recipe
   addedItems: Item[]
   close: () => void
 }
 
-export function RecipeModal(props: RecipeModalProps) {
+export const RecipeModal = (props: RecipeModalProps) => {
   const { isOpen, recipe: initialRecipe, addedItems, close } = props
   const [mode, setMode] = useState(Mode.Read)
   const [recipe, setRecipe] = useState(initialRecipe)

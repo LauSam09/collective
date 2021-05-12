@@ -5,12 +5,12 @@ import { FilterRecipes } from "./FilterRecipes/FilterRecipes"
 
 import classes from "./RecipeListActions.module.css"
 
-type RecipeListActionsProps = {
+interface RecipeListActionsProps {
   onClickAdd: () => void
   onFilterChange: (filter: string) => void
 }
 
-export function RecipeListActions(props: RecipeListActionsProps) {
+export const RecipeListActions = (props: RecipeListActionsProps) => {
   const { onClickAdd, onFilterChange } = props
 
   return (

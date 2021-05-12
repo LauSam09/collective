@@ -4,7 +4,7 @@ import { Content, Footer, Header } from "Layout"
 
 import classes from "./App.module.css"
 
-export function App() {
+export const App = () => {
   useEffect(() => {
     document.body.dataset.theme = "light"
   }, [])

@@ -1,8 +1,6 @@
-export function ModalHeader(
+export const ModalHeader = (
   props: React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   >
-) {
-  return <div {...props} />
-}
+) => <div {...props} />

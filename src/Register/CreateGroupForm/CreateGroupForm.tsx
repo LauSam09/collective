@@ -7,11 +7,11 @@ import { createGroup } from "./CreateGroupForm.service"
 
 import classes from "./CreateGroupForm.module.css"
 
-type Form = {
+interface Form {
   name: string
 }
 
-export function CreateGroupForm() {
+export const CreateGroupForm = () => {
   const { formState, handleSubmit, register } = useForm<Form>({
     defaultValues: {
       name: "",

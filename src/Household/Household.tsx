@@ -15,7 +15,7 @@ const classnames = cx.bind(classes)
 const functions = firebase.functions()
 const createInvitation = functions.httpsCallable("createInvitation")
 
-export function Household() {
+export const Household = () => {
   const group = useGroup()
 
   if (!group) {
@@ -35,7 +35,7 @@ export function Household() {
   )
 }
 
-function InviteMember() {
+const InviteMember = () => {
   const group = useGroup()
   const [working, setWorking] = useState(false)
   const [error, setError] = useState<string>()

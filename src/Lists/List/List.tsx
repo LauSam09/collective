@@ -17,12 +17,12 @@ import { ListActions } from "./ListActions"
 
 import classes from "./List.module.css"
 
-export type ListProps = {
+export interface ListProps {
   addedItems: Item[]
   unaddedItems: Item[]
 }
 
-export function List(props: ListProps) {
+export const List = (props: ListProps) => {
   const { addedItems, unaddedItems } = props
   const categories = useCategories()
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)

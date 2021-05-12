@@ -5,13 +5,13 @@ import { Button } from "Common"
 
 import classes from "./Ingredient.module.css"
 
-type IngredientProps = {
+interface IngredientProps {
   name: string
   added: boolean
   toggle: () => void
 }
 
-export function Ingredient(props: IngredientProps) {
+export const Ingredient = (props: IngredientProps) => {
   const { added, name, toggle } = props
 
   return (

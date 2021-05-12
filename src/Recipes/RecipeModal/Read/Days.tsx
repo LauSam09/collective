@@ -8,12 +8,12 @@ import classes from "./Days.module.css"
 
 const classnames = cx.bind(classes)
 
-type DaysProps = {
+interface DaysProps {
   id: string
   recipeDays: number[]
 }
 
-export function Days(props: DaysProps) {
+export const Days = (props: DaysProps) => {
   const { id, recipeDays: initialDays } = props
   const [recipeDays, setRecipeDays] = useState(initialDays)
   const { assignRecipe } = useRecipes()

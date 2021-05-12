@@ -11,13 +11,13 @@ import classes from "./ItemModal.module.css"
 
 const classnames = cx.bind(classes)
 
-type ItemModalProps = {
+interface ItemModalProps {
   isOpen: boolean
   item: Item | undefined
   close: () => void
 }
 
-export function ItemModal(props: ItemModalProps) {
+export const ItemModal = (props: ItemModalProps) => {
   const { isOpen, item, close } = props
   const [notes, setNotes] = useState(item?.notes)
   const [flagged, setFlagged] = useState(item?.flagged)

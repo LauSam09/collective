@@ -2,12 +2,12 @@ import { Link } from "react-router-dom"
 
 import classes from "./RegisteredSplash.module.css"
 
-type RegisteredSplashProps = {
+interface RegisteredSplashProps {
   itemCount: number
   planCount: number
 }
 
-export function RegisteredSplash(props: RegisteredSplashProps) {
+export const RegisteredSplash = (props: RegisteredSplashProps) => {
   const { itemCount, planCount } = props
 
   return (
@@ -18,11 +18,11 @@ export function RegisteredSplash(props: RegisteredSplashProps) {
   )
 }
 
-type ListSummaryProps = {
+interface ListSummaryProps {
   itemCount: number
 }
 
-function ListSummary(props: ListSummaryProps) {
+const ListSummary = (props: ListSummaryProps) => {
   const { itemCount } = props
 
   return (
@@ -35,11 +35,11 @@ function ListSummary(props: ListSummaryProps) {
   )
 }
 
-type RecipeSummaryProps = {
+interface RecipeSummaryProps {
   planCount: number
 }
 
-function RecipeSummary(props: RecipeSummaryProps) {
+const RecipeSummary = (props: RecipeSummaryProps) => {
   const { planCount } = props
 
   return (

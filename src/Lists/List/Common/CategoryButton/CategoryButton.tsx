@@ -1,15 +1,14 @@
-import React from "react"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import classes from "./CategoryButton.module.css"
 
-type CategoryButtonProps = {
+interface CategoryButtonProps {
   onClick?: () => void
   buttonColour: string
 }
 
-export function CategoryButton(props: CategoryButtonProps) {
+export const CategoryButton = (props: CategoryButtonProps) => {
   const { buttonColour, onClick } = props
 
   return (

@@ -11,23 +11,21 @@ import { Invitation } from "../models"
 
 import classes from "./JoinHousehold.module.css"
 
-type Params = {
+interface Params {
   id: string
 }
 
 const functions = firebase.functions()
 const acceptInvitation = functions.httpsCallable("acceptInvitation")
 
-export function JoinHousehold() {
-  return (
-    <article>
-      <h2>Join Household</h2>
-      <JoinHouseholdContent />
-    </article>
-  )
-}
+export const JoinHousehold = () => (
+  <article>
+    <h2>Join Household</h2>
+    <JoinHouseholdContent />
+  </article>
+)
 
-export function JoinHouseholdContent() {
+export const JoinHouseholdContent = () => {
   const { id } = useParams<Params>()
   const history = useHistory()
   const { refreshUser } = useUserContext()

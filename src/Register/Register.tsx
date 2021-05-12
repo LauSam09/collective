@@ -2,7 +2,7 @@ import { CreateGroupForm } from "./CreateGroupForm"
 
 import classes from "./Register.module.css"
 
-export function Register() {
+export const Register = () => {
   return (
     <article>
       <h1>Welcome to Collective, it looks like you're new here!</h1>

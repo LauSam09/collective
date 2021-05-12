@@ -9,7 +9,7 @@ import { useItemInput } from "./useItemInput"
 
 import classes from "./AddItem.module.css"
 
-export type AddItemsProps = {
+export interface AddItemsProps {
   addedItems: ItemModel[]
   category: string
   setCategory: React.Dispatch<React.SetStateAction<string>>

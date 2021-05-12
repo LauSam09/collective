@@ -5,7 +5,7 @@ import { Features } from "./Features"
 
 import classes from "./AnonymousSplash.module.css"
 
-export function AnonymousSplash() {
+export const AnonymousSplash = () => {
   const { login } = useAuth()
 
   return (

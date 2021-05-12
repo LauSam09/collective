@@ -7,7 +7,7 @@ import { RegisteredSplash } from "Splash"
 import { CategoriesContextProvider, List, useItemSubscription } from "Lists"
 import { Recipes, useRecipeSubscription } from "Recipes"
 
-function RegisteredContent() {
+const RegisteredContent = () => {
   const { addedItems, unaddedItems } = useItemSubscription()
   const { recipes } = useRecipeSubscription()
 
@@ -38,20 +38,18 @@ function RegisteredContent() {
   )
 }
 
-function UnregisteredContent() {
-  return (
-    <Switch>
-      <Route path="/join/:id" exact>
-        <JoinHousehold />
-      </Route>
-      <Route path="/register" exact>
-        <Register />
-      </Route>
-      <Redirect to="/register" />
-    </Switch>
-  )
-}
+const UnregisteredContent = () => (
+  <Switch>
+    <Route path="/join/:id" exact>
+      <JoinHousehold />
+    </Route>
+    <Route path="/register" exact>
+      <Register />
+    </Route>
+    <Redirect to="/register" />
+  </Switch>
+)
 
-export function AuthenticatedContent() {
+export const AuthenticatedContent = () => {
   return useIsRegistered() ? <RegisteredContent /> : <UnregisteredContent />
 }

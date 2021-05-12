@@ -4,16 +4,11 @@ import classes from "./FormGroup.module.css"
 
 const classnames = cx.bind(classes)
 
-export function FormGroup(
+export const FormGroup = (
   props: React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   >
-) {
-  return (
-    <div
-      {...props}
-      className={classnames(classes.formGroup, props.className)}
-    />
-  )
-}
+) => (
+  <div {...props} className={classnames(classes.formGroup, props.className)} />
+)
