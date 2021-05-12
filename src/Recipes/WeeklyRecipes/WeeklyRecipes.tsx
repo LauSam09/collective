@@ -2,8 +2,8 @@ import { useState } from "react"
 import cx from "classnames/bind"
 
 import { weekDays } from "Constants"
-import { Recipe } from "Recipes/models"
-import { useRecipes } from "Recipes/useRecipes"
+import { RecipeModel, useRecipes } from "Recipes"
+
 import { WeeklyRecipeListItem } from "./WeeklyRecipeListItem"
 
 import classes from "./WeeklyRecipes.module.css"
@@ -32,8 +32,8 @@ const DayButton = (props: DayButtonProps) => {
 }
 
 interface WeeklyRecipesProps {
-  recipes: Recipe[]
-  onClickRecipe: (recipe: Recipe) => void
+  recipes: RecipeModel[]
+  onClickRecipe: (recipe: RecipeModel) => void
 }
 
 export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
@@ -58,7 +58,7 @@ export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
           }
         })
 
-  async function handleClickRemove(recipe: Recipe) {
+  async function handleClickRemove(recipe: RecipeModel) {
     assignRecipe(recipe.id, recipe.days?.filter((d) => d !== selectedDay) ?? [])
   }
 

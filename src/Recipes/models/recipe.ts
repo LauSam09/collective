@@ -1,4 +1,4 @@
-export interface Recipe {
+export interface RecipeModel {
   id: string
   name: string
   days?: number[]

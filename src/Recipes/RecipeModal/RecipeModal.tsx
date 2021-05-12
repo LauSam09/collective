@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import { Modal } from "Common"
 import { ItemModel } from "Lists"
-import { Recipe } from "Recipes/models"
+import { RecipeModel } from "Recipes"
 
 import { ReadRecipe } from "./Read"
 import { WriteRecipe } from "./Write"
@@ -14,7 +14,7 @@ enum Mode {
 
 interface RecipeModalProps {
   isOpen: boolean
-  recipe: Recipe
+  recipe: RecipeModel
   addedItems: ItemModel[]
   close: () => void
 }
@@ -32,7 +32,7 @@ export const RecipeModal = (props: RecipeModalProps) => {
     setRecipe(initialRecipe)
   }, [initialRecipe])
 
-  function handleSave(recipe: Recipe) {
+  function handleSave(recipe: RecipeModel) {
     setRecipe(recipe)
     setMode(Mode.Read)
   }

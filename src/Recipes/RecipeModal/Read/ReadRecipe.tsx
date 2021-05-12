@@ -4,7 +4,7 @@ import { singular } from "pluralize"
 
 import { Button, FormGroup, Modal } from "Common"
 import { ItemModel, useItems } from "Lists"
-import { Recipe } from "Recipes/models"
+import { RecipeModel } from "Recipes"
 
 import { Ingredient } from "./Ingredient"
 import { Days } from "./Days"
@@ -18,7 +18,7 @@ interface IngredientViewModel {
 }
 
 interface ReadRecipeProps {
-  recipe: Recipe
+  recipe: RecipeModel
   addedItems: ItemModel[]
   close: () => void
   edit: () => void

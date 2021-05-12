@@ -3,8 +3,7 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useFieldArray, useForm } from "react-hook-form"
 
 import { Button, FormGroup, Modal } from "Common"
-import { Recipe } from "Recipes/models"
-import { useRecipes } from "Recipes"
+import { RecipeModel, useRecipes } from "Recipes"
 
 import classes from "./WriteRecipe.module.css"
 
@@ -17,9 +16,9 @@ interface RecipeFormModel {
 }
 
 interface WriteRecipeProps {
-  recipe: Recipe
+  recipe: RecipeModel
   close: () => void
-  onSave: (recipe: Recipe) => void
+  onSave: (recipe: RecipeModel) => void
 }
 
 export const WriteRecipe = (props: WriteRecipeProps) => {
@@ -41,7 +40,7 @@ export const WriteRecipe = (props: WriteRecipeProps) => {
   const adding = !recipe.id
 
   const saveRecipe = async (data: RecipeFormModel) => {
-    const modifiedRecipe: Recipe = {
+    const modifiedRecipe: RecipeModel = {
       ...recipe,
       ...data,
       ingredients:

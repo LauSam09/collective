@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 
 import { ItemModel } from "Lists"
 
-import { Recipe } from "./models"
+import { RecipeModel } from "./models"
 import { RecipeList } from "./RecipeList"
 import { RecipeModal } from "./RecipeModal"
 import { WeeklyRecipes } from "./WeeklyRecipes"
@@ -10,20 +10,20 @@ import { RecipeListActions } from "./RecipeListActions"
 
 interface RecipesProps {
   addedItems: ItemModel[]
-  recipes: Recipe[]
+  recipes: RecipeModel[]
 }
 
 export const Recipes = (props: RecipesProps) => {
   const { addedItems, recipes } = props
   const [modalOpen, setModalOpen] = useState(false)
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>({
+  const [selectedRecipe, setSelectedRecipe] = useState<RecipeModel>({
     name: "",
     id: "",
     days: [],
   })
   const [filteredRecipes, setFilteredRecipes] = useState(recipes)
 
-  function handleClickRecipe(recipe: Recipe) {
+  function handleClickRecipe(recipe: RecipeModel) {
     setSelectedRecipe(recipe)
     setModalOpen(true)
   }

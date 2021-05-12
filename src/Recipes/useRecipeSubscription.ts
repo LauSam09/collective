@@ -2,17 +2,17 @@ import { useEffect, useState } from "react"
 
 import { useUserContext } from "Authentication"
 
-import { Recipe } from "./models"
+import { RecipeModel } from "./models"
 
 export function useRecipeSubscription() {
-  const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [recipes, setRecipes] = useState<RecipeModel[]>([])
   const { getRecipesCollection } = useUserContext()
 
   useEffect(() => {
     const unsubscribe = getRecipesCollection().onSnapshot((snapshot) => {
-      const addedRecipes: Recipe[] = []
+      const addedRecipes: RecipeModel[] = []
       snapshot.docChanges().forEach((change) => {
-        const item = { ...change.doc.data(), id: change.doc.id } as Recipe
+        const item = { ...change.doc.data(), id: change.doc.id } as RecipeModel
         switch (change.type) {
           case "added": {
             addedRecipes.push(item)

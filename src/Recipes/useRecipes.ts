@@ -1,11 +1,11 @@
 import { useUserContext } from "Authentication"
-import { DatabaseRecipe, Recipe } from "Recipes/models"
+import { DatabaseRecipe, RecipeModel } from "Recipes"
 
 export function useRecipes() {
   const { getRecipesCollection } = useUserContext()
   const recipesCollection = getRecipesCollection()
 
-  function recipeToDbRecipe(recipe: Recipe) {
+  function recipeToDbRecipe(recipe: RecipeModel) {
     const dbRecipe: DatabaseRecipe = {
       name: recipe.name,
       days: recipe.days,
@@ -15,12 +15,12 @@ export function useRecipes() {
     return dbRecipe
   }
 
-  async function addRecipe(recipe: Recipe) {
+  async function addRecipe(recipe: RecipeModel) {
     const dbRecipe = recipeToDbRecipe(recipe)
     await recipesCollection.add(dbRecipe)
   }
 
-  async function updateRecipe(recipe: Recipe) {
+  async function updateRecipe(recipe: RecipeModel) {
     const dbRecipe = recipeToDbRecipe(recipe)
     await recipesCollection.doc(recipe.id).update(dbRecipe)
   }

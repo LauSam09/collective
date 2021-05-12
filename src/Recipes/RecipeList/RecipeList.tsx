@@ -1,13 +1,13 @@
-import { Recipe } from "Recipes/models"
+import { RecipeModel } from "Recipes"
 
 import { RecipeListItem } from "./RecipeListItem"
 
-type RecipeListProps = {
-  recipes: Recipe[]
-  onClickRecipe: (recipe: Recipe) => void
+interface RecipeListProps {
+  recipes: RecipeModel[]
+  onClickRecipe: (recipe: RecipeModel) => void
 }
 
-export function RecipeList(props: RecipeListProps) {
+export const RecipeList = (props: RecipeListProps) => {
   const { recipes, onClickRecipe } = props
 
   return (
