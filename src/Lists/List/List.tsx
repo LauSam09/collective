@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
@@ -32,6 +32,7 @@ export function List(props: ListProps) {
   const { batchRemoveItems } = useItems()
   const { getDefaultItemsCollection } = useUserContext()
   const [selectedCategory, setSelectedCategory] = useState("")
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const completedItems = addedItems.filter((i) => i.completed)
 
@@ -83,6 +84,11 @@ export function List(props: ListProps) {
     await batchRemoveItems(addedIds)
   }
 
+  const handleClickCategoryButton = (category: string | undefined) => {
+    setSelectedCategory(category ?? "")
+    inputRef.current?.focus()
+  }
+
   return (
     <article>
       <section>
@@ -91,6 +97,7 @@ export function List(props: ListProps) {
           category={selectedCategory}
           setCategory={setSelectedCategory}
           unaddedItems={unaddedItems}
+          ref={inputRef}
         />
         {addedItems.length > 0 ? (
           <ListActions
@@ -109,7 +116,7 @@ export function List(props: ListProps) {
             >
               <div className={classes.categoryHeader}>
                 <small>{c.name.toLocaleUpperCase()} </small>
-                <Button onClick={() => setSelectedCategory(c.id ?? "")}>
+                <Button onClick={() => handleClickCategoryButton(c.id)}>
                   <FontAwesomeIcon icon={faPlus} />
                 </Button>
               </div>

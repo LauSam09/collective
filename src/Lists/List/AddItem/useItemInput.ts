@@ -1,7 +1,7 @@
 import { useItems } from "Lists"
 import { Item } from "Lists/models"
 import { singular } from "pluralize"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 export function useItemInput(
   addedItems: Item[],
@@ -10,7 +10,6 @@ export function useItemInput(
   unaddedItems: Item[]
 ) {
   const [value, setValue] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null)
   const { addItem: baseAddItem } = useItems()
 
   const lowerName = singular(value.trim().toLowerCase())
@@ -35,7 +34,6 @@ export function useItemInput(
   const addItem = () => {
     baseAddItem(value, category)
     setValue("")
-    inputRef.current?.focus()
   }
 
   const clear = () => {
@@ -46,7 +44,6 @@ export function useItemInput(
   return {
     alreadyAdded,
     category,
-    inputRef,
     isValid,
     previouslyAdded,
     value,
