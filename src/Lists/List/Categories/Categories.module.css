@@ -1,0 +1,11 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--spacing-md);
+}
+
+.list > * {
+  width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}

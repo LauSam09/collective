@@ -1,14 +1,3 @@
-.list {
-  display: flex;
-  flex-direction: column;
-  margin-top: var(--spacing-md);
-}
-
-.list > * {
-  width: 280px;
-  margin: auto;
-}
-
 .category {
   padding: var(--spacing-md);
   border-radius: var(--spacing-radius);
