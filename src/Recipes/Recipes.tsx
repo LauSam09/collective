@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 
-import { Item } from "Lists"
+import { ItemModel } from "Lists"
 
 import { Recipe } from "./models"
 import { RecipeList } from "./RecipeList"
@@ -9,7 +9,7 @@ import { WeeklyRecipes } from "./WeeklyRecipes"
 import { RecipeListActions } from "./RecipeListActions"
 
 interface RecipesProps {
-  addedItems: Item[]
+  addedItems: ItemModel[]
   recipes: Recipe[]
 }
 

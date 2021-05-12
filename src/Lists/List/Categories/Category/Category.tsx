@@ -2,14 +2,14 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { Button } from "Common"
-import { Item } from "Lists/models"
+import { ItemModel } from "Lists"
 
 import { ListItem } from "../../ListItem"
 
 import classes from "./Category.module.css"
 
 export interface CategoryItems {
-  items: Item[]
+  items: ItemModel[]
   id?: string | undefined
   name: string
   colour: string
@@ -19,8 +19,8 @@ export interface CategoryItems {
 export interface CategoryProps {
   category: CategoryItems
   onClickAddCategoryItem: (id: string | undefined) => void
-  onClickItem: (item: Item) => void
-  onClickItemCategory: (item: Item) => void
+  onClickItem: (item: ItemModel) => void
+  onClickItemCategory: (item: ItemModel) => void
 }
 
 export const Category = (props: CategoryProps) => {

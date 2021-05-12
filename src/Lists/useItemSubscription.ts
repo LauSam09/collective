@@ -2,13 +2,13 @@ import { useEffect, useState } from "react"
 
 import { useUserContext } from "Authentication"
 
-import { Item } from "./models"
+import { ItemModel } from "./models"
 
 export function useItemSubscription() {
   const { getDefaultItemsCollection } = useUserContext()
-  const [items, setItems] = useState<Item[]>([])
-  const [addedItems, setAddedItems] = useState<Item[]>([])
-  const [unaddedItems, setUnaddedItems] = useState<Item[]>([])
+  const [items, setItems] = useState<ItemModel[]>([])
+  const [addedItems, setAddedItems] = useState<ItemModel[]>([])
+  const [unaddedItems, setUnaddedItems] = useState<ItemModel[]>([])
 
   useEffect(() => {
     setAddedItems(items.filter((i) => i.added))
@@ -17,9 +17,9 @@ export function useItemSubscription() {
 
   useEffect(() => {
     const unsubscribe = getDefaultItemsCollection().onSnapshot((snapshot) => {
-      const addedItems: Item[] = []
+      const addedItems: ItemModel[] = []
       snapshot.docChanges().forEach((change) => {
-        const item = { ...change.doc.data(), id: change.doc.id } as Item
+        const item = { ...change.doc.data(), id: change.doc.id } as ItemModel
         switch (change.type) {
           case "added": {
             addedItems.push(item)

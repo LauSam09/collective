@@ -1,15 +1,15 @@
-import { Item, useCategories } from "Lists"
+import { ItemModel, useCategories } from "Lists"
 
 import { Category } from "./Category"
 
 import classes from "./Categories.module.css"
 
 export interface CategoriesProps {
-  addedItems: Item[]
+  addedItems: ItemModel[]
   showCompleted: boolean
   onClickAddCategoryItem: (id: string | undefined) => void
-  onClickItem: (item: Item) => void
-  onClickItemCategory: (item: Item) => void
+  onClickItem: (item: ItemModel) => void
+  onClickItemCategory: (item: ItemModel) => void
 }
 
 export const Categories = (props: CategoriesProps) => {

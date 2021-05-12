@@ -4,8 +4,7 @@ import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
 import cx from "classnames/bind"
 
 import { Button, Modal } from "Common"
-import { useItems } from "Lists"
-import { Item } from "Lists/models"
+import { ItemModel, useItems } from "Lists"
 
 import classes from "./ItemModal.module.css"
 
@@ -13,7 +12,7 @@ const classnames = cx.bind(classes)
 
 interface ItemModalProps {
   isOpen: boolean
-  item: Item | undefined
+  item: ItemModel | undefined
   close: () => void
 }
 

@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
 
 import { useCategories } from "../../CategoriesContext"
-import { Item as ItemModel } from "../../models"
+import { ItemModel } from "../../models"
 
 import { Item } from "../Common/Item"
 import { CategoryModal } from "../CategoryModal"

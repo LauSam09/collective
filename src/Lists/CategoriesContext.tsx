@@ -6,13 +6,13 @@ import {
   useState,
 } from "react"
 
-import { Category } from "./models"
+import { CategoryModel } from "./models"
 import { useGroup } from "Authentication"
 import { db } from "Config"
 import { FullPageSpinner } from "Common"
 
 interface CategoriesContextType {
-  categories: Category[]
+  categories: CategoryModel[]
 }
 
 export const CategoriesContext = createContext<CategoriesContextType>({
@@ -27,7 +27,7 @@ export const CategoriesContextProvider = (
   props: CategoriesContextProviderProps
 ) => {
   const { defaultList, id } = useGroup() || {}
-  const [categories, setCategories] = useState<Category[]>()
+  const [categories, setCategories] = useState<CategoryModel[]>()
 
   if (!defaultList || !id) {
     throw new Error("Group not defined for user.")
@@ -43,7 +43,7 @@ export const CategoriesContextProvider = (
       .then((querySnapshot) => {
         setCategories(
           querySnapshot.docs.map(
-            (doc) => ({ ...doc.data(), id: doc.id } as Category)
+            (doc) => ({ ...doc.data(), id: doc.id } as CategoryModel)
           )
         )
       })

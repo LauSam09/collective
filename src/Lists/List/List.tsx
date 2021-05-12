@@ -3,7 +3,7 @@ import { useRef, useState } from "react"
 import { useUserContext } from "Authentication"
 import { useItems } from "Lists"
 
-import { Item } from "../models"
+import { ItemModel } from "../models"
 
 import { AddItem } from "./AddItem"
 import { CategoryModal } from "./CategoryModal"
@@ -12,15 +12,15 @@ import { ListActions } from "./ListActions"
 import { Categories } from "./Categories"
 
 export interface ListProps {
-  addedItems: Item[]
-  unaddedItems: Item[]
+  addedItems: ItemModel[]
+  unaddedItems: ItemModel[]
 }
 
 export const List = (props: ListProps) => {
   const { addedItems, unaddedItems } = props
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [isItemModalOpen, setIsItemModalOpen] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<Item>()
+  const [selectedItem, setSelectedItem] = useState<ItemModel>()
   const [showCompleted, setShowCompleted] = useState(true)
   const { batchRemoveItems } = useItems()
   const { getDefaultItemsCollection } = useUserContext()
@@ -29,12 +29,12 @@ export const List = (props: ListProps) => {
 
   const completedItems = addedItems.filter((i) => i.completed)
 
-  const handleClickItemCategory = (item: Item) => {
+  const handleClickItemCategory = (item: ItemModel) => {
     setSelectedItem(item)
     setIsCategoryModalOpen(true)
   }
 
-  const handleClickItem = (item: Item) => {
+  const handleClickItem = (item: ItemModel) => {
     setSelectedItem(item)
     setIsItemModalOpen(true)
   }

@@ -3,7 +3,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons"
 import { singular } from "pluralize"
 
 import { Button, FormGroup, Modal } from "Common"
-import { Item, useItems } from "Lists"
+import { ItemModel, useItems } from "Lists"
 import { Recipe } from "Recipes/models"
 
 import { Ingredient } from "./Ingredient"
@@ -19,7 +19,7 @@ interface IngredientViewModel {
 
 interface ReadRecipeProps {
   recipe: Recipe
-  addedItems: Item[]
+  addedItems: ItemModel[]
   close: () => void
   edit: () => void
 }

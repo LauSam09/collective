@@ -1,9 +1,9 @@
 import { DatabaseUser, UserGroup, UserState } from "Authentication"
-import { Category } from "Lists/models"
+import { CategoryModel } from "Lists"
 import { db } from "Config"
 
 // For now hard-code the initial categories. These could be customisable in future.
-const defaultCategories: Category[] = [
+const defaultCategories: CategoryModel[] = [
   {
     name: "Fruit & Vegetables",
     colour: "#74ac72",

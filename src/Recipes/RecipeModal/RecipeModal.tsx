@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 import { Modal } from "Common"
-import { Item } from "Lists"
+import { ItemModel } from "Lists"
 import { Recipe } from "Recipes/models"
 
 import { ReadRecipe } from "./Read"
@@ -15,7 +15,7 @@ enum Mode {
 interface RecipeModalProps {
   isOpen: boolean
   recipe: Recipe
-  addedItems: Item[]
+  addedItems: ItemModel[]
   close: () => void
 }
 

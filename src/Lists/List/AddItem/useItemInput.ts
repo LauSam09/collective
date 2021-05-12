@@ -1,14 +1,13 @@
-import { singular } from "pluralize"
 import { useEffect, useState } from "react"
+import { singular } from "pluralize"
 
-import { useItems } from "Lists"
-import { Item } from "Lists/models"
+import { ItemModel, useItems } from "Lists"
 
 export function useItemInput(
-  addedItems: Item[],
+  addedItems: ItemModel[],
   category: string,
   setCategory: React.Dispatch<React.SetStateAction<string>>,
-  unaddedItems: Item[]
+  unaddedItems: ItemModel[]
 ) {
   const [value, setValue] = useState("")
   const { addItem: baseAddItem } = useItems()

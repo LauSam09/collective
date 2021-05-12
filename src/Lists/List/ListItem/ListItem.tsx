@@ -1,14 +1,15 @@
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useUserContext } from "Authentication"
-import { Category, Item as ItemModel } from "../../models"
+
+import { CategoryModel, ItemModel } from "Lists"
 import { Item } from "../Common/Item"
 
 import classes from "./ListItem.module.css"
 
 export interface ListItemProps {
   item: ItemModel
-  category: Category | undefined
+  category: CategoryModel | undefined
   onClickCategory: () => void
   onClickItem: () => void
 }

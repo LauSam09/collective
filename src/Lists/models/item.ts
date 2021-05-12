@@ -1,4 +1,4 @@
-export interface Item {
+export interface ItemModel {
   id: string
   added: boolean
   completed: boolean
