@@ -6,6 +6,13 @@ import { DatabaseItem } from "./models"
 
 import { db } from "Config"
 
+const deletionFields: firebase.firestore.UpdateData = {
+  completed: false,
+  added: false,
+  notes: firebase.firestore.FieldValue.delete(),
+  flagged: firebase.firestore.FieldValue.delete(),
+}
+
 export function useItems() {
   const { getDefaultItemsCollection } = useUserContext()
   const collection = getDefaultItemsCollection()
@@ -46,11 +53,7 @@ export function useItems() {
   }
 
   function removeItem(id: string) {
-    return collection.doc(id).update({
-      completed: false,
-      added: false,
-      notes: firebase.firestore.FieldValue.delete(),
-    })
+    return collection.doc(id).update(deletionFields)
   }
 
   function updateItem(id: string, item: Partial<DatabaseItem>) {
@@ -62,11 +65,7 @@ export function useItems() {
 
     for (const id of ids) {
       const ref = collection.doc(id)
-      batch.update(ref, {
-        completed: false,
-        added: false,
-        notes: firebase.firestore.FieldValue.delete(),
-      })
+      batch.update(ref, deletionFields)
     }
 
     return batch.commit()

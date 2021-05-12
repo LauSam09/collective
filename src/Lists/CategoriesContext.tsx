@@ -6,10 +6,11 @@ import {
   useState,
 } from "react"
 
-import { CategoryModel } from "./models"
 import { useGroup } from "Authentication"
 import { db } from "Config"
 import { FullPageSpinner } from "Common"
+
+import { CategoryModel } from "./models"
 
 interface CategoriesContextType {
   categories: CategoryModel[]
