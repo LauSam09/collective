@@ -9,11 +9,16 @@ exports[`<Header /> matches snapshot 1`] = `
       href="/"
       onClick={[Function]}
     >
-      <h3
-        className="brand"
-      >
-        Collective
-      </h3>
+      <span>
+        <h3
+          className="brand"
+        >
+          Collective
+        </h3>
+        <small>
+          2.2.0
+        </small>
+      </span>
     </a>
   </nav>
 </header>
