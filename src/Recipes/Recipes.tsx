@@ -65,6 +65,7 @@ export const Recipes = (props: RecipesProps) => {
       />
       <WeeklyRecipes recipes={recipes} onClickRecipe={handleClickRecipe} />
       <RecipeListActions
+        recipes={recipes}
         onClickAdd={handleClickAdd}
         onFilterChange={handleFilterChanged}
       />

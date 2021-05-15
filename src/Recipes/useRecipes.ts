@@ -1,6 +1,8 @@
 import { useUserContext } from "Authentication"
 import { DatabaseRecipe, RecipeModel } from "Recipes"
 
+import { db } from "Config"
+
 export function useRecipes() {
   const { getRecipesCollection } = useUserContext()
   const recipesCollection = getRecipesCollection()
@@ -31,5 +33,26 @@ export function useRecipes() {
     })
   }
 
-  return { addRecipe, assignRecipe, updateRecipe }
+  function getAssignedRecipes(recipes: RecipeModel[]) {
+    return recipes.filter((r) => r.days && r.days.length > 0)
+  }
+
+  function unassignRecipes(ids: string[]) {
+    const batch = db.batch()
+
+    for (const id of ids) {
+      const ref = recipesCollection.doc(id)
+      batch.update(ref, { days: [] })
+    }
+
+    return batch.commit()
+  }
+
+  return {
+    addRecipe,
+    assignRecipe,
+    getAssignedRecipes,
+    unassignRecipes,
+    updateRecipe,
+  }
 }
