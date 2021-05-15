@@ -13,7 +13,10 @@ export const Header = () => {
     <header className={classes.header}>
       <nav>
         <Link to="/">
-          <h3 className={classes.brand}>Collective</h3>
+          <span>
+            <h3 className={classes.brand}>Collective</h3>
+            <small>{process.env.REACT_APP_VERSION}</small>
+          </span>
         </Link>
         {useIsRegistered() ? (
           <div className={classes.links}>

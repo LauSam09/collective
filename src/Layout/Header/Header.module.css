@@ -15,6 +15,11 @@
 
 .brand {
   margin: 0;
+  display: inline-block;
+}
+
+.brand + small {
+  margin-left: var(--spacing-sm);
 }
 
 .links {
