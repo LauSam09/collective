@@ -7,4 +7,5 @@
 
 .button {
   padding: var(--spacing-md);
+  margin-left: var(--spacing-sm);
 }
