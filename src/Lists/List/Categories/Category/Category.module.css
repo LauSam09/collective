@@ -11,6 +11,7 @@
 
 .categoryHeader button {
   padding: var(--spacing-sm);
+  color: var(--colour-action);
 }
 
 .items > * {
