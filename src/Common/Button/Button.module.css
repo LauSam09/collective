@@ -17,3 +17,13 @@
 .button:disabled {
   color: var(--colour-disabled);
 }
+
+.primary {
+  background-color: var(--colour-action);
+  color: var(--colour-secondary);
+}
+
+.secondary {
+  background-color: var(--colour-background-tertiary);
+  color: var(--colour-secondary);
+}

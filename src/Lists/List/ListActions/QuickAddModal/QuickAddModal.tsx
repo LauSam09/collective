@@ -21,18 +21,19 @@ export const QuickAddModal = (props: QuickAddModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
-      <Modal.Header>
-        <h2>Quick Add</h2>
-      </Modal.Header>
       <Modal.Body>
-        <div>
+        <Modal.Header>
+          <h2>Quick Add</h2>
+        </Modal.Header>
+        <span>These items are frequently added</span>
+        <div className={classes.items}>
           {topUnaddedItems.length === 0 ? (
             <span>No more items to add</span>
           ) : null}
           {topUnaddedItems.map((i, index) => (
-            <div key={index}>
+            <div key={index} style={{ padding: "5px 0" }}>
               <Button onClick={() => addItem(i.name)} className={classes.add}>
-                <FontAwesomeIcon icon={faPlus} />
+                <FontAwesomeIcon icon={faPlus} size="lg" />
               </Button>
               <span title={`Added ${i.count} times`} className={classes.name}>
                 {i.name}
@@ -40,6 +41,11 @@ export const QuickAddModal = (props: QuickAddModalProps) => {
             </div>
           ))}
         </div>
+        <Modal.Actions>
+          <Button mode="primary" onClick={onRequestClose}>
+            Close
+          </Button>
+        </Modal.Actions>
       </Modal.Body>
     </Modal>
   )

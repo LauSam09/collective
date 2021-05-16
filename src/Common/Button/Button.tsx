@@ -1,14 +1,29 @@
+import { DetailedHTMLProps } from "react"
 import cx from "classnames/bind"
 
 import classes from "./Button.module.css"
 
 const classnames = cx.bind(classes)
 
-export const Button = (
-  props: React.DetailedHTMLProps<
+export interface ButtonProps
+  extends DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
-  >
-) => (
-  <button {...props} className={classnames(classes.button, props.className)} />
-)
+  > {
+  mode: "primary" | "secondary" | "default"
+}
+
+export const Button = (props: ButtonProps) => {
+  const { className, mode, ...buttonProps } = props
+
+  return (
+    <button
+      {...buttonProps}
+      className={classnames(classes.button, className, [mode])}
+    />
+  )
+}
+
+Button.defaultProps = {
+  mode: "default",
+}
