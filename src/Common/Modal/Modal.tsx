@@ -1,19 +1,10 @@
+import React from "react"
 import RMModal from "react-modal"
 
 import { ModalHeader } from "./ModalHeader"
+import { ModalBody } from "./ModalBody"
 
 import classes from "./Modal.module.css"
-import React from "react"
-
-interface ModalBodyProps {
-  children?: React.ReactNode
-}
-
-const ModalBody = (props: ModalBodyProps) => {
-  const { children } = props
-
-  return <div className={classes.modalBody}>{children}</div>
-}
 
 export interface ModalProps extends ReactModal.Props {
   children?: React.ReactNode
