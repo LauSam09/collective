@@ -10,8 +10,7 @@
 }
 
 .button:hover:enabled {
-  background-color: var(--colour-hover);
-  color: var(--colour-secondary);
+  background-color: var(--colour-background-hover);
 }
 
 .button:disabled {

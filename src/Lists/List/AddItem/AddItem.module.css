@@ -45,7 +45,8 @@
 }
 
 .form .actions button:hover:enabled {
-  background-color: var(--colour-hover) !important;
+  background-color: var(--colour-background-hover) !important;
+  color: var(--colour-action);
 }
 
 .form .actions .add {
@@ -55,8 +56,9 @@
 .form .actions .clear {
   color: var(--colour-primary);
   margin-right: var(--spacing-sm);
+  background-color: var(--colour-background-light-accent);
 }
 
 .form .actions .clear:hover:enabled {
-  color: var(--colour-secondary);
+  color: var(--colour-action);
 }
