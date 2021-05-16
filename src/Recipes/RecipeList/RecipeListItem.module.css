@@ -5,6 +5,6 @@
 }
 
 .recipe:hover {
-  color: var(--colour-secondary);
-  background-color: var(--colour-hover);
+  color: var(--colour-action);
+  background-color: var(--colour-background-hover);
 }

@@ -17,8 +17,8 @@
 }
 
 .dayButton:hover {
-  color: var(--colour-secondary);
-  background: var(--colour-hover);
+  color: var(--colour-action);
+  background: var(--colour-background-hover);
   cursor: pointer;
 }
 
