@@ -1,5 +1,7 @@
 .container {
   display: flex;
+  background-color: var(--colour-background);
+  border-radius: var(--spacing-radius);
 }
 
 .listItem {
@@ -14,7 +16,7 @@
 }
 
 .button:hover {
-  background-color: var(--colour-hover);
+  background-color: var(--colour-background-hover);
   border-radius: var(--spacing-radius);
-  color: var(--colour-secondary);
+  color: var(--colour-action);
 }

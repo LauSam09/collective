@@ -63,8 +63,8 @@ export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
   }
 
   return (
-    <>
-      <div style={{ display: "flex" }}>
+    <div className={classes.container}>
+      <div className={classes.daysContainer}>
         {recipesByDay.map((d, i) => (
           <DayButton
             key={i}
@@ -88,6 +88,6 @@ export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
           ))}
         </ul>
       )}
-    </>
+    </div>
   )
 }
