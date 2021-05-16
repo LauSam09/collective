@@ -36,7 +36,7 @@ export const Category = (props: CategoryProps) => {
       <div className={classes.categoryHeader}>
         <small>{name.toLocaleUpperCase()} </small>
         <Button onClick={() => onClickAddCategoryItem(id)}>
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon icon={faPlus} size="lg" />
         </Button>
       </div>
       <div className={classes.items}>
