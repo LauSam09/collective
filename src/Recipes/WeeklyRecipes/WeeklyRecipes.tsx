@@ -70,7 +70,7 @@ export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
             key={i}
             count={d.length}
             day={weekDays[i]}
-            onClick={() => setSelectedDay(i)}
+            onClick={() => setSelectedDay((day) => (day === i ? undefined : i))}
             selected={i === selectedDay}
           />
         ))}
