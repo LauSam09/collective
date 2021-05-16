@@ -37,24 +37,26 @@ export const RecipeListActions = (props: RecipeListActionsProps) => {
         onClickCancel={() => setConfirmModalOpen(false)}
         onClickConfirm={handleConfirmClearWeek}
       />
-      <FilterRecipes onFilterChange={onFilterChange} />
-      <Button
-        onClick={onClickAdd}
-        title="Add recipe"
-        type="button"
-        className={classes.button}
-      >
-        <FontAwesomeIcon icon={faPlus} size="lg" />
-      </Button>
-      <Button
-        onClick={() => setConfirmModalOpen(true)}
-        title="Clear Week"
-        type="button"
-        disabled={!anySelected}
-        className={classes.button}
-      >
-        <FontAwesomeIcon icon={faTrash} size="lg" />
-      </Button>
+      <div>
+        <FilterRecipes onFilterChange={onFilterChange} />
+        <Button
+          onClick={onClickAdd}
+          title="Add recipe"
+          type="button"
+          className={classes.button}
+        >
+          <FontAwesomeIcon icon={faPlus} size="lg" />
+        </Button>
+        <Button
+          onClick={() => setConfirmModalOpen(true)}
+          title="Clear Week"
+          type="button"
+          disabled={!anySelected}
+          className={classes.button}
+        >
+          <FontAwesomeIcon icon={faTrash} size="lg" />
+        </Button>
+      </div>
     </div>
   )
 }

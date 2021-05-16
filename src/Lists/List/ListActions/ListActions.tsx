@@ -41,31 +41,33 @@ export const ListActions = (props: ListActionsProps) => {
         onRequestClose={() => setModalOpen(false)}
       />
       <div className={classes.container}>
-        <Button
-          title="Quick add"
-          onClick={() => setModalOpen(true)}
-          className={classes.quickAdd}
-        >
-          <FontAwesomeIcon icon={faBolt} size="lg" />
-        </Button>
-        <Button
-          title={showCompleted ? "Hide completed" : "Show completed"}
-          onClick={() => setShowCompleted((old) => !old)}
-          className={classes.toggle}
-        >
-          <FontAwesomeIcon
-            icon={showCompleted ? faEye : faEyeSlash}
-            size="lg"
-          />
-        </Button>
-        <Button
-          title="Clear completed"
-          onClick={clearCompleted}
-          disabled={disableClearCompleted}
-          className={classes.clear}
-        >
-          <FontAwesomeIcon icon={faTrash} size="lg" />
-        </Button>
+        <div>
+          <Button
+            title="Quick add"
+            onClick={() => setModalOpen(true)}
+            className={classes.quickAdd}
+          >
+            <FontAwesomeIcon icon={faBolt} size="lg" />
+          </Button>
+          <Button
+            title={showCompleted ? "Hide completed" : "Show completed"}
+            onClick={() => setShowCompleted((old) => !old)}
+            className={classes.toggle}
+          >
+            <FontAwesomeIcon
+              icon={showCompleted ? faEye : faEyeSlash}
+              size="lg"
+            />
+          </Button>
+          <Button
+            title="Clear completed"
+            onClick={clearCompleted}
+            disabled={disableClearCompleted}
+            className={classes.clear}
+          >
+            <FontAwesomeIcon icon={faTrash} size="lg" />
+          </Button>
+        </div>
       </div>
     </>
   )

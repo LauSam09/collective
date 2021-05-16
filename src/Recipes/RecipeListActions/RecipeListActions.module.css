@@ -5,7 +5,14 @@
   align-items: center;
 }
 
+.container > div {
+  background-color: var(--colour-background-light-accent);
+  border-radius: var(--spacing-radius);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
 .button {
   padding: var(--spacing-md);
   margin-left: var(--spacing-sm);
+  color: var(--colour-action);
 }

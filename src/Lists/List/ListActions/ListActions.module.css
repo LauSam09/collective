@@ -6,8 +6,15 @@
   padding: var(--spacing-md);
 }
 
-.container button {
+.container > div {
+  background-color: var(--colour-background-light-accent);
+  border-radius: var(--spacing-radius);
   padding: var(--spacing-sm);
+}
+
+.container button {
+  padding: var(--spacing-md);
+  margin-left: var(--spacing-sm);
 }
 
 .quickAdd {
