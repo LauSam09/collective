@@ -65,6 +65,7 @@ export const List = (props: ListProps) => {
         {addedItems.length > 0 ? (
           <ListActions
             disableClearCompleted={completedItems.length === 0}
+            items={[...addedItems, ...unaddedItems]}
             showCompleted={showCompleted}
             setShowCompleted={setShowCompleted}
             clearCompleted={handleClearCompleted}

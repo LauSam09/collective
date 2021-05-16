@@ -16,7 +16,6 @@ export const Ingredient = (props: IngredientProps) => {
 
   return (
     <div>
-      <span className={classes.name}>{name}</span>
       <Button
         title={added ? "Added to list (click to remove)" : "Add to list"}
         onClick={toggle}
@@ -24,6 +23,7 @@ export const Ingredient = (props: IngredientProps) => {
       >
         <FontAwesomeIcon icon={added ? faCheck : faPlus} />
       </Button>
+      <span className={classes.name}>{name}</span>
     </div>
   )
 }
