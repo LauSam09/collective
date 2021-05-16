@@ -1,0 +1,12 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actions > button {
+  padding: var(--spacing-md);
+  /* background-color: var(--colour-action); */
+  /* color: var(--colour-secondary); */
+  border-radius: var(--spacing-radius);
+  margin-left: var(--spacing-sm);
+}

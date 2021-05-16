@@ -3,6 +3,7 @@ import RMModal from "react-modal"
 
 import { ModalHeader } from "./ModalHeader"
 import { ModalBody } from "./ModalBody"
+import { ModalActions } from "./ModalActions"
 
 import classes from "./Modal.module.css"
 
@@ -16,3 +17,4 @@ export const Modal = (props: ModalProps) => (
 
 Modal.Body = ModalBody
 Modal.Header = ModalHeader
+Modal.Actions = ModalActions
