@@ -8,3 +8,10 @@
   color: var(--colour-action);
   background-color: var(--colour-background-hover);
 }
+
+.ingredients {
+  color: var(--colour-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

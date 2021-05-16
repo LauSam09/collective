@@ -77,12 +77,12 @@ export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
       </div>
       {selectedDay === undefined ? null : (
         <ul>
-          {selectedDayRecipes.map((r) => (
-            <li key={r.id}>
+          {selectedDayRecipes.map((recipe) => (
+            <li key={recipe.id}>
               <WeeklyRecipeListItem
-                name={r.name}
-                onClickRecipe={() => onClickRecipe(r)}
-                onClickRemove={() => handleClickRemove(r)}
+                recipe={recipe}
+                onClickRecipe={() => onClickRecipe(recipe)}
+                onClickRemove={() => handleClickRemove(recipe)}
               />
             </li>
           ))}

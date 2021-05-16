@@ -27,6 +27,7 @@ body[data-theme="light"] {
   --colour-action: #1e79c3;
   --colour-disabled: lightgrey;
   --colour-selected: #1e79c3;
+  --colour-muted: darkgrey;
 
   /* Background */
   --colour-background: white;

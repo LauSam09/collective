@@ -2,10 +2,12 @@
   display: flex;
   background-color: var(--colour-background);
   border-radius: var(--spacing-radius);
+  max-width: 100%;
 }
 
 .listItem {
   flex: 1;
+  min-width: 0;
 }
 
 .button {

@@ -13,12 +13,11 @@ export const RecipeList = (props: RecipeListProps) => {
   return (
     <div>
       <ul>
-        {recipes.map((r) => (
-          <li key={r.id}>
+        {recipes.map((recipe) => (
+          <li key={recipe.id}>
             <RecipeListItem
-              name={r.name}
-              onClick={() => onClickRecipe(r)}
-              key={r.id}
+              recipe={recipe}
+              onClick={() => onClickRecipe(recipe)}
             />
           </li>
         ))}
