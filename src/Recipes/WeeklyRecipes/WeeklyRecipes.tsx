@@ -7,6 +7,7 @@ import { WeeklyRecipeListItem } from "./ListItem"
 import { DayButton } from "./DayButton"
 
 import classes from "./WeeklyRecipes.module.css"
+import { DateService } from "Common"
 
 interface WeeklyRecipesProps {
   recipes: RecipeModel[]
@@ -15,7 +16,7 @@ interface WeeklyRecipesProps {
 
 export const WeeklyRecipes = (props: WeeklyRecipesProps) => {
   const { recipes, onClickRecipe } = props
-  const [selectedDay, setSelectedDay] = useState<number>()
+  const [selectedDay, setSelectedDay] = useState<number | undefined>(DateService.getCurrentDay())
   const { assignRecipe } = useRecipes()
 
   const recipesByDay: string[][] = weekDays.map(() => [])
