@@ -3,6 +3,7 @@
   background-color: var(--colour-background);
   border-radius: var(--spacing-radius);
   max-width: 100%;
+  margin-top: var(--spacing-sm);
 }
 
 .listItem {
