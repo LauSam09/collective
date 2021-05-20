@@ -1,7 +1,7 @@
 import { faMinus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import { RecipeListItem, RecipeListItemProps } from "../RecipeList"
+import { RecipeListItem, RecipeListItemProps } from "../../RecipeList"
 
 import classes from "./WeeklyRecipeListItem.module.css"
 

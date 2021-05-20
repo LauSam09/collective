@@ -3,7 +3,7 @@ import { useState } from "react"
 import { weekDays } from "Constants"
 import { RecipeModel, useRecipes } from "Recipes"
 
-import { WeeklyRecipeListItem } from "./WeeklyRecipeListItem"
+import { WeeklyRecipeListItem } from "./ListItem"
 import { DayButton } from "./DayButton"
 
 import classes from "./WeeklyRecipes.module.css"
