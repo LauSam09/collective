@@ -1,35 +1,12 @@
 import { useState } from "react"
-import cx from "classnames/bind"
 
 import { weekDays } from "Constants"
 import { RecipeModel, useRecipes } from "Recipes"
 
 import { WeeklyRecipeListItem } from "./WeeklyRecipeListItem"
+import { DayButton } from "./DayButton"
 
 import classes from "./WeeklyRecipes.module.css"
-
-const classnames = cx.bind(classes)
-
-interface DayButtonProps {
-  day: string
-  count: number
-  selected: boolean
-  onClick: () => void
-}
-
-const DayButton = (props: DayButtonProps) => {
-  const { count, day, selected, onClick } = props
-
-  return (
-    <button
-      onClick={onClick}
-      className={classnames(classes.dayButton, { selected })}
-    >
-      <span>{day}</span>
-      {count > 0 ? <span className={classes.count}>{count}</span> : null}
-    </button>
-  )
-}
 
 interface WeeklyRecipesProps {
   recipes: RecipeModel[]

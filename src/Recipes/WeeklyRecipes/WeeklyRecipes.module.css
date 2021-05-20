@@ -7,30 +7,6 @@
   display: flex;
 }
 
-.dayButton {
-  flex: 1;
-  border: none;
-  height: 45px;
-  background: none;
-  outline: none;
-  position: relative;
-  border-bottom: 2px solid transparent;
-  display: flex;
-  justify-content: center;
-}
-
-.selected {
-  color: var(--colour-action);
-  border-bottom: 2px solid var(--colour-action);
-  font-weight: bold;
-}
-
-.dayButton:hover {
-  color: var(--colour-action);
-  background: var(--colour-background-hover);
-  cursor: pointer;
-}
-
 .count {
   position: absolute;
   bottom: 0;
