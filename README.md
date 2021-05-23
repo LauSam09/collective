@@ -10,3 +10,6 @@ Features:
 - Store recipes, their ingredients and plan your meals for the week.
 - Live updates across devices.
 - Works entirely offline - synchronises when a network connection is available.
+
+# Deployment
+Deploy to gcp app engine: `gcloud app deploy --version=X-X-X`
