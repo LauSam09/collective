@@ -62,15 +62,13 @@ export const List = (props: ListProps) => {
           ref={inputRef}
           setCategory={setSelectedCategory}
         />
-        {addedItems.length > 0 ? (
-          <ListActions
-            disableClearCompleted={completedItems.length === 0}
-            items={[...addedItems, ...unaddedItems]}
-            showCompleted={showCompleted}
-            setShowCompleted={setShowCompleted}
-            clearCompleted={handleClearCompleted}
-          />
-        ) : null}
+        <ListActions
+          disableClearCompleted={completedItems.length === 0}
+          items={[...addedItems, ...unaddedItems]}
+          showCompleted={showCompleted}
+          setShowCompleted={setShowCompleted}
+          clearCompleted={handleClearCompleted}
+        />
         <Categories
           addedItems={addedItems}
           showCompleted={showCompleted}
