@@ -7,8 +7,7 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      - run:
-        command: npm run lint
+      - run: npm run lint
 workflows:
   node-tests:
     jobs:
