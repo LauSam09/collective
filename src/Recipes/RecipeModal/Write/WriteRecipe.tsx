@@ -7,12 +7,14 @@ import { RecipeModel, useRecipes } from "Recipes"
 
 import classes from "./WriteRecipe.module.css"
 
+interface Ingredient {
+  name: string
+}
+
 interface RecipeFormModel {
   name: string
+  ingredients: Array<Ingredient>
   recipeUrl?: string
-  ingredients?: {
-    name: string
-  }[]
 }
 
 interface WriteRecipeProps {
@@ -28,7 +30,7 @@ export const WriteRecipe = (props: WriteRecipeProps) => {
       mode: "onChange",
       defaultValues: {
         ...recipe,
-        ingredients: recipe.ingredients?.map((i) => ({ name: i })) || [],
+        ingredients: recipe.ingredients?.map((i) => ({ name: i })) ?? [],
       },
     })
   const { fields, append, remove } = useFieldArray({
@@ -67,8 +69,7 @@ export const WriteRecipe = (props: WriteRecipeProps) => {
           <input
             id="name"
             placeholder="Name"
-            ref={register({ required: "Name is required" })}
-            name="name"
+            {...register("name", { required: "Name is required" })}
           />
           {errors.name ? (
             <small className={classes.invalid}>{errors.name.message}</small>
@@ -79,9 +80,9 @@ export const WriteRecipe = (props: WriteRecipeProps) => {
           <input
             id="recipeUrl"
             placeholder="Recipe Url"
-            ref={register({
+            {...register("recipeUrl", {
               validate: {
-                isUrl: (value: string) => {
+                isUrl: (value: string | undefined) => {
                   try {
                     value && new URL(value)
                   } catch (err) {
@@ -103,7 +104,7 @@ export const WriteRecipe = (props: WriteRecipeProps) => {
         <FormGroup>
           <label>
             Ingredients
-            <Button type="button" onClick={append}>
+            <Button type="button" onClick={() => append({ name: "" })}>
               <FontAwesomeIcon icon={faPlus} />
             </Button>
           </label>
@@ -111,8 +112,7 @@ export const WriteRecipe = (props: WriteRecipeProps) => {
           {fields.map((field, index) => (
             <div key={field.id} className={classes.ingredient}>
               <input
-                ref={register()}
-                name={`ingredients[${index}].name`}
+                {...register(`ingredients.${index}.name` as const)}
                 defaultValue={field.name}
                 placeholder={`Ingredient ${index + 1}`}
               />

@@ -49,8 +49,7 @@ export const CreateGroupForm = () => {
             <label htmlFor="name">Name*</label>
             <input
               id="name"
-              name="name"
-              ref={register({ required: "You must provide a name" })}
+              {...register("name", { required: "You must provide a name" })}
             />
             <span className={classes.error}>
               {errors?.name ? errors.name.message : null}
