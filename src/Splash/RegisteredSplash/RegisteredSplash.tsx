@@ -44,7 +44,10 @@ const RecipeSummary = (props: RecipeSummaryProps) => {
 
   return (
     <section className={classes.section}>
-      <div>You've planned meals for {planCount} days this week</div>
+      <div>
+        You've planned meals for {planCount} day{planCount === 1 ? null : "s"}{" "}
+        this week
+      </div>
       <Link to="/recipes">Go to recipes & meal planning</Link>
     </section>
   )
