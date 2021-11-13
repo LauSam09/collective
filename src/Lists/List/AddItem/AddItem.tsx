@@ -1,4 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
+import Select from "react-select"
 
 import { useCategories } from "../../CategoriesContext"
 import { ItemModel } from "../../models"
@@ -12,13 +13,13 @@ import classes from "./AddItem.module.css"
 export interface AddItemsProps {
   addedItems: ItemModel[]
   category: string
-  setCategory: React.Dispatch<React.SetStateAction<string>>
   unaddedItems: ItemModel[]
+  setCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
   (props, ref) => {
-    const { addedItems, category, setCategory, unaddedItems } = props
+    const { addedItems, category, unaddedItems, setCategory } = props
     const {
       alreadyAdded,
       isValid,
@@ -41,9 +42,12 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
 
     const handleClickCancel = () => clear()
 
+    const options = unaddedItems.map((i) => ({ value: i.name, label: i.name }))
+
     return (
       <>
         <form onSubmit={handleSubmit} className={classes.form}>
+          {/* Need to set overflow to not hidden on .content (inside .container) to display react-select */}
           <Item
             onClickCategory={() => setIsModalOpen(true)}
             buttonColour={
@@ -51,21 +55,23 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
               "var(--colour-uncategorised)"
             }
           >
-            <input
+            {/* TODO very slow. Look at async options */}
+            <Select
+              options={options}
+              onChange={(e) => setValue(e?.value ?? "")}
+              components={{
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+              }}
+            />
+            {/* <input
               ref={inputRef}
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="Item to add..."
               list="items"
-            />
+            /> */}
           </Item>
-          {value.length > 0 ? (
-            <datalist id="items">
-              {unaddedItems.map((i) => (
-                <option key={i.id} value={i.name} />
-              ))}
-            </datalist>
-          ) : null}
           {alreadyAdded ? (
             <small className={classes.error}>
               {alreadyAdded.name} has already been added
