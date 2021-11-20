@@ -7,13 +7,13 @@ export function useItemInput(
   addedItems: ItemModel[],
   category: string,
   setCategory: React.Dispatch<React.SetStateAction<string>>,
-  unaddedItems: ItemModel[]
+  allItems: ItemModel[]
 ) {
   const [value, setValue] = useState("")
   const { addItem: baseAddItem } = useItems()
 
   const lowerName = singular(value.trim().toLowerCase())
-  const previouslyAdded = unaddedItems.find((i) => i.lowerName === lowerName)
+  const previouslyAdded = allItems.find((i) => i.lowerName === lowerName)
   const alreadyAdded = addedItems.find((i) => i.lowerName === lowerName)
   const isValid = Boolean(value) && !alreadyAdded
 

@@ -13,11 +13,11 @@ import { Categories } from "./Categories"
 
 export interface ListProps {
   addedItems: ItemModel[]
-  unaddedItems: ItemModel[]
+  allItems: ItemModel[]
 }
 
 export const List = (props: ListProps) => {
-  const { addedItems, unaddedItems } = props
+  const { addedItems, allItems } = props
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [isItemModalOpen, setIsItemModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<ItemModel>()
@@ -57,14 +57,14 @@ export const List = (props: ListProps) => {
       <section>
         <AddItem
           addedItems={addedItems}
+          allItems={allItems}
           category={selectedCategory}
-          unaddedItems={unaddedItems}
           ref={inputRef}
           setCategory={setSelectedCategory}
         />
         <ListActions
           disableClearCompleted={completedItems.length === 0}
-          items={[...addedItems, ...unaddedItems]}
+          items={allItems}
           showCompleted={showCompleted}
           setShowCompleted={setShowCompleted}
           clearCompleted={handleClearCompleted}

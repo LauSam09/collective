@@ -43,5 +43,5 @@ export function useItemSubscription() {
     }
   }, [getDefaultItemsCollection])
 
-  return { addedItems, unaddedItems }
+  return { addedItems, unaddedItems, allItems: items }
 }

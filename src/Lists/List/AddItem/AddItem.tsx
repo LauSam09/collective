@@ -19,16 +19,16 @@ import classes from "./AddItem.module.css"
 
 export interface AddItemsProps {
   addedItems: ItemModel[]
+  allItems: ItemModel[]
   category: string
-  unaddedItems: ItemModel[]
   setCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
   (props, ref) => {
-    const { addedItems, category, unaddedItems, setCategory } = props
+    const { addedItems, category, allItems, setCategory } = props
     const { alreadyAdded, isValid, previouslyAdded, value, addItem, setValue } =
-      useItemInput(addedItems, category, setCategory, unaddedItems)
+      useItemInput(addedItems, category, setCategory, allItems)
     const inputRef = createRef<SelectRef>()
     const [isModalOpen, setIsModalOpen] = useState(false)
     const categories = useCategories()
@@ -41,12 +41,12 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
 
     const options = useMemo(
       () =>
-        unaddedItems
+        allItems
           .map((i) => ({ value: i.name, label: i.name }))
           .sort((a, b) =>
             a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1
           ),
-      [unaddedItems]
+      [allItems]
     )
 
     const handleLoadOptions = (

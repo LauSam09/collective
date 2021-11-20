@@ -8,7 +8,7 @@ import { CategoriesContextProvider, List, useItemSubscription } from "Lists"
 import { Recipes, useRecipeSubscription } from "Recipes"
 
 const RegisteredContent = () => {
-  const { addedItems, unaddedItems } = useItemSubscription()
+  const { addedItems, allItems } = useItemSubscription()
   const { recipes } = useRecipeSubscription()
 
   const plannedDays = new Set()
@@ -24,7 +24,7 @@ const RegisteredContent = () => {
           <Recipes addedItems={addedItems} recipes={recipes} />
         </Route>
         <Route path="/list" exact>
-          <List addedItems={addedItems} unaddedItems={unaddedItems} />
+          <List addedItems={addedItems} allItems={allItems} />
         </Route>
         <Route path="/" exact>
           <RegisteredSplash
