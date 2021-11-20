@@ -6,7 +6,6 @@
 .content {
   flex: 1;
   margin-right: var(--spacing-sm);
-  /* overflow: hidden; FIXME */
 }
 
 .button {

@@ -1,5 +1,11 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react"
-import Select from "react-select"
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
+import AsyncSelect from "react-select/async"
 
 import { useCategories } from "../../CategoriesContext"
 import { ItemModel } from "../../models"
@@ -20,15 +26,8 @@ export interface AddItemsProps {
 export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
   (props, ref) => {
     const { addedItems, category, unaddedItems, setCategory } = props
-    const {
-      alreadyAdded,
-      isValid,
-      previouslyAdded,
-      value,
-      addItem,
-      clear,
-      setValue,
-    } = useItemInput(addedItems, category, setCategory, unaddedItems)
+    const { alreadyAdded, isValid, previouslyAdded, value, addItem, setValue } =
+      useItemInput(addedItems, category, setCategory, unaddedItems)
     const inputRef = useRef<HTMLInputElement>(null)
     useImperativeHandle(ref, () => inputRef.current as HTMLInputElement)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -40,14 +39,19 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
       inputRef.current?.focus()
     }
 
-    const handleClickCancel = () => clear()
-
-    const options = unaddedItems.map((i) => ({ value: i.name, label: i.name }))
+    const options = useMemo(
+      () =>
+        unaddedItems
+          .map((i) => ({ value: i.name, label: i.name }))
+          .sort((a, b) =>
+            a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1
+          ),
+      [unaddedItems]
+    )
 
     return (
       <>
         <form onSubmit={handleSubmit} className={classes.form}>
-          {/* Need to set overflow to not hidden on .content (inside .container) to display react-select */}
           <Item
             onClickCategory={() => setIsModalOpen(true)}
             buttonColour={
@@ -55,22 +59,18 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
               "var(--colour-uncategorised)"
             }
           >
-            {/* TODO very slow. Look at async options */}
-            <Select
-              options={options}
-              onChange={(e) => setValue(e?.value ?? "")}
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
+            <AsyncSelect
+              onChange={(value) => setValue((value as any)?.value ?? "")}
+              loadOptions={(inputValue, callback) =>
+                callback(
+                  options.filter((o) =>
+                    o.label.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                )
+              }
+              noOptionsMessage={() => null}
+              isClearable
             />
-            {/* <input
-              ref={inputRef}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="Item to add..."
-              list="items"
-            /> */}
           </Item>
           {alreadyAdded ? (
             <small className={classes.error}>
@@ -78,14 +78,14 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
             </small>
           ) : null}
           <div className={classes.actions}>
-            <button
+            {/* <button
               type="button"
               onClick={handleClickCancel}
               disabled={!Boolean(value) && !category}
               className={classes.clear}
             >
               Clear
-            </button>
+            </button> */}
             <button type="submit" disabled={!isValid} className={classes.add}>
               {previouslyAdded || value === "" ? "Add" : "Add (New)"}
             </button>
