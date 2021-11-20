@@ -1,11 +1,11 @@
 import React, {
+  createRef,
+  FormEvent,
   forwardRef,
-  useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from "react"
-import AsyncSelect from "react-select/async"
+import AsyncSelect from "react-select/async-creatable"
 
 import { useCategories } from "../../CategoriesContext"
 import { ItemModel } from "../../models"
@@ -13,6 +13,7 @@ import { ItemModel } from "../../models"
 import { Item } from "../Common/Item"
 import { CategoryModal } from "../CategoryModal"
 import { useItemInput } from "./useItemInput"
+import { LoadOptionsCallback, SelectRef } from "./types"
 
 import classes from "./AddItem.module.css"
 
@@ -28,12 +29,11 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
     const { addedItems, category, unaddedItems, setCategory } = props
     const { alreadyAdded, isValid, previouslyAdded, value, addItem, setValue } =
       useItemInput(addedItems, category, setCategory, unaddedItems)
-    const inputRef = useRef<HTMLInputElement>(null)
-    useImperativeHandle(ref, () => inputRef.current as HTMLInputElement)
+    const inputRef = createRef<SelectRef>()
     const [isModalOpen, setIsModalOpen] = useState(false)
     const categories = useCategories()
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       addItem()
       inputRef.current?.focus()
@@ -49,6 +49,16 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
       [unaddedItems]
     )
 
+    const handleLoadOptions = (
+      inputValue: string,
+      callback: LoadOptionsCallback
+    ) =>
+      callback(
+        options.filter((o) =>
+          o.label.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      )
+
     return (
       <>
         <form onSubmit={handleSubmit} className={classes.form}>
@@ -60,16 +70,13 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
             }
           >
             <AsyncSelect
-              onChange={(value) => setValue((value as any)?.value ?? "")}
-              loadOptions={(inputValue, callback) =>
-                callback(
-                  options.filter((o) =>
-                    o.label.toLowerCase().includes(inputValue.toLowerCase())
-                  )
-                )
-              }
+              value={{ label: value, value }}
+              onChange={(newValue) => setValue(newValue?.value ?? "")}
+              loadOptions={handleLoadOptions}
               noOptionsMessage={() => null}
               isClearable
+              ref={inputRef}
+              blurInputOnSelect={false}
             />
           </Item>
           {alreadyAdded ? (
@@ -78,14 +85,6 @@ export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
             </small>
           ) : null}
           <div className={classes.actions}>
-            {/* <button
-              type="button"
-              onClick={handleClickCancel}
-              disabled={!Boolean(value) && !category}
-              className={classes.clear}
-            >
-              Clear
-            </button> */}
             <button type="submit" disabled={!isValid} className={classes.add}>
               {previouslyAdded || value === "" ? "Add" : "Add (New)"}
             </button>
