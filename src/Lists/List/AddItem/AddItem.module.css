@@ -24,13 +24,12 @@
 
 .form .actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
   margin-top: var(--spacing-md);
 }
 
 .form .actions button {
-  min-width: 100px;
+  /* min-width: 100px; */
+  flex: 1;
   cursor: pointer;
   border: none;
   border-radius: var(--spacing-radius);
