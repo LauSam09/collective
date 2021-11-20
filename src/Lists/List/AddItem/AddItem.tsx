@@ -2,6 +2,7 @@ import React, {
   createRef,
   FormEvent,
   forwardRef,
+  useImperativeHandle,
   useMemo,
   useState,
 } from "react"
@@ -24,82 +25,81 @@ export interface AddItemsProps {
   setCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const AddItem = forwardRef<HTMLInputElement, AddItemsProps>(
-  (props, ref) => {
-    const { addedItems, category, allItems, setCategory } = props
-    const { alreadyAdded, isValid, previouslyAdded, value, addItem, setValue } =
-      useItemInput(addedItems, category, setCategory, allItems)
-    const inputRef = createRef<SelectRef>()
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const categories = useCategories()
+export const AddItem = forwardRef<SelectRef, AddItemsProps>((props, ref) => {
+  const { addedItems, category, allItems, setCategory } = props
+  const { alreadyAdded, isValid, previouslyAdded, value, addItem, setValue } =
+    useItemInput(addedItems, category, setCategory, allItems)
+  const inputRef = createRef<SelectRef>()
+  useImperativeHandle(ref, () => inputRef.current as SelectRef)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const categories = useCategories()
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
-      addItem()
-      inputRef.current?.focus()
-    }
-
-    const options = useMemo(
-      () =>
-        allItems
-          .map((i) => ({ value: i.name, label: i.name }))
-          .sort((a, b) =>
-            a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1
-          ),
-      [allItems]
-    )
-
-    const handleLoadOptions = (
-      inputValue: string,
-      callback: LoadOptionsCallback
-    ) =>
-      callback(
-        options.filter((o) =>
-          o.label.toLowerCase().includes(inputValue.toLowerCase())
-        )
-      )
-
-    return (
-      <>
-        <form onSubmit={handleSubmit} className={classes.form}>
-          <Item
-            onClickCategory={() => setIsModalOpen(true)}
-            buttonColour={
-              categories.find((c) => c.id === category)?.colour ||
-              "var(--colour-uncategorised)"
-            }
-          >
-            <AsyncSelect
-              value={{ label: value, value }}
-              onChange={(newValue) => setValue(newValue?.value ?? "")}
-              loadOptions={handleLoadOptions}
-              noOptionsMessage={() => null}
-              isClearable
-              ref={inputRef}
-              blurInputOnSelect={false}
-            />
-          </Item>
-          {alreadyAdded ? (
-            <small className={classes.error}>
-              {alreadyAdded.name} has already been added
-            </small>
-          ) : null}
-          <div className={classes.actions}>
-            <button type="submit" disabled={!isValid} className={classes.add}>
-              {previouslyAdded || value === "" ? "Add" : "Add (New)"}
-            </button>
-          </div>
-        </form>
-        <CategoryModal
-          isOpen={isModalOpen}
-          selectedCategoryId={category}
-          close={() => setIsModalOpen(false)}
-          select={(category) => {
-            setCategory(category)
-            return Promise.resolve()
-          }}
-        />
-      </>
-    )
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    addItem()
+    inputRef.current?.focus()
   }
-)
+
+  const options = useMemo(
+    () =>
+      allItems
+        .map((i) => ({ value: i.name, label: i.name }))
+        .sort((a, b) =>
+          a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1
+        ),
+    [allItems]
+  )
+
+  const handleLoadOptions = (
+    inputValue: string,
+    callback: LoadOptionsCallback
+  ) =>
+    callback(
+      options.filter((o) =>
+        o.label.toLowerCase().includes(inputValue.toLowerCase())
+      )
+    )
+
+  return (
+    <>
+      <form onSubmit={handleSubmit} className={classes.form}>
+        <Item
+          onClickCategory={() => setIsModalOpen(true)}
+          buttonColour={
+            categories.find((c) => c.id === category)?.colour ||
+            "var(--colour-uncategorised)"
+          }
+        >
+          <AsyncSelect
+            value={{ label: value, value }}
+            onChange={(newValue) => setValue(newValue?.value ?? "")}
+            loadOptions={handleLoadOptions}
+            noOptionsMessage={() => null}
+            isClearable
+            ref={inputRef}
+            blurInputOnSelect={false}
+          />
+        </Item>
+        {alreadyAdded ? (
+          <small className={classes.error}>
+            {alreadyAdded.name} has already been added
+          </small>
+        ) : null}
+        <div className={classes.actions}>
+          <button type="submit" disabled={!isValid} className={classes.add}>
+            {previouslyAdded || value === "" ? "Add" : "Add (New)"}
+          </button>
+        </div>
+      </form>
+      <CategoryModal
+        isOpen={isModalOpen}
+        selectedCategoryId={category}
+        close={() => setIsModalOpen(false)}
+        select={(category) => {
+          setCategory(category)
+          return Promise.resolve()
+        }}
+      />
+    </>
+  )
+})

@@ -5,7 +5,7 @@ import { useItems } from "Lists"
 
 import { ItemModel } from "../models"
 
-import { AddItem } from "./AddItem"
+import { AddItem, SelectRef } from "./AddItem"
 import { CategoryModal } from "./CategoryModal"
 import { ItemModal } from "./ItemModal"
 import { ListActions } from "./ListActions"
@@ -25,7 +25,7 @@ export const List = (props: ListProps) => {
   const { batchRemoveItems } = useItems()
   const { getDefaultItemsCollection } = useUserContext()
   const [selectedCategory, setSelectedCategory] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<SelectRef>(null)
 
   const completedItems = addedItems.filter((i) => i.completed)
 
