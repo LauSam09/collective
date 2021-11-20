@@ -36,3 +36,11 @@ Collective is a `React` application written in `TypeScript`, backed by a Google 
 In addition a number of firebase functions are used for operations that should not happen client-side.
 
 Jest and React Testing Library are used for automated testing, and tests are run automatically using a Circle CI pipeline.
+
+### Deployment
+
+First time setup:
+
+1. First time setup only - install the [google cloud SDK](https://cloud.google.com/sdk/docs/install) and initialise the environment by running `gcloud init`, selecting the relevant appengine project
+2. Create a production build by running `npm run build`
+3. Run `gcloud app deploy --version MAJOR-MINOR-PATCH`
