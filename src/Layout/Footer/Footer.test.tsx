@@ -17,7 +17,7 @@ describe("<Footer />", () => {
   test("renders copyright notice", () => {
     render(<Footer />)
     expect(
-      screen.getByText(/© Copyright 2021, Collective/i)
+      screen.getByText(/© Copyright 2022, Collective/i)
     ).toBeInTheDocument()
   })
 })

@@ -6,7 +6,7 @@ exports[`<Footer /> matches snapshot 1`] = `
 >
   <small>
     © Copyright 
-    2021
+    2022
     , Collective
   </small>
 </footer>
