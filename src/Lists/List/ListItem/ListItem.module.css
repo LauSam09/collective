@@ -1,3 +1,7 @@
+.itemContent {
+  overflow-x: hidden;
+}
+
 .content {
   display: flex;
 }

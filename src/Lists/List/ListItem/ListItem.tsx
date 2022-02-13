@@ -25,7 +25,11 @@ export const ListItem = (props: ListItemProps) => {
   }
 
   return (
-    <Item onClickCategory={onClickCategory} buttonColour={category?.colour}>
+    <Item
+      onClickCategory={onClickCategory}
+      buttonColour={category?.colour}
+      contentClassName={classes.itemContent}
+    >
       <div className={classes.content}>
         <input
           type="checkbox"
