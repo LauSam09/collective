@@ -58,7 +58,7 @@ export const JoinHouseholdContent = () => {
       await refreshUser()
       history.push("/")
     } catch (err) {
-      setError(err.message)
+      setError((err as Error).message)
       setWorking(false)
     }
   }

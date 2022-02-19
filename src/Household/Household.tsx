@@ -53,7 +53,7 @@ const InviteMember = () => {
       setUrl(`${window.location.origin}/join/${inviteId}`)
     } catch (err) {
       console.error(err)
-      setError(err)
+      setError(err as string)
     } finally {
       setWorking(false)
     }
@@ -68,7 +68,7 @@ const InviteMember = () => {
       setCopied(true)
     } catch (err) {
       console.error(err)
-      setError(err)
+      setError(err as string)
     }
   }
 
