@@ -6,6 +6,7 @@ import { Household } from "Household"
 import { RegisteredSplash } from "Splash"
 import { CategoriesContextProvider, List, useItemSubscription } from "Lists"
 import { Recipes, useRecipeSubscription } from "Recipes"
+import { Tasks } from "Tasks"
 
 const RegisteredContent = () => {
   const { addedItems, allItems } = useItemSubscription()
@@ -23,8 +24,11 @@ const RegisteredContent = () => {
         <Route path="/recipes" exact>
           <Recipes addedItems={addedItems} recipes={recipes} />
         </Route>
-        <Route path="/list" exact>
+        <Route path="/shopping" exact>
           <List addedItems={addedItems} allItems={allItems} />
+        </Route>
+        <Route path="/tasks" exact>
+          <Tasks />
         </Route>
         <Route path="/" exact>
           <RegisteredSplash

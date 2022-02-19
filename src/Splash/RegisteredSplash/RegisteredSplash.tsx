@@ -30,7 +30,7 @@ const ListSummary = (props: ListSummaryProps) => {
       <div>
         You have {itemCount} item{itemCount === 1 ? null : "s"} in Shopping
       </div>
-      <Link to="/list">Go to list</Link>
+      <Link to="/shopping">Go to shopping</Link>
     </section>
   )
 }

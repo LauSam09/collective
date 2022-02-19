@@ -21,7 +21,7 @@ export const Header = () => {
         {useIsRegistered() ? (
           <div className={classes.links}>
             <NavLink activeClassName={classes.active} to="/list" title="List">
-              List
+              Shopping
             </NavLink>
             <NavLink
               activeClassName={classes.active}
@@ -29,6 +29,9 @@ export const Header = () => {
               title="Recipes"
             >
               Recipes
+            </NavLink>
+            <NavLink activeClassName={classes.active} to="/tasks" title="Tasks">
+              Tasks
             </NavLink>
             <button onClick={logout} title="Log out" className={classes.logout}>
               <FontAwesomeIcon icon={faSignOutAlt} size="lg" />
