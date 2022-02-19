@@ -6,7 +6,7 @@ describe("<RegisteredSplash />", () => {
   test("renders", () => {
     render(
       <BrowserRouter>
-        <RegisteredSplash />
+        <RegisteredSplash itemCount={0} planCount={0} />
       </BrowserRouter>
     )
   })
