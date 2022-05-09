@@ -3,7 +3,11 @@
   margin: auto;
 }
 
-.login > div {
-  margin: 0 auto;
+.login {
+  display: flex;
+  justify-content: center;
+}
+
+.login > button {
   cursor: pointer;
 }
