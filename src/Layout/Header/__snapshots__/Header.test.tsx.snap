@@ -16,7 +16,7 @@ exports[`<Header /> matches snapshot 1`] = `
           Collective
         </h3>
         <small>
-          2.5.2
+          2.5.4
         </small>
       </span>
     </a>

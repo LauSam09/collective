@@ -21,7 +21,7 @@ describe("<AnonymousSplash />", () => {
 
     const button = screen.getByRole(/button/)
     expect(button).toBeInTheDocument()
-    expect(button).toHaveTextContent(/sign in with google/i)
+    expect(button).toHaveTextContent(/sign in through google/i)
   })
 
   test("clicking login button calls login", () => {
