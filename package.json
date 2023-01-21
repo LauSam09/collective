@@ -1,86 +1,22 @@
 {
-  "name": "collective",
-  "version": "2.5.5",
+  "name": "tmp",
   "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@types/jest": "^26.0.20",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "classnames": "^2.2.6",
-    "firebase": "^8.10.0",
-    "pluralize": "^8.0.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-hook-form": "^7.6.5",
-    "react-modal": "^3.12.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.0",
-    "react-select": "^5.2.1",
-    "typescript": "^4.1.5",
-    "web-vitals": "^1.1.0",
-    "workbox-background-sync": "^6.1.5",
-    "workbox-broadcast-update": "^6.1.5",
-    "workbox-cacheable-response": "^6.1.5",
-    "workbox-core": "^6.1.5",
-    "workbox-expiration": "^6.1.5",
-    "workbox-google-analytics": "^6.1.5",
-    "workbox-navigation-preload": "^6.1.5",
-    "workbox-precaching": "^6.1.5",
-    "workbox-range-requests": "^6.1.5",
-    "workbox-routing": "^6.1.5",
-    "workbox-strategies": "^6.1.5",
-    "workbox-streams": "^6.1.5"
-  },
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "prebuild": "rimraf build",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint --ext .ts,.tsx src/"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "no-restricted-syntax": [
-        "error",
-        {
-          "selector": "ExportDefaultDeclaration",
-          "message": "Prefer named exports"
-        }
-      ]
-    }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@testing-library/user-event": "^13.1.9",
-    "@types/classnames": "^2.2.11",
-    "@types/node": "^15.6.0",
-    "@types/pluralize": "^0.0.29",
-    "@types/react-modal": "^3.12.0",
-    "@types/react-router-dom": "^5.1.7",
-    "@types/react-test-renderer": "^17.0.1",
-    "prettier": "^2.2.1",
-    "react-test-renderer": "^17.0.2",
-    "rimraf": "^3.0.2"
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react": "^3.0.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
   }
 }
