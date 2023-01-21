@@ -1,8 +1,0 @@
-.container {
-  background-color: var(--colour-background-light-accent);
-  padding: var(--spacing-sm);
-}
-
-.daysContainer {
-  display: flex;
-}
