@@ -12,8 +12,11 @@ import {
   Stack,
   useColorMode,
   Center,
+  Link,
+  Text,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
+import { Link as RouterLink, NavLink } from "react-router-dom"
 
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -22,14 +25,20 @@ export default function Nav() {
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Box>Collective</Box>
+          <Box>
+            <Link as={RouterLink} to="/">
+              Collective
+            </Link>
+          </Box>
 
           <Flex alignItems={"center"}>
-            <Stack direction={"row"} spacing={7}>
-              <Button onClick={toggleColorMode}>
-                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-              </Button>
-
+            <Stack direction={"row"} spacing={4} alignItems={"center"}>
+              <Link as={NavLink} to="/">
+                List
+              </Link>
+              <Link as={NavLink} to="/recipes">
+                Recipes
+              </Link>
               <Menu>
                 <MenuButton
                   as={Button}
@@ -42,9 +51,13 @@ export default function Nav() {
                 </MenuButton>
                 <MenuList alignItems={"center"}>
                   <Center>
-                    <p>Username</p>
+                    <p>Laurence</p>
                   </Center>
-                  <br />
+                  <Box p={2}>
+                    <Button onClick={toggleColorMode}>
+                      {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                    </Button>
+                  </Box>
                   <MenuDivider />
                   <MenuItem>Logout</MenuItem>
                 </MenuList>
