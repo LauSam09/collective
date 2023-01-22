@@ -27,18 +27,18 @@ const Category = (props: CategoryProps) => {
   const items = [
     {
       name: "Cheddar",
-      complete: false,
+      complete: true,
       notes: "if on special",
     },
-    { name: "Milk", complete: true },
+    { name: "Milk", complete: false },
   ]
 
   return (
-    <Card backgroundColor={`${colour}75`}>
-      <CardHeader>
+    <Card>
+      <CardHeader backgroundColor={`${colour}75`}>
         <Heading size="xs">{name.toLocaleUpperCase()}</Heading>
       </CardHeader>
-      <CardBody>
+      <CardBody backgroundColor={`${colour}50`}>
         <Stack gap={2}>
           {items.map((item) => (
             <Flex key={item.name} justifyContent="space-between">
@@ -51,12 +51,14 @@ const Category = (props: CategoryProps) => {
                 className="list-checkbox"
                 flex={1}
               >
-                {item.name}
-                {item.notes && (
-                  <Text fontSize="xs" ml="1" display="inline">
-                    - {item.notes}
-                  </Text>
-                )}
+                <Text color={item.complete ? "gray.500" : "default"}>
+                  <Text as={item.complete ? "s" : "p"}>{item.name}</Text>
+                  {item.notes && (
+                    <Text fontSize="xs" ml="1" display="inline">
+                      - {item.notes}
+                    </Text>
+                  )}
+                </Text>
               </Checkbox>
               <Menu>
                 <MenuButton
