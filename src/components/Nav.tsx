@@ -13,13 +13,15 @@ import {
   useColorMode,
   Center,
   Link,
-  Text,
+  SkeletonCircle,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Link as RouterLink, NavLink } from "react-router-dom"
+import { useAuthentication } from "../hooks/useAuthentication"
 
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode()
+  const { state } = useAuthentication()
 
   return (
     <>
@@ -39,29 +41,33 @@ export default function Nav() {
               <Link as={NavLink} to="/recipes">
                 Recipes
               </Link>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <Avatar size={"sm"} src={"Laurence"} />
-                </MenuButton>
-                <MenuList alignItems={"center"}>
-                  <Center>
-                    <p>Laurence</p>
-                  </Center>
-                  <Box p={2}>
-                    <Button onClick={toggleColorMode}>
-                      {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                    </Button>
-                  </Box>
-                  <MenuDivider />
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
+              {state === "Authenticated" ? (
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"link"}
+                    cursor={"pointer"}
+                    minW={0}
+                  >
+                    <Avatar size={"sm"} src={"Laurence"} />
+                  </MenuButton>
+                  <MenuList alignItems={"center"}>
+                    <Center>
+                      <p>Laurence</p>
+                    </Center>
+                    <Box p={2}>
+                      <Button onClick={toggleColorMode}>
+                        {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                      </Button>
+                    </Box>
+                    <MenuDivider />
+                    <MenuItem>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              ) : (
+                <SkeletonCircle />
+              )}
             </Stack>
           </Flex>
         </Flex>
