@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Nav />
-      <Box p={4} maxW={"800px"}>
+      <Box p={4} maxW={"800px"} mx="auto">
         <Routes>
           <Route
             path="/"

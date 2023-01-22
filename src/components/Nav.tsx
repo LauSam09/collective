@@ -15,6 +15,7 @@ import {
   Link,
   SkeletonCircle,
   Heading,
+  Text,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Link as RouterLink, NavLink } from "react-router-dom"
@@ -51,7 +52,7 @@ export default function Nav() {
               <Link as={NavLink} to="/recipes">
                 Recipes
               </Link>
-              {state === "Authenticated" ? (
+              {state !== "Authenticated" ? (
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -72,7 +73,12 @@ export default function Nav() {
                       </Button>
                     </Box>
                     <MenuDivider />
+
                     <MenuItem>Logout</MenuItem>
+                    <MenuDivider />
+                    <Flex p={1} justifyContent="end">
+                      <Text fontSize="xs">Version 3.0.0</Text>
+                    </Flex>
                   </MenuList>
                 </Menu>
               ) : (
