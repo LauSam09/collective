@@ -2,12 +2,14 @@ import { Skeleton, Stack, useDisclosure } from "@chakra-ui/react"
 import { useState } from "react"
 import { Item as ItemModel } from "../../models/item"
 import { Category } from "./Category"
+import { EditItemModal } from "./EditItemModal"
 import { Item } from "./Item"
 import { ItemDetailsModal } from "./ItemDetailsModal"
 
 export const Categories = () => {
   const state = "Loading"
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const detailsDisclosure = useDisclosure()
+  const editDisclosure = useDisclosure()
   const [selectedItem, setSelectedItem] = useState<ItemModel>()
 
   const categories = [
@@ -37,7 +39,12 @@ export const Categories = () => {
 
   const handleOpenDetails = (item: ItemModel) => {
     setSelectedItem(item)
-    onOpen()
+    detailsDisclosure.onOpen()
+  }
+
+  const handleOpenEdit = (item: ItemModel) => {
+    setSelectedItem(item)
+    editDisclosure.onOpen()
   }
 
   if (state !== "Loading") {
@@ -66,12 +73,14 @@ export const Categories = () => {
                 key={item.id}
                 item={item}
                 openDetails={() => handleOpenDetails(item)}
+                openEdit={() => handleOpenEdit(item)}
               />
             ))}
           </Category>
         ))}
       </Stack>
-      <ItemDetailsModal isOpen={isOpen} onClose={onClose} item={selectedItem} />
+      <ItemDetailsModal {...detailsDisclosure} item={selectedItem} />
+      <EditItemModal {...editDisclosure} item={selectedItem} />
     </>
   )
 }

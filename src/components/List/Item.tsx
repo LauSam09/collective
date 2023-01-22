@@ -16,12 +16,14 @@ import { Item as ItemModel } from "../../models/item"
 export type ItemProps = {
   item: ItemModel
   openDetails: () => void
+  openEdit: () => void
 }
 
 export const Item = (props: ItemProps) => {
   const {
     item: { name, complete, notes },
     openDetails,
+    openEdit,
   } = props
 
   return (
@@ -57,7 +59,9 @@ export const Item = (props: ItemProps) => {
           <MenuItem icon={<InfoIcon />} onClick={openDetails}>
             Details
           </MenuItem>
-          <MenuItem icon={<EditIcon />}>Edit</MenuItem>
+          <MenuItem icon={<EditIcon />} onClick={openEdit}>
+            Edit
+          </MenuItem>
           <MenuItem icon={<DeleteIcon />}>Delete</MenuItem>
         </MenuList>
       </Menu>
