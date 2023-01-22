@@ -3,6 +3,8 @@ import { Box } from "@chakra-ui/react"
 
 import Nav from "./components/Nav"
 import "./App.css"
+import { LoginPage } from "./pages/Login"
+import { Protected } from "./components/Protected"
 
 function App() {
   return (
@@ -10,8 +12,23 @@ function App() {
       <Nav />
       <Box p={4}>
         <Routes>
-          <Route path="/" element={<div>Home</div>} />
-          <Route path="/recipes" element={<div>Recipes</div>} />
+          <Route
+            path="/"
+            element={
+              <Protected>
+                <div>Home</div>
+              </Protected>
+            }
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/recipes"
+            element={
+              <Protected>
+                <div>Recipes</div>
+              </Protected>
+            }
+          />
         </Routes>
       </Box>
     </div>
