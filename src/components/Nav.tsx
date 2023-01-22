@@ -14,6 +14,7 @@ import {
   Center,
   Link,
   SkeletonCircle,
+  Heading,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Link as RouterLink, NavLink } from "react-router-dom"
@@ -26,12 +27,20 @@ export default function Nav() {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box
+        bg={useColorModeValue("gray.100", "gray.900")}
+        px={4}
+        position="sticky"
+        top={0}
+        zIndex={100}
+      >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <Box>
-            <Link as={RouterLink} to="/">
-              Collective
-            </Link>
+            <Heading>
+              <Link as={RouterLink} to="/">
+                Collective
+              </Link>
+            </Heading>
           </Box>
 
           <Flex alignItems={"center"}>

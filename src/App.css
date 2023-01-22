@@ -2,3 +2,9 @@
   width: 100vw;
   height: 100vh;
 }
+
+.list-checkbox .chakra-checkbox__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -2,21 +2,22 @@ import { Route, Routes } from "react-router-dom"
 import { Box } from "@chakra-ui/react"
 
 import Nav from "./components/Nav"
-import "./App.css"
 import { LoginPage } from "./pages/Login"
 import { Protected } from "./components/Protected"
+import { ListPage } from "./pages/List"
+import "./App.css"
 
 function App() {
   return (
     <div className="App">
       <Nav />
-      <Box p={4}>
+      <Box p={4} maxW={"800px"}>
         <Routes>
           <Route
             path="/"
             element={
               <Protected>
-                <div>Home</div>
+                <ListPage />
               </Protected>
             }
           />
