@@ -1,5 +1,5 @@
-import { AddIcon } from "@chakra-ui/icons"
-import { Box, Button } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
+import { AddItem } from "../components/List/AddItem"
 
 import { Categories } from "../components/List/Categories"
 
@@ -8,17 +8,7 @@ export const ListPage = () => {
     <Box>
       <Categories />
       <Box mb="12" />
-      <Button
-        variant="solid"
-        size="lg"
-        position="fixed"
-        colorScheme={"blue"}
-        bottom="4"
-        right="4"
-        zIndex={10}
-      >
-        <AddIcon />
-      </Button>
+      <AddItem />
     </Box>
   )
 }
