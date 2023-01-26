@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons"
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons"
 import {
   Button,
   Modal,
@@ -7,10 +7,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
+  Stack,
   useDisclosure,
 } from "@chakra-ui/react"
-import { createRef, FormEvent } from "react"
-import { OptionsOrGroups, GroupBase } from "react-select"
+import { createRef, FormEvent, useState } from "react"
+import { OptionsOrGroups, GroupBase, SingleValue } from "react-select"
 import AsyncSelect from "react-select/async-creatable"
 import ReactSelect from "react-select/dist/declarations/src/Select"
 
@@ -27,6 +29,10 @@ export type LoadOptionsCallback = (
   >
 ) => void
 
+const DropdownIndicator = () => (
+  <ChevronDownIcon width="20px" height="20px" mx="8px" />
+)
+
 export type SelectRef = ReactSelect<
   { label: string; value: string },
   false,
@@ -36,6 +42,7 @@ export type SelectRef = ReactSelect<
 export const AddItem = () => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const inputRef = createRef<SelectRef>()
+  const [category, setCategory] = useState<string>()
 
   if (!isOpen) {
     return (
@@ -55,15 +62,15 @@ export const AddItem = () => {
   }
 
   const inMemoryOptions = [
-    { name: "cabbage", label: "cabbage", value: "cabbage", category: "" },
-    { name: "crisps", label: "crisps", value: "crisps", category: "" },
+    { name: "cabbage", label: "cabbage", value: "cabbage", category: "1" },
+    { name: "crisps", label: "crisps", value: "crisps", category: "2" },
     {
       name: "hash browns",
       label: "hash browns",
       value: "hash browns",
-      category: "",
+      category: "3",
     },
-    { name: "potatoes", label: "potatoes", value: "potatoes", category: "" },
+    { name: "potatoes", label: "potatoes", value: "potatoes", category: "1" },
   ]
 
   const loadOptions = (inputValue: string, callback: LoadOptionsCallback) =>
@@ -73,6 +80,21 @@ export const AddItem = () => {
       )
     )
 
+  const handleChange = (
+    value: SingleValue<{
+      label: string
+      value: string
+    }>
+  ) => {
+    const item = inMemoryOptions.find((o) => o.value === value?.value)
+
+    if (item) {
+      setCategory(item.category)
+    } else {
+      setCategory(undefined)
+    }
+  }
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -81,7 +103,7 @@ export const AddItem = () => {
     inputRef.current?.clearValue()
     inputRef.current?.focus()
 
-    console.log(value)
+    console.log(`item: ${value}, category: ${category}`)
   }
 
   return (
@@ -97,16 +119,26 @@ export const AddItem = () => {
           <ModalHeader>Add Item</ModalHeader>
           <ModalBody>
             {/* TODO: fix dark mode styling */}
-            <AsyncSelect
-              name="item"
-              isClearable
-              loadOptions={loadOptions}
-              ref={inputRef}
-            />
-            {/* 
-              TODO: Highlight category of selected item but don't bother
-              with category selection for new items - these can be edited
-             */}
+            <Stack>
+              <AsyncSelect
+                name="item"
+                isClearable
+                components={{ DropdownIndicator }}
+                loadOptions={loadOptions}
+                ref={inputRef}
+                onChange={handleChange}
+                classNamePrefix="add-item"
+              />
+              <Select
+                value={category}
+                onChange={(e) => setCategory(e.currentTarget.value)}
+              >
+                <option value="0"> - </option>
+                <option value="1">Fruit & vegetables</option>
+                <option value="2">Pantry</option>
+                <option value="3">Frozen</option>
+              </Select>
+            </Stack>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} type="submit">

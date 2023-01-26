@@ -8,3 +8,28 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.chakra-ui-dark .add-item__control {
+  /* border-color: var(--chakra-colors-blue-300) !important;
+  box-shadow: var(--chakra-colors-blue-300) !important; */
+  padding-left: 7px !important;
+}
+
+.chakra-ui-dark .add-item__control,
+.add-item__single-value,
+.add-item__placeholder {
+  color: inherit !important;
+  background-color: inherit !important;
+}
+
+.chakra-ui-dark .add-item__menu {
+  background-color: #0e1117 !important;
+}
+
+.chakra-ui-dark .add-item__control {
+  border-color: var(--chakra-colors-chakra-border-color) !important;
+}
+
+.chakra-ui-dark .add-item__control:hover {
+  border-color: var(--chakra-colors-whiteAlpha-400) !important;
+}
