@@ -6,6 +6,7 @@ import { LoginPage } from "./pages/Login"
 import { Protected } from "./components/Protected"
 import { ListPage } from "./pages/List"
 import "./App.css"
+import { RecipesPage } from "./pages/Recipes"
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
             path="/recipes"
             element={
               <Protected>
-                <div>Recipes</div>
+                <RecipesPage />
               </Protected>
             }
           />
