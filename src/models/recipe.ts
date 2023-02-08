@@ -3,4 +3,6 @@ export interface Recipe {
   name: string
   ingredients: ReadonlyArray<string>
   days?: ReadonlyArray<number>
+  url?: string
+  notes?: string
 }
