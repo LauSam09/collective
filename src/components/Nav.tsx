@@ -10,20 +10,17 @@ import {
   MenuDivider,
   useColorModeValue,
   Stack,
-  useColorMode,
   Center,
   Link,
   SkeletonCircle,
   Heading,
   Text,
 } from "@chakra-ui/react"
-import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Link as RouterLink, NavLink } from "react-router-dom"
 
 import { useAuthentication } from "../hooks/useAuthentication"
 
 export default function Nav() {
-  const { colorMode, toggleColorMode } = useColorMode()
   const { state } = useAuthentication()
 
   return (
@@ -67,11 +64,6 @@ export default function Nav() {
                     <Center>
                       <p>Laurence</p>
                     </Center>
-                    <Box p={2}>
-                      <Button onClick={toggleColorMode}>
-                        {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                      </Button>
-                    </Box>
                     <MenuDivider />
 
                     <MenuItem>Logout</MenuItem>

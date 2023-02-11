@@ -7,15 +7,13 @@ import App from "./App"
 import { AuthenticationProvider } from "./contexts/AuthenticationContext"
 import "./index.css"
 
-const colors = {
-  brand: {
-    900: "#1a365d",
-    800: "#153e75",
-    700: "#2a69ac",
+const theme = extendTheme({
+  config: {
+    initialColorMode: "system",
+    useSystemColorMode: true,
+    useLocalStorage: false,
   },
-}
-
-const theme = extendTheme({ colors })
+})
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
