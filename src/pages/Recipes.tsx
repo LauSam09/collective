@@ -31,27 +31,26 @@ import { useState } from "react"
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal"
 import { Recipe } from "../models/recipe"
 
-const recipes: Array<Recipe> = [
-  { id: "1", name: "Lasagne", ingredients: ["eggs", "milk", "flour"] },
-  { id: "2", name: "Pancakes", ingredients: ["eggs", "milk", "flour"] },
-  {
-    id: "3",
-    name: "Penne Arrabiata",
-    url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
-    ingredients: [
-      "penne",
-      "tomatoes",
-      "garlic",
-      "chilli flakes",
-      "sugar",
-      "parmesan",
-    ],
-  },
-]
-
 export const RecipesPage = () => {
   const editDisclosure = useDisclosure()
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
+  const [recipes, setRecipes] = useState([
+    { id: "1", name: "Lasagne", ingredients: ["eggs", "milk", "flour"] },
+    { id: "2", name: "Pancakes", ingredients: ["eggs", "milk", "flour"] },
+    {
+      id: "3",
+      name: "Penne Arrabiata",
+      url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
+      ingredients: [
+        "penne",
+        "tomatoes",
+        "garlic",
+        "chilli flakes",
+        "sugar",
+        "parmesan",
+      ],
+    },
+  ])
 
   const today = new Date()
   today.getDay()
@@ -141,7 +140,16 @@ export const RecipesPage = () => {
                         >
                           Edit
                         </MenuItem>
-                        <MenuItem icon={<DeleteIcon />}>Delete</MenuItem>
+                        <MenuItem
+                          icon={<DeleteIcon />}
+                          onClick={() =>
+                            setRecipes((r) =>
+                              r.filter((x) => x.id !== recipe.id)
+                            )
+                          }
+                        >
+                          Delete
+                        </MenuItem>
                       </MenuList>
                     </Menu>
                   </Flex>
