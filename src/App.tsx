@@ -5,8 +5,8 @@ import Nav from "./components/Nav"
 import { LoginPage } from "./pages/Login"
 import { Protected } from "./components/Protected"
 import { ListPage } from "./pages/List"
-import "./App.css"
 import { RecipesPage } from "./pages/Recipes"
+import "./App.css"
 
 function App() {
   return (

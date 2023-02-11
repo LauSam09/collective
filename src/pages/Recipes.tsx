@@ -3,6 +3,7 @@ import {
   DeleteIcon,
   EditIcon,
   SearchIcon,
+  InfoIcon,
 } from "@chakra-ui/icons"
 import {
   Box,
@@ -29,10 +30,12 @@ import { Text } from "@chakra-ui/react"
 import { useState } from "react"
 
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal"
+import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"
 import { Recipe } from "../models/recipe"
 
 export const RecipesPage = () => {
   const editDisclosure = useDisclosure()
+  const detailsDisclose = useDisclosure()
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
   const [recipes, setRecipes] = useState([
     { id: "1", name: "Lasagne", ingredients: ["eggs", "milk", "flour"] },
@@ -41,6 +44,8 @@ export const RecipesPage = () => {
       id: "3",
       name: "Penne Arrabiata",
       url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
+      notes:
+        "A spicy pasta dish that has many words that we're using to test what happens",
       ingredients: [
         "penne",
         "tomatoes",
@@ -55,8 +60,18 @@ export const RecipesPage = () => {
   const today = new Date()
   today.getDay()
 
-  const handleEditClick = (recipe: Recipe) => {
+  const handleClickEdit = (recipe: Recipe) => {
     setSelectedRecipe(recipe)
+    editDisclosure.onOpen()
+  }
+
+  const handleClickDetails = (recipe: Recipe) => {
+    setSelectedRecipe(recipe)
+    detailsDisclose.onOpen()
+  }
+
+  const handleClickDetailsEdit = () => {
+    detailsDisclose.onClose()
     editDisclosure.onOpen()
   }
 
@@ -135,8 +150,14 @@ export const RecipesPage = () => {
                       />
                       <MenuList>
                         <MenuItem
+                          icon={<InfoIcon />}
+                          onClick={() => handleClickDetails(recipe)}
+                        >
+                          Details
+                        </MenuItem>
+                        <MenuItem
                           icon={<EditIcon />}
-                          onClick={() => handleEditClick(recipe)}
+                          onClick={() => handleClickEdit(recipe)}
                         >
                           Edit
                         </MenuItem>
@@ -159,6 +180,11 @@ export const RecipesPage = () => {
           </Stack>
         </Box>
       </Box>
+      <RecipeDetailsModal
+        {...detailsDisclose}
+        recipe={selectedRecipe}
+        onClickEdit={handleClickDetailsEdit}
+      />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </>
   )
