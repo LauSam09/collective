@@ -24,8 +24,6 @@ import {
   MenuItem,
   MenuList,
   Stack,
-  Tag,
-  TagLabel,
   useDisclosure,
 } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
@@ -35,30 +33,43 @@ import { EditRecipeModal } from "../components/Recipes/EditRecipeModal"
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"
 import { Recipe } from "../models/recipe"
 
+const initialRecipes: ReadonlyArray<Recipe> = [
+  {
+    id: "1",
+    name: "Lasagne",
+    ingredients: ["eggs", "milk", "flour"],
+    days: [],
+  },
+  {
+    id: "2",
+    name: "Pancakes",
+    ingredients: ["eggs", "milk", "flour"],
+    days: [],
+  },
+  {
+    id: "3",
+    name: "Penne Arrabiata",
+    url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
+    notes:
+      "A spicy pasta dish that has many words that we're using to test what happens",
+    ingredients: [
+      "penne",
+      "tomatoes",
+      "garlic",
+      "chilli flakes",
+      "sugar",
+      "parmesan",
+    ],
+    days: [0],
+  },
+]
+
 export const RecipesPage = () => {
   const [assignDay, setAssignDay] = useState(false)
   const editDisclosure = useDisclosure()
   const detailsDisclose = useDisclosure()
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
-  const [recipes, setRecipes] = useState([
-    { id: "1", name: "Lasagne", ingredients: ["eggs", "milk", "flour"] },
-    { id: "2", name: "Pancakes", ingredients: ["eggs", "milk", "flour"] },
-    {
-      id: "3",
-      name: "Penne Arrabiata",
-      url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
-      notes:
-        "A spicy pasta dish that has many words that we're using to test what happens",
-      ingredients: [
-        "penne",
-        "tomatoes",
-        "garlic",
-        "chilli flakes",
-        "sugar",
-        "parmesan",
-      ],
-    },
-  ])
+  const [recipes, setRecipes] = useState(initialRecipes)
 
   const today = new Date()
   today.getDay()
@@ -83,6 +94,32 @@ export const RecipesPage = () => {
     setAssignDay(true)
   }
 
+  const handleClickDay = (day: number) => {
+    setRecipes((old) =>
+      old.map((r) =>
+        r.id === selectedRecipe?.id
+          ? { ...r, days: [...(r.days ?? []), day] }
+          : r
+      )
+    )
+    setSelectedRecipe(undefined)
+    setAssignDay(false)
+  }
+
+  const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
+    { name: "Sunday", recipes: [] },
+    { name: "Monday", recipes: [] },
+    { name: "Tuesday", recipes: [] },
+    { name: "Wednesday", recipes: [] },
+    { name: "Thursday", recipes: [] },
+    { name: "Friday", recipes: [] },
+    { name: "Saturday", recipes: [] },
+  ]
+
+  for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
+    recipe.days?.forEach((d) => days[d].recipes.push(recipe))
+  }
+
   return (
     <>
       <Box>
@@ -101,38 +138,74 @@ export const RecipesPage = () => {
           </Menu>
         </Flex>
         <List spacing={4} mb={10}>
-          {[
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-          ].map((day) => (
-            <ListItem key={day}>
+          {days.map((day, i) => (
+            <ListItem key={day.name}>
               {assignDay ? (
                 <Button
                   variant="solid"
                   colorScheme="blue"
-                  onClick={() => setAssignDay(false)}
+                  onClick={() => handleClickDay(i)}
                 >
-                  {day}
+                  {day.name}
                 </Button>
               ) : (
-                <Tag
-                  ml="2"
-                  size="lg"
-                  variant={day === "Monday" ? "solid" : "subtle"}
-                  fontWeight={day === "Monday" ? "bold" : "normal"}
-                >
-                  <TagLabel>{day}</TagLabel>
-                </Tag>
+                <Heading size="sm">{day.name}</Heading>
               )}
-
-              <Tag ml="2" size={"lg"} variant="outline">
-                <TagLabel>Roast</TagLabel>
-              </Tag>
+              {day.recipes.map((recipe) => (
+                <Card key={recipe.id} mt={2}>
+                  <CardBody>
+                    <Flex>
+                      <Box
+                        cursor="pointer"
+                        flex={1}
+                        onClick={() => handleClickDetails(recipe)}
+                      >
+                        <Text>{recipe.name}</Text>
+                        <Text fontSize="sm">
+                          {recipe.ingredients.join(", ")}
+                        </Text>
+                      </Box>
+                      <Menu>
+                        <MenuButton
+                          as={IconButton}
+                          aria-label="Options"
+                          icon={<HamburgerIcon />}
+                        />
+                        <MenuList>
+                          <MenuItem
+                            icon={<InfoIcon />}
+                            onClick={() => handleClickDetails(recipe)}
+                          >
+                            Details
+                          </MenuItem>
+                          <MenuItem
+                            icon={<CalendarIcon />}
+                            onClick={() => handleClickAssignDay(recipe)}
+                          >
+                            Assign day
+                          </MenuItem>
+                          <MenuItem
+                            icon={<EditIcon />}
+                            onClick={() => handleClickEdit(recipe)}
+                          >
+                            Edit
+                          </MenuItem>
+                          <MenuItem
+                            icon={<DeleteIcon />}
+                            onClick={() =>
+                              setRecipes((r) =>
+                                r.filter((x) => x.id !== recipe.id)
+                              )
+                            }
+                          >
+                            Delete
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </Flex>
+                  </CardBody>
+                </Card>
+              ))}
             </ListItem>
           ))}
         </List>
