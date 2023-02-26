@@ -4,9 +4,11 @@ import {
   EditIcon,
   SearchIcon,
   InfoIcon,
+  CalendarIcon,
 } from "@chakra-ui/icons"
 import {
   Box,
+  Button,
   Card,
   CardBody,
   Flex,
@@ -34,6 +36,7 @@ import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"
 import { Recipe } from "../models/recipe"
 
 export const RecipesPage = () => {
+  const [assignDay, setAssignDay] = useState(false)
   const editDisclosure = useDisclosure()
   const detailsDisclose = useDisclosure()
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
@@ -75,6 +78,11 @@ export const RecipesPage = () => {
     editDisclosure.onOpen()
   }
 
+  const handleClickAssignDay = (recipe: Recipe) => {
+    setSelectedRecipe(recipe)
+    setAssignDay(true)
+  }
+
   return (
     <>
       <Box>
@@ -103,14 +111,25 @@ export const RecipesPage = () => {
             "Saturday",
           ].map((day) => (
             <ListItem key={day}>
-              <Tag
-                ml="2"
-                size={"lg"}
-                variant={day === "Monday" ? "solid" : "subtle"}
-                fontWeight={day === "Monday" ? "bold" : "normal"}
-              >
-                <TagLabel>{day}</TagLabel>
-              </Tag>
+              {assignDay ? (
+                <Button
+                  variant="solid"
+                  colorScheme="blue"
+                  onClick={() => setAssignDay(false)}
+                >
+                  {day}
+                </Button>
+              ) : (
+                <Tag
+                  ml="2"
+                  size="lg"
+                  variant={day === "Monday" ? "solid" : "subtle"}
+                  fontWeight={day === "Monday" ? "bold" : "normal"}
+                >
+                  <TagLabel>{day}</TagLabel>
+                </Tag>
+              )}
+
               <Tag ml="2" size={"lg"} variant="outline">
                 <TagLabel>Roast</TagLabel>
               </Tag>
@@ -136,8 +155,12 @@ export const RecipesPage = () => {
             {recipes.map((recipe) => (
               <Card key={recipe.id}>
                 <CardBody>
-                  <Flex justifyContent="space-between">
-                    <Box>
+                  <Flex>
+                    <Box
+                      cursor="pointer"
+                      flex={1}
+                      onClick={() => handleClickDetails(recipe)}
+                    >
                       <Text>{recipe.name}</Text>
                       <Text fontSize="sm">{recipe.ingredients.join(", ")}</Text>
                     </Box>
@@ -154,6 +177,12 @@ export const RecipesPage = () => {
                           onClick={() => handleClickDetails(recipe)}
                         >
                           Details
+                        </MenuItem>
+                        <MenuItem
+                          icon={<CalendarIcon />}
+                          onClick={() => handleClickAssignDay(recipe)}
+                        >
+                          Assign day
                         </MenuItem>
                         <MenuItem
                           icon={<EditIcon />}

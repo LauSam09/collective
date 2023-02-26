@@ -78,11 +78,11 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            Close
-          </Button>
-          <Button variant="ghost" onClick={onClickEdit}>
+          <Button colorScheme="blue" mr={3} onClick={onClickEdit}>
             Edit
+          </Button>
+          <Button variant="ghost" onClick={onClose}>
+            Close
           </Button>
         </ModalFooter>
       </ModalContent>
