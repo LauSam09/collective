@@ -1,4 +1,11 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons"
+import {
+  CalendarIcon,
+  DeleteIcon,
+  EditIcon,
+  ExternalLinkIcon,
+  HamburgerIcon,
+  InfoIcon,
+} from "@chakra-ui/icons"
 import {
   Modal,
   ModalOverlay,
@@ -16,6 +23,11 @@ import {
   TagLabel,
   Button,
   ModalFooter,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react"
 
 import { Recipe } from "../../models/recipe"
@@ -25,17 +37,38 @@ export type RecipeDetailsModalProps = {
   recipe: Recipe | undefined
   onClose: () => void
   onClickEdit: () => void
+  onClickDelete: () => void
 }
 
 export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
-  const { isOpen, recipe, onClose, onClickEdit } = props
+  const { isOpen, recipe, onClose, onClickEdit, onClickDelete } = props
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{recipe?.name}</ModalHeader>
-        <ModalCloseButton />
+        <ModalHeader>
+          <Flex justifyContent="space-between">
+            <Text>{recipe?.name}</Text>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<HamburgerIcon />}
+              />
+              <MenuList>
+                <MenuItem icon={<CalendarIcon />}>Assign day</MenuItem>
+                <MenuItem icon={<EditIcon />} onClick={onClickEdit}>
+                  Edit
+                </MenuItem>
+                <MenuItem icon={<DeleteIcon />} onClick={onClickDelete}>
+                  Delete
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
+        </ModalHeader>
+
         <ModalBody>
           <VStack alignItems="flex-start">
             {recipe?.url && (
@@ -78,10 +111,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClickEdit}>
-            Edit
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
+          <Button colorScheme="blue" onClick={onClose}>
             Close
           </Button>
         </ModalFooter>

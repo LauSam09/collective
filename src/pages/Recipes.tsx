@@ -1,11 +1,4 @@
-import {
-  HamburgerIcon,
-  DeleteIcon,
-  EditIcon,
-  SearchIcon,
-  InfoIcon,
-  CalendarIcon,
-} from "@chakra-ui/icons"
+import { HamburgerIcon, DeleteIcon, SearchIcon } from "@chakra-ui/icons"
 import {
   Box,
   Button,
@@ -74,11 +67,6 @@ export const RecipesPage = () => {
   const today = new Date()
   today.getDay()
 
-  const handleClickEdit = (recipe: Recipe) => {
-    setSelectedRecipe(recipe)
-    editDisclosure.onOpen()
-  }
-
   const handleClickDetails = (recipe: Recipe) => {
     setSelectedRecipe(recipe)
     detailsDisclose.onOpen()
@@ -89,9 +77,12 @@ export const RecipesPage = () => {
     editDisclosure.onOpen()
   }
 
-  const handleClickAssignDay = (recipe: Recipe) => {
-    setSelectedRecipe(recipe)
-    setAssignDay(true)
+  const handleClickDelete = () => {
+    // TODO: Add confirmation
+    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id))
+    setSelectedRecipe(undefined)
+    editDisclosure.onClose()
+    detailsDisclose.onClose()
   }
 
   const handleClickDay = (day: number) => {
@@ -152,56 +143,19 @@ export const RecipesPage = () => {
                 <Heading size="sm">{day.name}</Heading>
               )}
               {day.recipes.map((recipe) => (
-                <Card key={recipe.id} mt={2}>
+                <Card
+                  key={recipe.id}
+                  cursor="pointer"
+                  onClick={() => handleClickDetails(recipe)}
+                >
                   <CardBody>
                     <Flex>
-                      <Box
-                        cursor="pointer"
-                        flex={1}
-                        onClick={() => handleClickDetails(recipe)}
-                      >
+                      <Box flex={1}>
                         <Text>{recipe.name}</Text>
                         <Text fontSize="sm">
                           {recipe.ingredients.join(", ")}
                         </Text>
                       </Box>
-                      <Menu>
-                        <MenuButton
-                          as={IconButton}
-                          aria-label="Options"
-                          icon={<HamburgerIcon />}
-                        />
-                        <MenuList>
-                          <MenuItem
-                            icon={<InfoIcon />}
-                            onClick={() => handleClickDetails(recipe)}
-                          >
-                            Details
-                          </MenuItem>
-                          <MenuItem
-                            icon={<CalendarIcon />}
-                            onClick={() => handleClickAssignDay(recipe)}
-                          >
-                            Assign day
-                          </MenuItem>
-                          <MenuItem
-                            icon={<EditIcon />}
-                            onClick={() => handleClickEdit(recipe)}
-                          >
-                            Edit
-                          </MenuItem>
-                          <MenuItem
-                            icon={<DeleteIcon />}
-                            onClick={() =>
-                              setRecipes((r) =>
-                                r.filter((x) => x.id !== recipe.id)
-                              )
-                            }
-                          >
-                            Delete
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
                     </Flex>
                   </CardBody>
                 </Card>
@@ -226,55 +180,17 @@ export const RecipesPage = () => {
         <Box>
           <Stack>
             {recipes.map((recipe) => (
-              <Card key={recipe.id}>
+              <Card
+                key={recipe.id}
+                cursor="pointer"
+                onClick={() => handleClickDetails(recipe)}
+              >
                 <CardBody>
                   <Flex>
-                    <Box
-                      cursor="pointer"
-                      flex={1}
-                      onClick={() => handleClickDetails(recipe)}
-                    >
+                    <Box flex={1}>
                       <Text>{recipe.name}</Text>
                       <Text fontSize="sm">{recipe.ingredients.join(", ")}</Text>
                     </Box>
-                    <Menu>
-                      <MenuButton
-                        as={IconButton}
-                        aria-label="Options"
-                        icon={<HamburgerIcon />}
-                        variant="solid"
-                      />
-                      <MenuList>
-                        <MenuItem
-                          icon={<InfoIcon />}
-                          onClick={() => handleClickDetails(recipe)}
-                        >
-                          Details
-                        </MenuItem>
-                        <MenuItem
-                          icon={<CalendarIcon />}
-                          onClick={() => handleClickAssignDay(recipe)}
-                        >
-                          Assign day
-                        </MenuItem>
-                        <MenuItem
-                          icon={<EditIcon />}
-                          onClick={() => handleClickEdit(recipe)}
-                        >
-                          Edit
-                        </MenuItem>
-                        <MenuItem
-                          icon={<DeleteIcon />}
-                          onClick={() =>
-                            setRecipes((r) =>
-                              r.filter((x) => x.id !== recipe.id)
-                            )
-                          }
-                        >
-                          Delete
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
                   </Flex>
                 </CardBody>
               </Card>
@@ -286,6 +202,7 @@ export const RecipesPage = () => {
         {...detailsDisclose}
         recipe={selectedRecipe}
         onClickEdit={handleClickDetailsEdit}
+        onClickDelete={handleClickDelete}
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </>
