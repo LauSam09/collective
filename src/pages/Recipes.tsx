@@ -1,7 +1,16 @@
-import { HamburgerIcon, DeleteIcon, SearchIcon } from "@chakra-ui/icons"
 import {
+  HamburgerIcon,
+  DeleteIcon,
+  SearchIcon,
+  ViewIcon,
+} from "@chakra-ui/icons"
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
-  Button,
   Card,
   CardBody,
   Flex,
@@ -10,8 +19,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  List,
-  ListItem,
   Menu,
   MenuButton,
   MenuItem,
@@ -31,13 +38,13 @@ const initialRecipes: ReadonlyArray<Recipe> = [
     id: "1",
     name: "Lasagne",
     ingredients: ["eggs", "milk", "flour"],
-    days: [],
+    days: [6],
   },
   {
     id: "2",
     name: "Pancakes",
     ingredients: ["eggs", "milk", "flour"],
-    days: [],
+    days: [1, 2],
   },
   {
     id: "3",
@@ -53,7 +60,7 @@ const initialRecipes: ReadonlyArray<Recipe> = [
       "sugar",
       "parmesan",
     ],
-    days: [0],
+    days: [0, 3, 5],
   },
 ]
 
@@ -97,6 +104,11 @@ export const RecipesPage = () => {
     setAssignDay(false)
   }
 
+  const handleClickClearWeek = () => {
+    // TODO: Add confirmation
+    setRecipes((old) => old.map((r) => ({ ...r, days: [] })))
+  }
+
   const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
     { name: "Sunday", recipes: [] },
     { name: "Monday", recipes: [] },
@@ -124,46 +136,51 @@ export const RecipesPage = () => {
               variant="outline"
             />
             <MenuList>
-              <MenuItem icon={<DeleteIcon />}>Clear week</MenuItem>
+              <MenuItem icon={<ViewIcon />} onClick={handleClickClearWeek}>
+                Expand all
+              </MenuItem>
+              <MenuItem icon={<DeleteIcon />} onClick={handleClickClearWeek}>
+                Clear week
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>
-        <List spacing={4} mb={10}>
+        <Accordion allowMultiple mb={4}>
           {days.map((day, i) => (
-            <ListItem key={day.name}>
-              {assignDay ? (
-                <Button
-                  variant="solid"
-                  colorScheme="blue"
-                  onClick={() => handleClickDay(i)}
+            <AccordionItem key={i}>
+              <AccordionButton>
+                <Box
+                  as="span"
+                  flex="1"
+                  textAlign="left"
+                  // TODO: Make current day bold and expanded
+                  fontWeight={i === 5 ? "bold" : "default"}
                 >
                   {day.name}
-                </Button>
-              ) : (
-                <Heading size="sm">{day.name}</Heading>
-              )}
-              {day.recipes.map((recipe) => (
-                <Card
-                  key={recipe.id}
-                  cursor="pointer"
-                  onClick={() => handleClickDetails(recipe)}
-                >
-                  <CardBody>
-                    <Flex>
-                      <Box flex={1}>
-                        <Text>{recipe.name}</Text>
-                        <Text fontSize="sm">
-                          {recipe.ingredients.join(", ")}
-                        </Text>
-                      </Box>
-                    </Flex>
-                  </CardBody>
-                </Card>
-              ))}
-            </ListItem>
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel pb={4}>
+                {day.recipes.map((recipe) => (
+                  <Card
+                    key={recipe.id}
+                    cursor="pointer"
+                    onClick={() => handleClickDetails(recipe)}
+                    size="sm"
+                  >
+                    <CardBody>
+                      <Flex>
+                        <Box flex={1}>
+                          <Text>{recipe.name}</Text>
+                        </Box>
+                      </Flex>
+                    </CardBody>
+                  </Card>
+                ))}
+              </AccordionPanel>
+            </AccordionItem>
           ))}
-        </List>
-
+        </Accordion>
         <Heading size="md" mb={4}>
           Recipes
         </Heading>
@@ -182,6 +199,7 @@ export const RecipesPage = () => {
             {recipes.map((recipe) => (
               <Card
                 key={recipe.id}
+                size="sm"
                 cursor="pointer"
                 onClick={() => handleClickDetails(recipe)}
               >
