@@ -3,6 +3,7 @@ import {
   DeleteIcon,
   SearchIcon,
   ViewIcon,
+  AddIcon,
 } from "@chakra-ui/icons"
 import {
   Accordion,
@@ -11,6 +12,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Card,
   CardBody,
   Flex,
@@ -181,9 +183,12 @@ export const RecipesPage = () => {
             </AccordionItem>
           ))}
         </Accordion>
-        <Heading size="md" mb={4}>
-          Recipes
-        </Heading>
+        <Flex justifyContent="space-between" alignItems="center" mb={2}>
+          <Heading size="md">Recipes</Heading>
+          <Button>
+            <AddIcon />
+          </Button>
+        </Flex>
         <Box mb={4}>
           <form>
             <InputGroup>
