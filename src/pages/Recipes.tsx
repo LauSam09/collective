@@ -17,6 +17,7 @@ import {
   CardBody,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Input,
   InputGroup,
@@ -26,6 +27,8 @@ import {
   MenuItem,
   MenuList,
   Stack,
+  Tag,
+  TagLabel,
   useDisclosure,
 } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
@@ -67,7 +70,6 @@ const initialRecipes: ReadonlyArray<Recipe> = [
 ]
 
 export const RecipesPage = () => {
-  const [assignDay, setAssignDay] = useState(false)
   const editDisclosure = useDisclosure()
   const detailsDisclose = useDisclosure()
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
@@ -92,18 +94,6 @@ export const RecipesPage = () => {
     setSelectedRecipe(undefined)
     editDisclosure.onClose()
     detailsDisclose.onClose()
-  }
-
-  const handleClickDay = (day: number) => {
-    setRecipes((old) =>
-      old.map((r) =>
-        r.id === selectedRecipe?.id
-          ? { ...r, days: [...(r.days ?? []), day] }
-          : r
-      )
-    )
-    setSelectedRecipe(undefined)
-    setAssignDay(false)
   }
 
   const handleClickClearWeek = () => {
@@ -210,8 +200,24 @@ export const RecipesPage = () => {
               >
                 <CardBody>
                   <Flex>
-                    <Box flex={1}>
-                      <Text>{recipe.name}</Text>
+                    <Box maxW="100%" flex={1}>
+                      <Flex maxW="100%" overflow="hidden">
+                        <Text whiteSpace="nowrap" mr={2}>
+                          {recipe.name}
+                        </Text>
+                        <HStack spacing={1}>
+                          {["Sun"].map((day) => (
+                            <Tag
+                              key={day}
+                              borderRadius="full"
+                              variant="solid"
+                              colorScheme="blue"
+                            >
+                              <TagLabel>{day}</TagLabel>
+                            </Tag>
+                          ))}
+                        </HStack>
+                      </Flex>
                       <Text fontSize="sm">{recipe.ingredients.join(", ")}</Text>
                     </Box>
                   </Flex>
