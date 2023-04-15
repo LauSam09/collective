@@ -44,11 +44,12 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
           <Flex justifyContent="space-between">
             <Text>{recipe?.name}</Text>
             <Flex gap={2}>
-              {/* <Button>
-                <CalendarIcon />
-              </Button> */}
-              <Button onClick={onClickEdit}><EditIcon /></Button>
-              <Button onClick={onClickDelete}><DeleteIcon /></Button>
+              <Button onClick={onClickEdit}>
+                <EditIcon />
+              </Button>
+              <Button onClick={onClickDelete}>
+                <DeleteIcon />
+              </Button>
             </Flex>
           </Flex>
         </ModalHeader>
@@ -67,9 +68,14 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                   <TagCloseButton />
                 </Tag>
               ))}
-              <Button borderRadius="full" size="xs">
-                <AddIcon />
-              </Button>
+              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <Tag key={day} borderRadius="full" variant="subtle">
+                  <TagLabel>{day}</TagLabel>
+                  <TagCloseButton>
+                    <AddIcon boxSize="12px" />
+                  </TagCloseButton>
+                </Tag>
+              ))}
             </HStack>
 
             {recipe?.url && (
