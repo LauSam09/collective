@@ -68,7 +68,20 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                   <TagCloseButton />
                 </Tag>
               ))}
-              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              {["Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <Tag
+                  key={day}
+                  borderRadius="full"
+                  variant="subtle"
+                  colorScheme="green"
+                >
+                  <TagLabel>{day}</TagLabel>
+                  <TagCloseButton>
+                    <AddIcon boxSize="12px" />
+                  </TagCloseButton>
+                </Tag>
+              ))}
+              {["Mon", "Tue"].map((day) => (
                 <Tag key={day} borderRadius="full" variant="subtle">
                   <TagLabel>{day}</TagLabel>
                   <TagCloseButton>
