@@ -1,8 +1,5 @@
 import {
-  HamburgerIcon,
-  DeleteIcon,
   SearchIcon,
-  ViewIcon,
   AddIcon,
 } from "@chakra-ui/icons"
 import {
@@ -18,14 +15,9 @@ import {
   Flex,
   Heading,
   HStack,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Stack,
   Tag,
   TagLabel,
@@ -70,14 +62,14 @@ const initialRecipes: ReadonlyArray<Recipe> = [
 ]
 
 export const RecipesPage = () => {
+  const today = new Date()
   const editDisclosure = useDisclosure()
   const detailsDisclose = useDisclosure()
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
   const [recipes, setRecipes] = useState(initialRecipes)
-
-  const today = new Date()
-  today.getDay()
-
+  const [expandedDays, setExpandedDays] = useState([today.getDay()])
+  const allDaysExpanded = expandedDays.length === 7;
+  
   const handleClickDetails = (recipe: Recipe) => {
     setSelectedRecipe(recipe)
     detailsDisclose.onOpen()
@@ -99,8 +91,25 @@ export const RecipesPage = () => {
   const handleClickClearWeek = () => {
     // TODO: Add confirmation
     setRecipes((old) => old.map((r) => ({ ...r, days: [] })))
+    setExpandedDays([])
   }
 
+  const handleToggleExpandAllDays = () => {
+    if (allDaysExpanded) {
+      setExpandedDays([])
+    } else {
+      setExpandedDays([0, 1, 2, 3, 4, 5, 6])
+    }
+  }
+
+  const handleClickDay = (day: number) => {
+    if (expandedDays.includes(day)) {
+      setExpandedDays(old => old.filter(d => d !== day))
+    } else {
+      setExpandedDays(old => [...old, day])
+    }
+  }
+  
   const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
     { name: "Sunday", recipes: [] },
     { name: "Monday", recipes: [] },
@@ -120,33 +129,20 @@ export const RecipesPage = () => {
       <Box>
         <Flex justifyContent="space-between" alignItems="center" mb={2}>
           <Heading size="md">Planning</Heading>
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Options"
-              icon={<HamburgerIcon />}
-              variant="outline"
-            />
-            <MenuList>
-              <MenuItem icon={<ViewIcon />} onClick={handleClickClearWeek}>
-                Expand all
-              </MenuItem>
-              <MenuItem icon={<DeleteIcon />} onClick={handleClickClearWeek}>
-                Clear week
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <Flex gap={2}>
+            <Button variant="outline" onClick={handleToggleExpandAllDays}>{allDaysExpanded ? "Collapse all" : "Expand all"}</Button>
+            <Button variant="outline" onClick={handleClickClearWeek}>Clear</Button>
+          </Flex>
         </Flex>
-        <Accordion allowMultiple mb={4}>
+        <Accordion allowMultiple mb={4} index={expandedDays}>
           {days.map((day, i) => (
-            <AccordionItem key={i}>
+            <AccordionItem key={i} onClick={() => handleClickDay(i)}>
               <AccordionButton>
                 <Box
                   as="span"
                   flex="1"
                   textAlign="left"
-                  // TODO: Make current day bold and expanded
-                  fontWeight={i === 5 ? "bold" : "default"}
+                  fontWeight={i === today.getDay() ? "bold" : "default"}
                 >
                   {day.name}
                 </Box>

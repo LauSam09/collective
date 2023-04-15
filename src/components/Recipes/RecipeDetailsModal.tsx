@@ -3,7 +3,6 @@ import {
   DeleteIcon,
   EditIcon,
   ExternalLinkIcon,
-  HamburgerIcon,
 } from "@chakra-ui/icons"
 import {
   Modal,
@@ -21,12 +20,6 @@ import {
   TagLabel,
   Button,
   ModalFooter,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Box,
   TagCloseButton,
 } from "@chakra-ui/react"
 
@@ -50,26 +43,13 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
         <ModalHeader>
           <Flex justifyContent="space-between">
             <Text>{recipe?.name}</Text>
-            <Box>
+            <Flex gap={2}>
               {/* <Button>
                 <CalendarIcon />
               </Button> */}
-              <Menu>
-                <MenuButton
-                  as={IconButton}
-                  aria-label="Options"
-                  icon={<HamburgerIcon />}
-                />
-                <MenuList>
-                  <MenuItem icon={<EditIcon />} onClick={onClickEdit}>
-                    Edit
-                  </MenuItem>
-                  <MenuItem icon={<DeleteIcon />} onClick={onClickDelete}>
-                    Delete
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
+              <Button onClick={onClickEdit}><EditIcon /></Button>
+              <Button onClick={onClickDelete}><DeleteIcon /></Button>
+            </Flex>
           </Flex>
         </ModalHeader>
 
