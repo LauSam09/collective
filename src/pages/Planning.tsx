@@ -13,7 +13,7 @@
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useState } from "react"
+import React, { useState, MouseEvent } from "react"
 
 import { Recipe } from "../models/recipe"
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"
@@ -81,7 +81,11 @@ export const PlanningPage = () => {
     }
   }
 
-  const handleClickDetails = (recipe: Recipe) => {
+  const handleClickDetails = (
+    event: MouseEvent<HTMLDivElement>,
+    recipe: Recipe
+  ) => {
+    event.stopPropagation()
     setSelectedRecipe(recipe)
     detailsDisclose.onOpen()
   }
@@ -130,34 +134,33 @@ export const PlanningPage = () => {
         {days.map((day, i) => (
           <AccordionItem key={i} onClick={() => handleClickDay(i)}>
             <AccordionButton>
-              <Box
-                as="span"
-                flex="1"
-                textAlign="left"
-                fontWeight={i === today.getDay() ? "bold" : "default"}
-              >
-                {day.name}
+              <Box as="span" flex="1" textAlign="left">
+                <Heading as="h3" size="sm">
+                  {day.name} {i === today.getDay() && "*"}
+                </Heading>
               </Box>
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel pb={4}>
-              {day.recipes.map((recipe) => (
-                <Card
-                  key={recipe.id}
-                  cursor="pointer"
-                  onClick={() => handleClickDetails(recipe)}
-                  size="sm"
-                  variant="filled"
-                >
-                  <CardBody>
-                    <Flex>
-                      <Box flex={1}>
-                        <Text>{recipe.name}</Text>
-                      </Box>
-                    </Flex>
-                  </CardBody>
-                </Card>
-              ))}
+              <Box>
+                {day.recipes.map((recipe) => (
+                  <Card
+                    key={recipe.id}
+                    cursor="pointer"
+                    onClick={(e) => handleClickDetails(e, recipe)}
+                    size="sm"
+                  >
+                    <CardBody>
+                      <Flex>
+                        <Box flex={1}>
+                          <Text>{recipe.name}</Text>
+                        </Box>
+                      </Flex>
+                      <Text fontSize="sm">{recipe.ingredients.join(", ")}</Text>
+                    </CardBody>
+                  </Card>
+                ))}
+              </Box>
             </AccordionPanel>
           </AccordionItem>
         ))}
