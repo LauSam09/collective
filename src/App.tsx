@@ -6,6 +6,7 @@ import { LoginPage } from "./pages/Login"
 import { Protected } from "./components/Protected"
 import { ListPage } from "./pages/List"
 import { RecipesPage } from "./pages/Recipes"
+import { PlanningPage } from "./pages/Planning"
 import "./App.css"
 
 function App() {
@@ -28,6 +29,14 @@ function App() {
             element={
               <Protected>
                 <RecipesPage />
+              </Protected>
+            }
+          />
+          <Route
+            path="/planning"
+            element={
+              <Protected>
+                <PlanningPage />
               </Protected>
             }
           />
