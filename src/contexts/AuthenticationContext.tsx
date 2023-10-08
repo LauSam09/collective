@@ -15,7 +15,7 @@ type AuthenticationContextProviderProps = {
 }
 
 export const AuthenticationProvider = (
-  props: AuthenticationContextProviderProps
+  props: AuthenticationContextProviderProps,
 ) => {
   const { children } = props
   const [state] = useState<AuthenticationState>("Loading")

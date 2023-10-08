@@ -83,7 +83,7 @@ export const PlanningPage = () => {
 
   const handleClickDetails = (
     event: MouseEvent<HTMLDivElement>,
-    recipe: Recipe
+    recipe: Recipe,
   ) => {
     event.stopPropagation()
     setSelectedRecipe(recipe)

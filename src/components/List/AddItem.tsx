@@ -26,7 +26,7 @@ export type LoadOptionsCallback = (
       label: string
       value: string
     }>
-  >
+  >,
 ) => void
 
 const DropdownIndicator = () => (
@@ -76,15 +76,15 @@ export const AddItem = () => {
   const loadOptions = (inputValue: string, callback: LoadOptionsCallback) =>
     callback(
       inMemoryOptions.filter((o) =>
-        o.name.toLowerCase().includes(inputValue.toLowerCase())
-      )
+        o.name.toLowerCase().includes(inputValue.toLowerCase()),
+      ),
     )
 
   const handleChange = (
     value: SingleValue<{
       label: string
       value: string
-    }>
+    }>,
   ) => {
     const item = inMemoryOptions.find((o) => o.value === value?.value)
 
