@@ -13,7 +13,7 @@
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import React, { useState, MouseEvent } from "react"
+import { useState, MouseEvent } from "react"
 
 import { Recipe } from "../models/recipe"
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"

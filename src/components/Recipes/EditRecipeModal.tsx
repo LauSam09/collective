@@ -1,4 +1,4 @@
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons"
+import { AddIcon } from "@chakra-ui/icons"
 import {
   Modal,
   ModalOverlay,
@@ -17,10 +17,9 @@ import {
   TagCloseButton,
   Tag,
   TagLabel,
-  
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
-import {useFieldArray, useForm} from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 
 import { Recipe } from "../../models/recipe"
 
@@ -51,9 +50,9 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
 
   const handleAddIngredient = () => {
     if (!ingredient) {
-      return;
+      return
     }
-    
+
     append(ingredient)
     setIngredient("")
   }
@@ -64,9 +63,9 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
 
     onClose()
   }
-  
+
   const ingredients: ReadonlyArray<string> = watch("ingredients")
-  
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -88,27 +87,27 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
                 <FormLabel>Notes</FormLabel>
                 <Textarea {...register("notes")} />
               </FormControl>
-              
+
               <FormControl>
                 <FormLabel>Ingredients</FormLabel>
                 <HStack wrap="wrap" rowGap="2" mb={2}>
-                  {ingredients?.map((ingredient, i) =>
-                    (
-                      <Tag key={i}>
-                        <TagLabel>{ingredient}</TagLabel>
-                        <TagCloseButton onClick={() => remove(i)}
-                        />
-                      </Tag>
-                    ))}
+                  {ingredients?.map((ingredient, i) => (
+                    <Tag key={i}>
+                      <TagLabel>{ingredient}</TagLabel>
+                      <TagCloseButton onClick={() => remove(i)} />
+                    </Tag>
+                  ))}
                 </HStack>
                 <HStack>
-                  <Input value={ingredient} onChange={(e) => setIngredient(e.target.value)} />
+                  <Input
+                    value={ingredient}
+                    onChange={(e) => setIngredient(e.target.value)}
+                  />
                   <Button type="button" onClick={handleAddIngredient}>
                     <AddIcon />
                   </Button>
                 </HStack>
               </FormControl>
-              
             </VStack>
           </ModalBody>
           <ModalFooter>
