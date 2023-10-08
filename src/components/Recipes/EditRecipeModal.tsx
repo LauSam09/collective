@@ -25,7 +25,7 @@ import { Recipe } from "../../models/recipe"
 
 interface Form {
   name: string
-  ingredients: ReadonlyArray<string>
+  ingredients: ReadonlyArray<{ name: string }>
   notes: string
   url?: string
 }
@@ -39,13 +39,19 @@ export type EditRecipeModalProps = {
 export const EditRecipeModal = (props: EditRecipeModalProps) => {
   const { isOpen, recipe, onClose } = props
   const { control, register, handleSubmit, reset, watch } = useForm<Form>({
-    defaultValues: { ...recipe },
+    defaultValues: {
+      ...recipe,
+      ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
+    },
   })
   const { append, remove } = useFieldArray({ control, name: "ingredients" })
   const [ingredient, setIngredient] = useState("")
 
   useEffect(() => {
-    reset({ ...recipe })
+    reset({
+      ...recipe,
+      ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
+    })
   }, [recipe])
 
   const handleAddIngredient = () => {
@@ -53,7 +59,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       return
     }
 
-    append(ingredient)
+    append({ name: ingredient })
     setIngredient("")
   }
 
@@ -64,7 +70,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
     onClose()
   }
 
-  const ingredients: ReadonlyArray<string> = watch("ingredients")
+  const ingredients = watch("ingredients")
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -93,7 +99,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
                 <HStack wrap="wrap" rowGap="2" mb={2}>
                   {ingredients?.map((ingredient, i) => (
                     <Tag key={i}>
-                      <TagLabel>{ingredient}</TagLabel>
+                      <TagLabel>{ingredient.name}</TagLabel>
                       <TagCloseButton onClick={() => remove(i)} />
                     </Tag>
                   ))}
