@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom"
 import App from "./App"
 import { AuthenticationProvider } from "./contexts/AuthenticationContext"
 import "./index.css"
+import FirebaseContextProvider from "./contexts/FirebaseContext"
 
 const theme = extendTheme({
   config: {
@@ -19,9 +20,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <BrowserRouter>
-        <AuthenticationProvider>
-          <App />
-        </AuthenticationProvider>
+        <FirebaseContextProvider>
+          <AuthenticationProvider>
+            <App />
+          </AuthenticationProvider>
+        </FirebaseContextProvider>
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,

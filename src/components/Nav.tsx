@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Center,
   Flex,
   Heading,
   Link,
@@ -11,7 +10,6 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  SkeletonCircle,
   Stack,
   Text,
   useColorModeValue,
@@ -21,7 +19,7 @@ import { Link as RouterLink, NavLink } from "react-router-dom"
 import { useAuthentication } from "../hooks/useAuthentication"
 
 export default function Nav() {
-  const { state } = useAuthentication()
+  const { state, user, signOut } = useAuthentication()
 
   return (
     <>
@@ -41,18 +39,18 @@ export default function Nav() {
             </Heading>
           </Box>
 
-          <Flex alignItems={"center"}>
-            <Stack direction={"row"} spacing={4} alignItems={"center"}>
-              <Link as={NavLink} to="/">
-                List
-              </Link>
-              <Link as={NavLink} to="/recipes">
-                Recipes
-              </Link>
-              <Link as={NavLink} to="/planning">
-                Planning
-              </Link>
-              {state !== "Authenticated" ? (
+          {state === "Authenticated" && (
+            <Flex alignItems={"center"}>
+              <Stack direction={"row"} spacing={4} alignItems={"center"}>
+                <Link as={NavLink} to="/">
+                  List
+                </Link>
+                <Link as={NavLink} to="/recipes">
+                  Recipes
+                </Link>
+                <Link as={NavLink} to="/planning">
+                  Planning
+                </Link>
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -61,26 +59,24 @@ export default function Nav() {
                     cursor={"pointer"}
                     minW={0}
                   >
-                    <Avatar size={"sm"} src={"Laurence"} />
+                    <Avatar size={"sm"} src={user?.displayName ?? "User"} />
                   </MenuButton>
                   <MenuList alignItems={"center"}>
-                    <Center>
-                      <p>Laurence</p>
-                    </Center>
+                    <Flex px={3} direction="column">
+                      <p>{user?.displayName}</p>
+                      <small>{user?.email}</small>
+                    </Flex>
                     <MenuDivider />
-
-                    <MenuItem>Logout</MenuItem>
+                    <MenuItem onClick={signOut}>Logout</MenuItem>
                     <MenuDivider />
-                    <Flex p={1} justifyContent="end">
+                    <Flex px={2} justifyContent="end">
                       <Text fontSize="xs">Version 3.0.0</Text>
                     </Flex>
                   </MenuList>
                 </Menu>
-              ) : (
-                <SkeletonCircle />
-              )}
-            </Stack>
-          </Flex>
+              </Stack>
+            </Flex>
+          )}
         </Flex>
       </Box>
     </>

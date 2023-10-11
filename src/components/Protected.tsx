@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
-import { Navigate, useLocation } from "react-router-dom"
+import { ReactNode, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useAuthentication } from "../hooks/useAuthentication"
 
 type ProtectedProps = {
@@ -8,10 +8,17 @@ type ProtectedProps = {
 
 export const Protected = ({ children }: ProtectedProps) => {
   const { state } = useAuthentication()
+  const navigate = useNavigate()
   const location = useLocation()
 
-  if (state === "Unauthenticated") {
-    return <Navigate to="/login" state={{ from: location }} replace />
+  useEffect(() => {
+    if (state === "Unauthenticated") {
+      navigate("/login", { state: { from: location } })
+    }
+  }, [state])
+
+  if (state !== "Authenticated") {
+    return null
   }
 
   return <>{children}</>
