@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	// Make sure the uid of the requesting user matches name of the user
+  	// document. The wildcard expression {userId} makes the userId variable
+  	// available in rules.
+    match /users/{userId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null;
+    }
+    // Ensure only users within a group can access group data.
+    match /groups/{groupId}/{document=**} {
+    	allow read, write: if request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.users
+    }
+    // Any authenticated user can create a group.
+    match /groups/{groupId} {
+    	allow create: if request.auth != null;
+    }
+    // Prevent writing or listing invitations.
+    match /invites/{inviteId} {
+      allow get: if request.auth != null;
+    }
+  }
+}
