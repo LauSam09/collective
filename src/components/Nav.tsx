@@ -45,11 +45,11 @@ export default function Nav() {
                 <Link as={NavLink} to="/">
                   List
                 </Link>
-                <Link as={NavLink} to="/recipes">
-                  Recipes
-                </Link>
                 <Link as={NavLink} to="/planning">
                   Planning
+                </Link>
+                <Link as={NavLink} to="/recipes">
+                  Recipes
                 </Link>
                 <Menu>
                   <MenuButton
