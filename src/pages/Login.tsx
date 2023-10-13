@@ -1,18 +1,10 @@
 import { Box, Button, Flex, Spinner } from "@chakra-ui/react"
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { Navigate } from "react-router-dom"
 
 import { useAuthentication } from "../hooks/useAuthentication"
 
-const provider = new GoogleAuthProvider()
-
 export const LoginPage = () => {
-  const { state } = useAuthentication()
-
-  async function handleClick() {
-    const user = await signInWithPopup(getAuth(), provider)
-    console.log(user)
-  }
+  const { state, signIn } = useAuthentication()
 
   if (state === "Loading") {
     return (
@@ -29,7 +21,7 @@ export const LoginPage = () => {
 
   return (
     <Box textAlign="center">
-      <Button onClick={handleClick}>Log in with Google</Button>
+      <Button onClick={signIn}>Log in with Google</Button>
     </Box>
   )
 }

@@ -1,14 +1,17 @@
-import { createContext, useEffect, useState } from "react"
-import { FirebaseApp, initializeApp, deleteApp } from "firebase/app"
+import { createContext } from "react"
+import { FirebaseApp, initializeApp, getApps } from "firebase/app"
+import { Analytics, getAnalytics } from "firebase/analytics"
 import "firebase/auth"
 import "firebase/firestore"
 
 type FirebaseContextType = {
-  firebaseApp: FirebaseApp | null
+  app: FirebaseApp
+  analytics: Analytics
 }
 
 export const FirebaseContext = createContext<FirebaseContextType>({
-  firebaseApp: null,
+  app: null!,
+  analytics: null!,
 })
 
 export type FirebaseContextProviderProps = {
@@ -18,10 +21,10 @@ export type FirebaseContextProviderProps = {
 const FirebaseContextProvider = ({
   children,
 }: FirebaseContextProviderProps) => {
-  const [firebaseApp, setFirebaseApp] = useState<FirebaseApp | null>(null)
+  const apps = getApps()
 
-  useEffect(() => {
-    const firebaseConfig = {
+  if (!apps.length) {
+    initializeApp({
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
       authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
       databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
@@ -30,23 +33,14 @@ const FirebaseContextProvider = ({
       messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
       appId: import.meta.env.VITE_FIREBASE_APP_ID,
       measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-    }
-
-    const app = initializeApp(firebaseConfig)
-
-    setFirebaseApp(app)
-
-    return () => {
-      deleteApp(app)
-    }
-  }, [])
-
-  if (!firebaseApp) {
-    return null
+    })
   }
 
+  const app = apps[0]
+  const analytics = getAnalytics(app)
+
   return (
-    <FirebaseContext.Provider value={{ firebaseApp }}>
+    <FirebaseContext.Provider value={{ app, analytics }}>
       {children}
     </FirebaseContext.Provider>
   )

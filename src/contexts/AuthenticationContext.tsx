@@ -7,6 +7,7 @@ import {
 } from "firebase/auth"
 
 import useFirebase from "../hooks/useFirebase"
+import { logEvent } from "firebase/analytics"
 
 type AuthenticationState = "Loading" | "Authenticated" | "Unauthenticated"
 
@@ -34,10 +35,10 @@ export const AuthenticationProvider = (
   const { children } = props
   const [state, setState] = useState<AuthenticationState>("Loading")
   const [user, setUser] = useState<User>()
-  const { firebaseApp } = useFirebase()
+  const { app, analytics } = useFirebase()
 
   useEffect(() => {
-    if (!firebaseApp) {
+    if (!app) {
       return
     }
 
@@ -56,7 +57,7 @@ export const AuthenticationProvider = (
     return () => {
       unsubscribe()
     }
-  }, [firebaseApp])
+  }, [app])
 
   const signIn = async () => {
     const auth = getAuth()
@@ -67,6 +68,8 @@ export const AuthenticationProvider = (
     } catch (error) {
       console.error(error)
     }
+
+    logEvent(analytics, "login", { method: "Google" })
   }
 
   const signOut = async () => {
@@ -77,6 +80,8 @@ export const AuthenticationProvider = (
     } catch (error) {
       console.error(error)
     }
+
+    logEvent(analytics, "logout")
   }
 
   return (
