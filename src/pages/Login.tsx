@@ -1,10 +1,18 @@
 import { Box, Button, Flex, Spinner } from "@chakra-ui/react"
-import { Navigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 
 import { useAuthentication } from "../hooks/useAuthentication"
 
 export const LoginPage = () => {
   const { state, signIn } = useAuthentication()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (state === "Authenticated") {
+      navigate("/")
+    }
+  }, [state, navigate])
 
   if (state === "Loading") {
     return (
@@ -15,8 +23,7 @@ export const LoginPage = () => {
   }
 
   if (state === "Authenticated") {
-    // TODO: Improve to use returnUrl
-    return <Navigate to="/" />
+    return null
   }
 
   return (
