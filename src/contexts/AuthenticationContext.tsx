@@ -5,10 +5,10 @@ import {
   GoogleAuthProvider,
   User,
 } from "firebase/auth"
-
-import useFirebase from "../hooks/useFirebase"
 import { logEvent } from "firebase/analytics"
 import { doc, getDoc } from "firebase/firestore"
+
+import useFirebase from "../hooks/useFirebase"
 
 type AuthenticationState = "Loading" | "Authenticated" | "Unauthenticated"
 

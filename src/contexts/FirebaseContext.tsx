@@ -1,9 +1,9 @@
 import { createContext } from "react"
 import { FirebaseApp, initializeApp, getApps } from "firebase/app"
 import { Analytics, getAnalytics } from "firebase/analytics"
+import { Firestore, getFirestore } from "firebase/firestore"
 import "firebase/auth"
 import "firebase/firestore"
-import { Firestore, getFirestore } from "firebase/firestore"
 
 type FirebaseContextType = {
   app: FirebaseApp
@@ -25,8 +25,8 @@ const FirebaseContextProvider = ({
   children,
 }: FirebaseContextProviderProps) => {
   const apps = getApps()
-
-  if (!apps.length) {
+  const app =
+    apps?.[0] ??
     initializeApp({
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
       authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -37,9 +37,7 @@ const FirebaseContextProvider = ({
       appId: import.meta.env.VITE_FIREBASE_APP_ID,
       measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
     })
-  }
 
-  const app = apps[0]
   const analytics = getAnalytics(app)
   const firestore = getFirestore(app)
 
