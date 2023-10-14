@@ -3,12 +3,10 @@ import { AddItem } from "../components/List/AddItem"
 
 import { Categories } from "../components/List/Categories"
 
-export const ListPage = () => {
-  return (
-    <Box>
-      <Categories />
-      <Box mb="12" />
-      <AddItem />
-    </Box>
-  )
-}
+export const ListPage = () => (
+  <Box>
+    <Categories />
+    <Box mb="12" />
+    <AddItem />
+  </Box>
+)

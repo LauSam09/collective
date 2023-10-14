@@ -1,6 +1,7 @@
 export interface Item {
   id: string
   name: string
-  complete: boolean
+  completed: boolean
   notes: string | undefined
+  category: string
 }

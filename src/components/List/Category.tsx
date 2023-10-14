@@ -1,4 +1,5 @@
 import { Card, CardBody, CardHeader, Heading, Stack } from "@chakra-ui/react"
+import React from "react"
 import { ReactNode } from "react"
 
 export type CategoryProps = {
@@ -15,9 +16,11 @@ export const Category = (props: CategoryProps) => {
       <CardHeader backgroundColor={`${colour}75`}>
         <Heading size="xs">{name.toLocaleUpperCase()}</Heading>
       </CardHeader>
-      <CardBody backgroundColor={`${colour}50`}>
-        <Stack gap={2}>{children}</Stack>
-      </CardBody>
+      {React.Children.count(children) > 0 && (
+        <CardBody backgroundColor={`${colour}50`}>
+          <Stack gap={2}>{children}</Stack>
+        </CardBody>
+      )}
     </Card>
   )
 }

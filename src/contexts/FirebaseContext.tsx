@@ -3,15 +3,18 @@ import { FirebaseApp, initializeApp, getApps } from "firebase/app"
 import { Analytics, getAnalytics } from "firebase/analytics"
 import "firebase/auth"
 import "firebase/firestore"
+import { Firestore, getFirestore } from "firebase/firestore"
 
 type FirebaseContextType = {
   app: FirebaseApp
   analytics: Analytics
+  firestore: Firestore
 }
 
 export const FirebaseContext = createContext<FirebaseContextType>({
   app: null!,
   analytics: null!,
+  firestore: null!,
 })
 
 export type FirebaseContextProviderProps = {
@@ -38,9 +41,10 @@ const FirebaseContextProvider = ({
 
   const app = apps[0]
   const analytics = getAnalytics(app)
+  const firestore = getFirestore(app)
 
   return (
-    <FirebaseContext.Provider value={{ app, analytics }}>
+    <FirebaseContext.Provider value={{ app, analytics, firestore }}>
       {children}
     </FirebaseContext.Provider>
   )

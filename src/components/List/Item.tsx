@@ -21,7 +21,7 @@ export type ItemProps = {
 
 export const Item = (props: ItemProps) => {
   const {
-    item: { name, complete, notes },
+    item: { name, completed, notes },
     openDetails,
     openEdit,
   } = props
@@ -29,7 +29,7 @@ export const Item = (props: ItemProps) => {
   return (
     <Flex key={name} justifyContent="space-between">
       <Checkbox
-        defaultChecked={complete}
+        defaultChecked={completed}
         size="lg"
         whiteSpace="nowrap"
         overflow="hidden"
@@ -37,8 +37,8 @@ export const Item = (props: ItemProps) => {
         className="list-checkbox"
         flex={1}
       >
-        <Box color={complete ? "gray.500" : "default"}>
-          <Text as={complete ? "s" : "p"} display="inline">
+        <Box color={completed ? "gray.500" : "default"}>
+          <Text as={completed ? "s" : "p"} display="inline">
             {name}
           </Text>
           {notes && (
