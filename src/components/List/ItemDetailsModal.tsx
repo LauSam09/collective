@@ -9,17 +9,17 @@ import {
   Button,
   Heading,
   Text,
-} from "@chakra-ui/react"
-import { Item } from "../../models/item"
+} from "@chakra-ui/react";
+import { Item } from "../../models/item";
 
 type ItemDetailsModalProps = {
-  isOpen: boolean
-  item: Item | undefined
-  onClose: () => void
-}
+  isOpen: boolean;
+  item: Item | undefined;
+  onClose: () => void;
+};
 
 export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
-  const { isOpen, item, onClose } = props
+  const { isOpen, item, onClose } = props;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -42,5 +42,5 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};

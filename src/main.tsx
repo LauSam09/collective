@@ -1,12 +1,12 @@
-import React from "react"
-import ReactDOM from "react-dom/client"
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
-import { BrowserRouter } from "react-router-dom"
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { BrowserRouter } from "react-router-dom";
 
-import App from "./App"
-import { AuthenticationProvider } from "./contexts/AuthenticationContext"
-import "./index.css"
-import FirebaseContextProvider from "./contexts/FirebaseContext"
+import App from "./App";
+import { AuthenticationProvider } from "./contexts/AuthenticationContext";
+import "./index.css";
+import FirebaseContextProvider from "./contexts/FirebaseContext";
 
 const theme = extendTheme({
   config: {
@@ -14,9 +14,9 @@ const theme = extendTheme({
     useSystemColorMode: true,
     useLocalStorage: false,
   },
-})
+});
 
-console.log("rendering")
+console.log("rendering");
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -30,4 +30,4 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
-)
+);

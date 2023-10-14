@@ -8,37 +8,37 @@ import {
   ModalFooter,
   Button,
   Textarea,
-} from "@chakra-ui/react"
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { Item } from "../../models/item"
+} from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Item } from "../../models/item";
 
 interface Form {
-  notes: string
+  notes: string;
 }
 
 export type EditItemModalProps = {
-  isOpen: boolean
-  item: Item | undefined
-  onClose: () => void
-}
+  isOpen: boolean;
+  item: Item | undefined;
+  onClose: () => void;
+};
 
 export const EditItemModal = (props: EditItemModalProps) => {
-  const { isOpen, item, onClose } = props
+  const { isOpen, item, onClose } = props;
   const { register, handleSubmit, reset } = useForm<Form>({
     defaultValues: { notes: item?.notes },
-  })
+  });
 
   useEffect(() => {
-    reset({ notes: item?.notes })
-  }, [item])
+    reset({ notes: item?.notes });
+  }, [item]);
 
   const handleSave = (item: Form) => {
     // TODO: save here
-    console.log(item)
+    console.log(item);
 
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -64,5 +64,5 @@ export const EditItemModal = (props: EditItemModalProps) => {
         </form>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};

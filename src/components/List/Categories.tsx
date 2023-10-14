@@ -4,28 +4,28 @@ import {
   onSnapshot,
   query,
   where,
-} from "firebase/firestore"
-import { useEffect, useState } from "react"
-import { Skeleton, Stack, useDisclosure } from "@chakra-ui/react"
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { Skeleton, Stack, useDisclosure } from "@chakra-ui/react";
 
-import { Category } from "./Category"
-import { EditItemModal } from "./EditItemModal"
-import { Item } from "./Item"
-import { ItemDetailsModal } from "./ItemDetailsModal"
-import useFirebase from "../../hooks/useFirebase"
-import { Item as ItemModel } from "../../models/item"
-import { Category as CategoryModel } from "../../models/category"
-import { useAuthentication } from "../../hooks/useAuthentication"
+import { Category } from "./Category";
+import { EditItemModal } from "./EditItemModal";
+import { Item } from "./Item";
+import { ItemDetailsModal } from "./ItemDetailsModal";
+import useFirebase from "../../hooks/useFirebase";
+import { Item as ItemModel } from "../../models/item";
+import { Category as CategoryModel } from "../../models/category";
+import { useAuthentication } from "../../hooks/useAuthentication";
 
 export const Categories = () => {
-  const detailsDisclosure = useDisclosure()
-  const editDisclosure = useDisclosure()
-  const [selectedItem, setSelectedItem] = useState<ItemModel>()
-  const { firestore } = useFirebase()
-  const { appUser } = useAuthentication()
-  const [categories, setCategories] = useState<Array<CategoryModel>>([])
-  const [loading, setLoading] = useState(true)
-  const [items, setItems] = useState<Array<ItemModel>>([])
+  const detailsDisclosure = useDisclosure();
+  const editDisclosure = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState<ItemModel>();
+  const { firestore } = useFirebase();
+  const { appUser } = useAuthentication();
+  const [categories, setCategories] = useState<Array<CategoryModel>>([]);
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<Array<ItemModel>>([]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -38,20 +38,20 @@ export const Categories = () => {
           appUser!.group.defaultList,
           "categories",
         ),
-      )
-      const categories: Array<CategoryModel> = []
+      );
+      const categories: Array<CategoryModel> = [];
       querySnapshot.forEach((doc) => {
         categories.push({
           ...doc.data(),
           id: doc.id,
           items: [],
-        } as unknown as CategoryModel)
-      })
-      setCategories(categories)
-      setLoading(false)
+        } as unknown as CategoryModel);
+      });
+      setCategories(categories);
+      setLoading(false);
     }
 
-    fetchCategories()
+    fetchCategories();
 
     const q = query(
       collection(
@@ -63,30 +63,30 @@ export const Categories = () => {
         "items",
       ),
       where("added", "==", true),
-    )
+    );
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const items: Array<ItemModel> = []
+      const items: Array<ItemModel> = [];
       querySnapshot.forEach((doc) => {
-        items.push({ ...doc.data(), id: doc.id } as unknown as ItemModel)
-      })
-      setItems(items)
-    })
+        items.push({ ...doc.data(), id: doc.id } as unknown as ItemModel);
+      });
+      setItems(items);
+    });
 
     return () => {
-      unsubscribe()
-    }
-  }, [])
+      unsubscribe();
+    };
+  }, []);
 
   const handleOpenDetails = (item: ItemModel) => {
-    setSelectedItem(item)
-    detailsDisclosure.onOpen()
-  }
+    setSelectedItem(item);
+    detailsDisclosure.onOpen();
+  };
 
   const handleOpenEdit = (item: ItemModel) => {
-    setSelectedItem(item)
-    editDisclosure.onOpen()
-  }
+    setSelectedItem(item);
+    editDisclosure.onOpen();
+  };
 
   if (loading) {
     return (
@@ -101,7 +101,7 @@ export const Categories = () => {
           </Skeleton>
         ))}
       </Stack>
-    )
+    );
   }
 
   const displayCategories: Array<CategoryModel> = categories
@@ -109,7 +109,7 @@ export const Categories = () => {
       ...category,
       items: items.filter((item) => item.category === category.id),
     }))
-    .sort((a, b) => a.order - b.order)
+    .sort((a, b) => a.order - b.order);
 
   // TODO: Handle uncategorised. Doing .forEach results in duplicate items.
 
@@ -132,5 +132,5 @@ export const Categories = () => {
       <ItemDetailsModal {...detailsDisclosure} item={selectedItem} />
       <EditItemModal {...editDisclosure} item={selectedItem} />
     </>
-  )
-}
+  );
+};

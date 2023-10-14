@@ -3,7 +3,7 @@ import {
   DeleteIcon,
   EditIcon,
   ExternalLinkIcon,
-} from "@chakra-ui/icons"
+} from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -21,20 +21,20 @@ import {
   Button,
   ModalFooter,
   TagCloseButton,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 
-import { Recipe } from "../../models/recipe"
+import { Recipe } from "../../models/recipe";
 
 export type RecipeDetailsModalProps = {
-  isOpen: boolean
-  recipe: Recipe | undefined
-  onClose: () => void
-  onClickEdit: () => void
-  onClickDelete: () => void
-}
+  isOpen: boolean;
+  recipe: Recipe | undefined;
+  onClose: () => void;
+  onClickEdit: () => void;
+  onClickDelete: () => void;
+};
 
 export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
-  const { isOpen, recipe, onClose, onClickEdit, onClickDelete } = props
+  const { isOpen, recipe, onClose, onClickEdit, onClickDelete } = props;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -137,5 +137,5 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};

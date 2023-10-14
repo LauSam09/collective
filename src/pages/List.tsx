@@ -1,7 +1,7 @@
-import { Box } from "@chakra-ui/react"
-import { AddItem } from "../components/List/AddItem"
+import { Box } from "@chakra-ui/react";
+import { AddItem } from "../components/List/AddItem";
 
-import { Categories } from "../components/List/Categories"
+import { Categories } from "../components/List/Categories";
 
 export const ListPage = () => (
   <Box>
@@ -9,4 +9,4 @@ export const ListPage = () => (
     <Box mb="12" />
     <AddItem />
   </Box>
-)
+);

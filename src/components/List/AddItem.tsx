@@ -1,4 +1,4 @@
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons"
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
   Modal,
@@ -10,39 +10,39 @@ import {
   Select,
   Stack,
   useDisclosure,
-} from "@chakra-ui/react"
-import { createRef, FormEvent, useState } from "react"
-import { OptionsOrGroups, GroupBase, SingleValue } from "react-select"
-import AsyncSelect from "react-select/async-creatable"
-import ReactSelect from "react-select/dist/declarations/src/Select"
+} from "@chakra-ui/react";
+import { createRef, FormEvent, useState } from "react";
+import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
+import AsyncSelect from "react-select/async-creatable";
+import ReactSelect from "react-select/dist/declarations/src/Select";
 
 export type LoadOptionsCallback = (
   options: OptionsOrGroups<
     {
-      label: string
-      value: string
+      label: string;
+      value: string;
     },
     GroupBase<{
-      label: string
-      value: string
+      label: string;
+      value: string;
     }>
   >,
-) => void
+) => void;
 
 const DropdownIndicator = () => (
   <ChevronDownIcon width="20px" height="20px" mx="8px" />
-)
+);
 
 export type SelectRef = ReactSelect<
   { label: string; value: string },
   false,
   GroupBase<{ label: string; value: string }>
->
+>;
 
 export const AddItem = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure()
-  const inputRef = createRef<SelectRef>()
-  const [category, setCategory] = useState<string>()
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const inputRef = createRef<SelectRef>();
+  const [category, setCategory] = useState<string>();
 
   if (!isOpen) {
     return (
@@ -58,7 +58,7 @@ export const AddItem = () => {
       >
         <AddIcon />
       </Button>
-    )
+    );
   }
 
   const inMemoryOptions = [
@@ -71,40 +71,40 @@ export const AddItem = () => {
       category: "3",
     },
     { name: "potatoes", label: "potatoes", value: "potatoes", category: "1" },
-  ]
+  ];
 
   const loadOptions = (inputValue: string, callback: LoadOptionsCallback) =>
     callback(
       inMemoryOptions.filter((o) =>
         o.name.toLowerCase().includes(inputValue.toLowerCase()),
       ),
-    )
+    );
 
   const handleChange = (
     value: SingleValue<{
-      label: string
-      value: string
+      label: string;
+      value: string;
     }>,
   ) => {
-    const item = inMemoryOptions.find((o) => o.value === value?.value)
+    const item = inMemoryOptions.find((o) => o.value === value?.value);
 
     if (item) {
-      setCategory(item.category)
+      setCategory(item.category);
     } else {
-      setCategory(undefined)
+      setCategory(undefined);
     }
-  }
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const value = (e.currentTarget.elements[1] as HTMLInputElement).value
+    const value = (e.currentTarget.elements[1] as HTMLInputElement).value;
 
-    inputRef.current?.clearValue()
-    inputRef.current?.focus()
+    inputRef.current?.clearValue();
+    inputRef.current?.focus();
 
-    console.log(`item: ${value}, category: ${category}`)
-  }
+    console.log(`item: ${value}, category: ${category}`);
+  };
 
   return (
     <Modal
@@ -151,5 +151,5 @@ export const AddItem = () => {
         </form>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};

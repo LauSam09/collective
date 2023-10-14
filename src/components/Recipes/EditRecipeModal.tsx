@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons"
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -17,60 +17,60 @@ import {
   TagCloseButton,
   Tag,
   TagLabel,
-} from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import { useFieldArray, useForm } from "react-hook-form"
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 
-import { Recipe } from "../../models/recipe"
+import { Recipe } from "../../models/recipe";
 
 interface Form {
-  name: string
-  ingredients: ReadonlyArray<{ name: string }>
-  notes: string
-  url?: string
+  name: string;
+  ingredients: ReadonlyArray<{ name: string }>;
+  notes: string;
+  url?: string;
 }
 
 export type EditRecipeModalProps = {
-  isOpen: boolean
-  recipe: Recipe | undefined
-  onClose: () => void
-}
+  isOpen: boolean;
+  recipe: Recipe | undefined;
+  onClose: () => void;
+};
 
 export const EditRecipeModal = (props: EditRecipeModalProps) => {
-  const { isOpen, recipe, onClose } = props
+  const { isOpen, recipe, onClose } = props;
   const { control, register, handleSubmit, reset, watch } = useForm<Form>({
     defaultValues: {
       ...recipe,
       ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
     },
-  })
-  const { append, remove } = useFieldArray({ control, name: "ingredients" })
-  const [ingredient, setIngredient] = useState("")
+  });
+  const { append, remove } = useFieldArray({ control, name: "ingredients" });
+  const [ingredient, setIngredient] = useState("");
 
   useEffect(() => {
     reset({
       ...recipe,
       ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
-    })
-  }, [recipe])
+    });
+  }, [recipe]);
 
   const handleAddIngredient = () => {
     if (!ingredient) {
-      return
+      return;
     }
 
-    append({ name: ingredient })
-    setIngredient("")
-  }
+    append({ name: ingredient });
+    setIngredient("");
+  };
 
   const handleSave = (recipe: Form) => {
     // TODO: save here
-    console.log(recipe)
+    console.log(recipe);
 
-    onClose()
-  }
+    onClose();
+  };
 
-  const ingredients = watch("ingredients")
+  const ingredients = watch("ingredients");
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -127,5 +127,5 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
         </form>
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};

@@ -1,4 +1,9 @@
-import { HamburgerIcon, EditIcon, DeleteIcon, InfoIcon } from "@chakra-ui/icons"
+import {
+  HamburgerIcon,
+  EditIcon,
+  DeleteIcon,
+  InfoIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Checkbox,
@@ -9,22 +14,22 @@ import {
   MenuItem,
   MenuList,
   Text,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 
-import { Item as ItemModel } from "../../models/item"
+import { Item as ItemModel } from "../../models/item";
 
 export type ItemProps = {
-  item: ItemModel
-  openDetails: () => void
-  openEdit: () => void
-}
+  item: ItemModel;
+  openDetails: () => void;
+  openEdit: () => void;
+};
 
 export const Item = (props: ItemProps) => {
   const {
     item: { name, completed, notes },
     openDetails,
     openEdit,
-  } = props
+  } = props;
 
   return (
     <Flex key={name} justifyContent="space-between">
@@ -66,5 +71,5 @@ export const Item = (props: ItemProps) => {
         </MenuList>
       </Menu>
     </Flex>
-  )
-}
+  );
+};

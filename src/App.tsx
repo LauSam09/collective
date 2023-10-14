@@ -1,13 +1,13 @@
-import { Route, Routes } from "react-router-dom"
-import { Box } from "@chakra-ui/react"
+import { Route, Routes } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
 
-import Nav from "./components/Nav"
-import { LoginPage } from "./pages/Login"
-import { Protected } from "./components/Protected"
-import { ListPage } from "./pages/List"
-import { RecipesPage } from "./pages/Recipes"
-import { PlanningPage } from "./pages/Planning"
-import "./App.css"
+import Nav from "./components/Nav";
+import { LoginPage } from "./pages/Login";
+import { Protected } from "./components/Protected";
+import { ListPage } from "./pages/List";
+import { RecipesPage } from "./pages/Recipes";
+import { PlanningPage } from "./pages/Planning";
+import "./App.css";
 
 function App() {
   return (
@@ -43,7 +43,7 @@ function App() {
         </Routes>
       </Box>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

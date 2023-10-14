@@ -12,12 +12,12 @@
   Heading,
   Text,
   useDisclosure,
-} from "@chakra-ui/react"
-import { useState, MouseEvent } from "react"
+} from "@chakra-ui/react";
+import { useState, MouseEvent } from "react";
 
-import { Recipe } from "../models/recipe"
-import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"
-import { EditRecipeModal } from "../components/Recipes/EditRecipeModal"
+import { Recipe } from "../models/recipe";
+import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
+import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 
 const initialRecipes: ReadonlyArray<Recipe> = [
   {
@@ -48,60 +48,60 @@ const initialRecipes: ReadonlyArray<Recipe> = [
     ],
     days: [0, 3, 5],
   },
-]
+];
 
 export const PlanningPage = () => {
-  const today = new Date()
-  const [recipes, setRecipes] = useState(initialRecipes)
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
-  const editDisclosure = useDisclosure()
-  const detailsDisclose = useDisclosure()
-  const [expandedDays, setExpandedDays] = useState([today.getDay()])
-  const allDaysExpanded = expandedDays.length === 7
+  const today = new Date();
+  const [recipes, setRecipes] = useState(initialRecipes);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
+  const editDisclosure = useDisclosure();
+  const detailsDisclose = useDisclosure();
+  const [expandedDays, setExpandedDays] = useState([today.getDay()]);
+  const allDaysExpanded = expandedDays.length === 7;
 
   const handleClickDay = (day: number) => {
     if (expandedDays.includes(day)) {
-      setExpandedDays((old) => old.filter((d) => d !== day))
+      setExpandedDays((old) => old.filter((d) => d !== day));
     } else {
-      setExpandedDays((old) => [...old, day])
+      setExpandedDays((old) => [...old, day]);
     }
-  }
+  };
 
   const handleClickClearWeek = () => {
     // TODO: Add confirmation
-    setRecipes((old) => old.map((r) => ({ ...r, days: [] })))
-    setExpandedDays([])
-  }
+    setRecipes((old) => old.map((r) => ({ ...r, days: [] })));
+    setExpandedDays([]);
+  };
 
   const handleToggleExpandAllDays = () => {
     if (allDaysExpanded) {
-      setExpandedDays([])
+      setExpandedDays([]);
     } else {
-      setExpandedDays([0, 1, 2, 3, 4, 5, 6])
+      setExpandedDays([0, 1, 2, 3, 4, 5, 6]);
     }
-  }
+  };
 
   const handleClickDetails = (
     event: MouseEvent<HTMLDivElement>,
     recipe: Recipe,
   ) => {
-    event.stopPropagation()
-    setSelectedRecipe(recipe)
-    detailsDisclose.onOpen()
-  }
+    event.stopPropagation();
+    setSelectedRecipe(recipe);
+    detailsDisclose.onOpen();
+  };
 
   const handleClickDetailsEdit = () => {
-    detailsDisclose.onClose()
-    editDisclosure.onOpen()
-  }
+    detailsDisclose.onClose();
+    editDisclosure.onOpen();
+  };
 
   const handleClickDelete = () => {
     // TODO: Add confirmation
-    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id))
-    setSelectedRecipe(undefined)
-    editDisclosure.onClose()
-    detailsDisclose.onClose()
-  }
+    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id));
+    setSelectedRecipe(undefined);
+    editDisclosure.onClose();
+    detailsDisclose.onClose();
+  };
 
   const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
     { name: "Sunday", recipes: [] },
@@ -111,10 +111,10 @@ export const PlanningPage = () => {
     { name: "Thursday", recipes: [] },
     { name: "Friday", recipes: [] },
     { name: "Saturday", recipes: [] },
-  ]
+  ];
 
   for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
-    recipe.days?.forEach((d) => days[d].recipes.push(recipe))
+    recipe.days?.forEach((d) => days[d].recipes.push(recipe));
   }
 
   return (
@@ -173,5 +173,5 @@ export const PlanningPage = () => {
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </Box>
-  )
-}
+  );
+};

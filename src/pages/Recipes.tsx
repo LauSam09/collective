@@ -1,4 +1,4 @@
-import { SearchIcon, AddIcon } from "@chakra-ui/icons"
+import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -14,13 +14,13 @@ import {
   Tag,
   TagLabel,
   useDisclosure,
-} from "@chakra-ui/react"
-import { Text } from "@chakra-ui/react"
-import { useState } from "react"
+} from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
+import { useState } from "react";
 
-import { EditRecipeModal } from "../components/Recipes/EditRecipeModal"
-import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal"
-import { Recipe } from "../models/recipe"
+import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
+import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
+import { Recipe } from "../models/recipe";
 
 const initialRecipes: ReadonlyArray<Recipe> = [
   {
@@ -51,31 +51,31 @@ const initialRecipes: ReadonlyArray<Recipe> = [
     ],
     days: [0, 3, 5],
   },
-]
+];
 
 export const RecipesPage = () => {
-  const editDisclosure = useDisclosure()
-  const detailsDisclose = useDisclosure()
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
-  const [recipes, setRecipes] = useState(initialRecipes)
+  const editDisclosure = useDisclosure();
+  const detailsDisclose = useDisclosure();
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
+  const [recipes, setRecipes] = useState(initialRecipes);
 
   const handleClickDetails = (recipe: Recipe) => {
-    setSelectedRecipe(recipe)
-    detailsDisclose.onOpen()
-  }
+    setSelectedRecipe(recipe);
+    detailsDisclose.onOpen();
+  };
 
   const handleClickDetailsEdit = () => {
-    detailsDisclose.onClose()
-    editDisclosure.onOpen()
-  }
+    detailsDisclose.onClose();
+    editDisclosure.onOpen();
+  };
 
   const handleClickDelete = () => {
     // TODO: Add confirmation
-    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id))
-    setSelectedRecipe(undefined)
-    editDisclosure.onClose()
-    detailsDisclose.onClose()
-  }
+    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id));
+    setSelectedRecipe(undefined);
+    editDisclosure.onClose();
+    detailsDisclose.onClose();
+  };
 
   return (
     <>
@@ -142,5 +142,5 @@ export const RecipesPage = () => {
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </>
-  )
-}
+  );
+};

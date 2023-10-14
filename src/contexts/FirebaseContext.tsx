@@ -1,30 +1,30 @@
-import { createContext } from "react"
-import { FirebaseApp, initializeApp, getApps } from "firebase/app"
-import { Analytics, getAnalytics } from "firebase/analytics"
-import { Firestore, getFirestore } from "firebase/firestore"
-import "firebase/auth"
-import "firebase/firestore"
+import { createContext } from "react";
+import { FirebaseApp, initializeApp, getApps } from "firebase/app";
+import { Analytics, getAnalytics } from "firebase/analytics";
+import { Firestore, getFirestore } from "firebase/firestore";
+import "firebase/auth";
+import "firebase/firestore";
 
 type FirebaseContextType = {
-  app: FirebaseApp
-  analytics: Analytics
-  firestore: Firestore
-}
+  app: FirebaseApp;
+  analytics: Analytics;
+  firestore: Firestore;
+};
 
 export const FirebaseContext = createContext<FirebaseContextType>({
   app: null!,
   analytics: null!,
   firestore: null!,
-})
+});
 
 export type FirebaseContextProviderProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 const FirebaseContextProvider = ({
   children,
 }: FirebaseContextProviderProps) => {
-  const apps = getApps()
+  const apps = getApps();
   const app =
     apps?.[0] ??
     initializeApp({
@@ -36,16 +36,16 @@ const FirebaseContextProvider = ({
       messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
       appId: import.meta.env.VITE_FIREBASE_APP_ID,
       measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-    })
+    });
 
-  const analytics = getAnalytics(app)
-  const firestore = getFirestore(app)
+  const analytics = getAnalytics(app);
+  const firestore = getFirestore(app);
 
   return (
     <FirebaseContext.Provider value={{ app, analytics, firestore }}>
       {children}
     </FirebaseContext.Provider>
-  )
-}
+  );
+};
 
-export default FirebaseContextProvider
+export default FirebaseContextProvider;

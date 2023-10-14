@@ -13,14 +13,14 @@ import {
   Stack,
   Text,
   useColorModeValue,
-} from "@chakra-ui/react"
-import { Link as RouterLink, NavLink } from "react-router-dom"
+} from "@chakra-ui/react";
+import { Link as RouterLink, NavLink } from "react-router-dom";
 
-import { useAuthentication } from "../hooks/useAuthentication"
-import { version } from "../../package.json"
+import { useAuthentication } from "../hooks/useAuthentication";
+import { version } from "../../package.json";
 
 export default function Nav() {
-  const { state, user, signOut } = useAuthentication()
+  const { state, user, signOut } = useAuthentication();
 
   return (
     <>
@@ -81,5 +81,5 @@ export default function Nav() {
         </Flex>
       </Box>
     </>
-  )
+  );
 }
