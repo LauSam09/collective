@@ -17,6 +17,7 @@ import {
 import { Link as RouterLink, NavLink } from "react-router-dom"
 
 import { useAuthentication } from "../hooks/useAuthentication"
+import { version } from "../../package.json"
 
 export default function Nav() {
   const { state, user, signOut } = useAuthentication()
@@ -70,7 +71,7 @@ export default function Nav() {
                     <MenuItem onClick={signOut}>Logout</MenuItem>
                     <MenuDivider />
                     <Flex px={2} justifyContent="end">
-                      <Text fontSize="xs">Version 3.0.0</Text>
+                      <Text fontSize="xs">Version {version}</Text>
                     </Flex>
                   </MenuList>
                 </Menu>
