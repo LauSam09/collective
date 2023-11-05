@@ -15,8 +15,11 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
+import { doc, updateDoc } from "firebase/firestore";
 
 import { Item as ItemModel } from "../../models/item";
+import useFirebase from "../../hooks/useFirebase";
+import { useAuthentication } from "../../hooks/useAuthentication";
 
 export type ItemProps = {
   item: ItemModel;
@@ -26,14 +29,29 @@ export type ItemProps = {
 
 export const Item = (props: ItemProps) => {
   const {
-    item: { name, completed, notes },
+    item: { id, name, completed, notes },
     openDetails,
     openEdit,
   } = props;
+  const { firestore } = useFirebase();
+  const { appUser } = useAuthentication();
+
+  const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const completed = e.target.checked;
+    if (typeof completed !== "boolean") {
+      return;
+    }
+
+    const itemRef = doc(firestore, "groups", appUser!.group.id, "lists", appUser!.group.defaultList, "items", id);
+    await updateDoc(itemRef, {
+      completed
+    })
+  }
 
   return (
     <Flex key={name} justifyContent="space-between">
       <Checkbox
+        onChange={handleCheckboxChange}
         defaultChecked={completed}
         size="lg"
         whiteSpace="nowrap"
