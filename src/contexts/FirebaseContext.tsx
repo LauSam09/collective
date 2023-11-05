@@ -1,7 +1,11 @@
 import { createContext } from "react";
 import { FirebaseApp, initializeApp, getApps } from "firebase/app";
 import { Analytics, getAnalytics } from "firebase/analytics";
-import { Firestore, initializeFirestore, persistentLocalCache } from "firebase/firestore";
+import {
+  Firestore,
+  initializeFirestore,
+  persistentLocalCache,
+} from "firebase/firestore";
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -40,7 +44,7 @@ const FirebaseContextProvider = ({
 
   const analytics = getAnalytics(app);
   const firestore = initializeFirestore(app, {
-    localCache: persistentLocalCache()
+    localCache: persistentLocalCache(),
   });
 
   return (

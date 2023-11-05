@@ -8,7 +8,7 @@ import {
 import { logEvent } from "firebase/analytics";
 import { doc, getDoc } from "firebase/firestore";
 
-import useFirebase from "../hooks/useFirebase";
+import { useFirebase } from "../hooks";
 
 type AuthenticationState = "Loading" | "Authenticated" | "Unauthenticated";
 

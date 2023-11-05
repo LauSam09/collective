@@ -12,10 +12,9 @@ import { Category } from "./Category";
 import { EditItemModal } from "./EditItemModal";
 import { Item } from "./Item";
 import { ItemDetailsModal } from "./ItemDetailsModal";
-import useFirebase from "../../hooks/useFirebase";
+import { useFirebase, useAuthentication } from "../../hooks";
 import { Item as ItemModel } from "../../models/item";
 import { Category as CategoryModel } from "../../models/category";
-import { useAuthentication } from "../../hooks/useAuthentication";
 
 export const Categories = () => {
   const detailsDisclosure = useDisclosure();
