@@ -1,9 +1,4 @@
-import {
-  HamburgerIcon,
-  EditIcon,
-  DeleteIcon,
-  InfoIcon,
-} from "@chakra-ui/icons";
+import { HamburgerIcon, EditIcon, InfoIcon, MinusIcon } from "@chakra-ui/icons";
 import {
   Box,
   Checkbox,
@@ -15,7 +10,7 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 import { Item as ItemModel } from "../../models/item";
 
@@ -61,6 +56,27 @@ export const Item = (props: ItemProps) => {
     logEvent(analytics, "toggle_completion", { completed });
   };
 
+  const handleRemoveClick = async () => {
+    const itemRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "lists",
+      appUser!.group.defaultList,
+      "items",
+      id,
+    );
+
+    await updateDoc(itemRef, {
+      added: false,
+      completed: false,
+      notes: "",
+      count: increment(-1),
+    });
+
+    logEvent(analytics, "item_removal");
+  };
+
   return (
     <Flex key={name} justifyContent="space-between">
       <Checkbox
@@ -98,7 +114,9 @@ export const Item = (props: ItemProps) => {
           <MenuItem icon={<EditIcon />} onClick={openEdit}>
             Edit
           </MenuItem>
-          <MenuItem icon={<DeleteIcon />}>Delete</MenuItem>
+          <MenuItem icon={<MinusIcon />} onClick={handleRemoveClick}>
+            Remove
+          </MenuItem>
         </MenuList>
       </Menu>
     </Flex>
