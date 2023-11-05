@@ -20,6 +20,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { Item as ItemModel } from "../../models/item";
 
 import { useFirebase, useAuthentication } from "../../hooks";
+import { logEvent } from "firebase/analytics";
 
 export type ItemProps = {
   item: ItemModel;
@@ -33,7 +34,7 @@ export const Item = (props: ItemProps) => {
     openDetails,
     openEdit,
   } = props;
-  const { firestore } = useFirebase();
+  const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
 
   const handleCheckboxChange = async (
@@ -56,6 +57,8 @@ export const Item = (props: ItemProps) => {
     await updateDoc(itemRef, {
       completed,
     });
+
+    logEvent(analytics, "toggle_completion", { completed });
   };
 
   return (
