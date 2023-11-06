@@ -7,6 +7,7 @@ import App from "./App";
 import { AuthenticationProvider } from "./contexts/AuthenticationContext";
 import "./index.css";
 import FirebaseContextProvider from "./contexts/FirebaseContext";
+import { ListContextProvider } from "./contexts/ListContext";
 
 const theme = extendTheme({
   config: {
@@ -22,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <BrowserRouter>
         <FirebaseContextProvider>
           <AuthenticationProvider>
-            <App />
+            <ListContextProvider>
+              <App />
+            </ListContextProvider>
           </AuthenticationProvider>
         </FirebaseContextProvider>
       </BrowserRouter>
