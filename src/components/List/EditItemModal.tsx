@@ -11,7 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { doc, updateDoc } from "firebase/firestore";
+import { logEvent } from "firebase/analytics";
+
 import { Item } from "../../models/item";
+import { useAuthentication, useFirebase } from "../../hooks";
 
 interface Form {
   notes: string;
@@ -28,14 +32,30 @@ export const EditItemModal = (props: EditItemModalProps) => {
   const { register, handleSubmit, reset } = useForm<Form>({
     defaultValues: { notes: item?.notes },
   });
+  const { firestore, analytics } = useFirebase();
+  const { appUser } = useAuthentication();
 
   useEffect(() => {
     reset({ notes: item?.notes });
   }, [item]);
 
-  const handleSave = (item: Form) => {
-    // TODO: save here
-    console.log(item);
+  const handleSave = async (item: Form) => {
+    if (item.notes !== props.item?.notes) {
+      const itemRef = doc(
+        firestore,
+        "groups",
+        appUser!.group.id,
+        "lists",
+        appUser!.group.defaultList,
+        "items",
+        props.item!.id,
+      );
+      await updateDoc(itemRef, {
+        notes: item.notes,
+      });
+
+      logEvent(analytics, "edit_item_details");
+    }
 
     onClose();
   };

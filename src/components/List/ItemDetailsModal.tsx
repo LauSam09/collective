@@ -30,8 +30,8 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
         <ModalBody>
           <Heading size="sm">Notes</Heading>
           <Text mb="1rem">{item?.notes ? item.notes : "n/a"}</Text>
-          <Heading size="sm">Recipes</Heading>
-          <Text>TODO: A list of active recipes that this item is used in</Text>
+          {/* <Heading size="sm">Recipes</Heading>
+          <Text>TODO: A list of active recipes that this item is used in</Text> */}
         </ModalBody>
 
         <ModalFooter>
