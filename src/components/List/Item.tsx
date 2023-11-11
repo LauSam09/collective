@@ -11,11 +11,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { doc, updateDoc, increment } from "firebase/firestore";
+import { logEvent } from "firebase/analytics";
 
 import { Item as ItemModel } from "../../models/item";
 
 import { useFirebase, useAuthentication } from "../../hooks";
-import { logEvent } from "firebase/analytics";
 
 export type ItemProps = {
   item: ItemModel;

@@ -11,11 +11,12 @@ import { Item as ItemModel } from "../../models/item";
 import { Category as CategoryModel } from "../../models/category";
 import { useList } from "../../hooks/useList";
 import { useAuthentication, useFirebase } from "../../hooks";
+import { logEvent } from "firebase/analytics";
 
 export const Categories = () => {
   const detailsDisclosure = useDisclosure();
   const editDisclosure = useDisclosure();
-  const { firestore } = useFirebase();
+  const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<ItemModel>();
   const { isLoading: loading, categories, addedItems: items } = useList();
@@ -52,6 +53,8 @@ export const Categories = () => {
     }
 
     batch.commit();
+
+    logEvent(analytics, "clear_completed");
   };
 
   if (loading) {
