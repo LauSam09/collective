@@ -6,4 +6,5 @@ export interface Item {
   completed: boolean;
   notes: string | undefined;
   category: string;
+  count: number;
 }

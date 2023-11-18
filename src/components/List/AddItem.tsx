@@ -15,7 +15,13 @@ import { createRef, FormEvent, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  increment,
+  updateDoc,
+} from "firebase/firestore";
 
 import { useList } from "../../hooks/useList";
 import { useAuthentication, useFirebase } from "../../hooks";
@@ -105,6 +111,7 @@ export const AddItem = () => {
         notes: "",
         completed: false,
         added: false,
+        count: 0,
       });
     } else {
       setCategory(undefined);
@@ -132,6 +139,7 @@ export const AddItem = () => {
       await updateDoc(itemRef, {
         added: true,
         category: category ?? categories[0].id,
+        count: increment(1),
       });
     } else {
       await addDoc(
@@ -144,9 +152,13 @@ export const AddItem = () => {
           "items",
         ),
         {
-          ...selectedItem,
+          name: selectedItem.name,
+          lowerName: selectedItem.lowerName,
+          completed: false,
+          notes: undefined,
           added: true,
           category: category ?? categories[0].id,
+          count: 1,
         },
       );
     }
