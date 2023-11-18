@@ -22,6 +22,7 @@ import {
   increment,
   updateDoc,
 } from "firebase/firestore";
+import { logEvent } from "firebase/analytics";
 
 import { useList } from "../../hooks/useList";
 import { useAuthentication, useFirebase } from "../../hooks";
@@ -55,7 +56,7 @@ export const AddItem = () => {
   const inputRef = createRef<SelectRef>();
   const [category, setCategory] = useState<string>();
   const { unaddedItems, categories } = useList();
-  const { firestore } = useFirebase();
+  const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<Item>();
 
@@ -141,6 +142,7 @@ export const AddItem = () => {
         category: category ?? categories[0].id,
         count: increment(1),
       });
+      logEvent(analytics, "add_item");
     } else {
       await addDoc(
         collection(
@@ -161,6 +163,7 @@ export const AddItem = () => {
           count: 1,
         },
       );
+      logEvent(analytics, "create_item");
     }
 
     inputRef.current?.clearValue();
