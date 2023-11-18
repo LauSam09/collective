@@ -15,9 +15,10 @@ import { createRef, FormEvent, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+
 import { useList } from "../../hooks/useList";
 import { useAuthentication, useFirebase } from "../../hooks";
-import { doc, updateDoc } from "firebase/firestore";
 import { Item } from "../../models/item";
 
 export type LoadOptionsCallback = (
@@ -92,37 +93,67 @@ export const AddItem = () => {
   ) => {
     const item = unaddedItems.find((o) => o.lowerName === value?.value);
 
-    setSelectedItem(item);
-
     if (item) {
       setCategory(item.category);
+      setSelectedItem(item);
+    } else if (value?.value) {
+      setSelectedItem({
+        id: "",
+        name: value.value,
+        lowerName: value.value.toLowerCase(),
+        category: category ?? categories[0].id,
+        notes: "",
+        completed: false,
+        added: false,
+      });
     } else {
       setCategory(undefined);
+      setSelectedItem(undefined);
     }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    inputRef.current?.clearValue();
-    inputRef.current?.focus();
-
     if (!selectedItem) {
       return;
     }
 
-    const itemRef = doc(
-      firestore,
-      "groups",
-      appUser!.group.id,
-      "lists",
-      appUser!.group.defaultList,
-      "items",
-      selectedItem.id,
-    );
-    await updateDoc(itemRef, {
-      added: true,
-    });
+    if (selectedItem.id) {
+      const itemRef = doc(
+        firestore,
+        "groups",
+        appUser!.group.id,
+        "lists",
+        appUser!.group.defaultList,
+        "items",
+        selectedItem.id,
+      );
+      await updateDoc(itemRef, {
+        added: true,
+        category: category ?? categories[0].id,
+      });
+    } else {
+      await addDoc(
+        collection(
+          firestore,
+          "groups",
+          appUser!.group.id,
+          "lists",
+          appUser!.group.defaultList,
+          "items",
+        ),
+        {
+          ...selectedItem,
+          added: true,
+          category: category ?? categories[0].id,
+        },
+      );
+    }
+
+    inputRef.current?.clearValue();
+    inputRef.current?.focus();
+    setSelectedItem(undefined);
   };
 
   return (
@@ -141,6 +172,10 @@ export const AddItem = () => {
             <Stack>
               <AsyncSelect
                 name="item"
+                value={{
+                  label: selectedItem?.name ?? "",
+                  value: selectedItem?.name ?? "",
+                }}
                 isClearable
                 components={{ DropdownIndicator }}
                 loadOptions={loadOptions}
@@ -152,7 +187,6 @@ export const AddItem = () => {
                 value={category}
                 onChange={(e) => setCategory(e.currentTarget.value)}
               >
-                <option value="0"> - </option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
