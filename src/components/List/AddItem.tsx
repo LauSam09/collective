@@ -15,6 +15,10 @@ import { createRef, FormEvent, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
+import { useList } from "../../hooks/useList";
+import { useAuthentication, useFirebase } from "../../hooks";
+import { doc, updateDoc } from "firebase/firestore";
+import { Item } from "../../models/item";
 
 export type LoadOptionsCallback = (
   options: OptionsOrGroups<
@@ -43,6 +47,10 @@ export const AddItem = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const inputRef = createRef<SelectRef>();
   const [category, setCategory] = useState<string>();
+  const { unaddedItems, categories } = useList();
+  const { firestore } = useFirebase();
+  const { appUser } = useAuthentication();
+  const [selectedItem, setSelectedItem] = useState<Item>();
 
   if (!isOpen) {
     return (
@@ -61,24 +69,20 @@ export const AddItem = () => {
     );
   }
 
-  const inMemoryOptions = [
-    { name: "cabbage", label: "cabbage", value: "cabbage", category: "1" },
-    { name: "crisps", label: "crisps", value: "crisps", category: "2" },
-    {
-      name: "hash browns",
-      label: "hash browns",
-      value: "hash browns",
-      category: "3",
-    },
-    { name: "potatoes", label: "potatoes", value: "potatoes", category: "1" },
-  ];
+  const loadOptions = (inputValue: string, callback: LoadOptionsCallback) => {
+    const lowerName = inputValue.toLowerCase();
 
-  const loadOptions = (inputValue: string, callback: LoadOptionsCallback) =>
-    callback(
-      inMemoryOptions.filter((o) =>
-        o.name.toLowerCase().includes(inputValue.toLowerCase()),
-      ),
+    return callback(
+      unaddedItems
+        .filter((o) => o.lowerName.includes(lowerName))
+        .map((i) => ({
+          label: i.name,
+          value: i.lowerName,
+          category: i.category,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
     );
+  };
 
   const handleChange = (
     value: SingleValue<{
@@ -86,7 +90,9 @@ export const AddItem = () => {
       value: string;
     }>,
   ) => {
-    const item = inMemoryOptions.find((o) => o.value === value?.value);
+    const item = unaddedItems.find((o) => o.lowerName === value?.value);
+
+    setSelectedItem(item);
 
     if (item) {
       setCategory(item.category);
@@ -95,15 +101,28 @@ export const AddItem = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const value = (e.currentTarget.elements[1] as HTMLInputElement).value;
 
     inputRef.current?.clearValue();
     inputRef.current?.focus();
 
-    console.log(`item: ${value}, category: ${category}`);
+    if (!selectedItem) {
+      return;
+    }
+
+    const itemRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "lists",
+      appUser!.group.defaultList,
+      "items",
+      selectedItem.id,
+    );
+    await updateDoc(itemRef, {
+      added: true,
+    });
   };
 
   return (
@@ -134,9 +153,11 @@ export const AddItem = () => {
                 onChange={(e) => setCategory(e.currentTarget.value)}
               >
                 <option value="0"> - </option>
-                <option value="1">Fruit & vegetables</option>
-                <option value="2">Pantry</option>
-                <option value="3">Frozen</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
               </Select>
             </Stack>
           </ModalBody>
