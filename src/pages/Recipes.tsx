@@ -16,48 +16,21 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { Recipe } from "../models/recipe";
-
-const initialRecipes: ReadonlyArray<Recipe> = [
-  {
-    id: "1",
-    name: "Lasagne",
-    ingredients: ["eggs", "milk", "flour"],
-    days: [6],
-  },
-  {
-    id: "2",
-    name: "Pancakes",
-    ingredients: ["eggs", "milk", "flour"],
-    days: [1, 2],
-  },
-  {
-    id: "3",
-    name: "Penne Arrabiata",
-    url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
-    notes:
-      "A spicy pasta dish that has many words that we're using to test what happens",
-    ingredients: [
-      "penne",
-      "tomatoes",
-      "garlic",
-      "chilli flakes",
-      "sugar",
-      "parmesan",
-    ],
-    days: [0, 3, 5],
-  },
-];
+import { useAuthentication, useFirebase } from "../hooks";
 
 export const RecipesPage = () => {
   const editDisclosure = useDisclosure();
   const detailsDisclose = useDisclosure();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
-  const [recipes, setRecipes] = useState(initialRecipes);
+  const [recipes, setRecipes] = useState<ReadonlyArray<Recipe>>([]);
+  const { firestore } = useFirebase();
+  const { appUser } = useAuthentication();
 
   const handleClickDetails = (recipe: Recipe) => {
     setSelectedRecipe(recipe);
@@ -76,6 +49,27 @@ export const RecipesPage = () => {
     editDisclosure.onClose();
     detailsDisclose.onClose();
   };
+
+  // TODO: Likely move into a context to share between recipes and planning
+  useEffect(() => {
+    const q = query(
+      collection(firestore, "groups", appUser!.group!.id, "recipes"),
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const recipes: Array<Recipe> = [];
+      querySnapshot.forEach((doc) => {
+        recipes.push({ ...doc.data(), id: doc.id } as unknown as Recipe);
+      });
+      const sortedRecipes = recipes.sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
+      setRecipes(sortedRecipes);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <>
