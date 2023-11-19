@@ -183,7 +183,6 @@ export const AddItem = () => {
         <form onSubmit={handleSubmit}>
           <ModalHeader>Add Item</ModalHeader>
           <ModalBody>
-            {/* TODO: fix dark mode styling */}
             <Stack>
               <AsyncSelect
                 name="item"

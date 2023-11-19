@@ -8,21 +8,31 @@
   text-overflow: ellipsis;
 }
 
-.chakra-ui-dark .add-item__control {
-  /* border-color: var(--chakra-colors-blue-300) !important;
-  box-shadow: var(--chakra-colors-blue-300) !important; */
-  padding-left: 7px !important;
+.add-item__control {
+  padding-left: 1rem;
+}
+
+.add-item__value-container {
+  padding-left: 0 !important;
+  margin-left: -2px;
 }
 
 .chakra-ui-dark .add-item__control,
-.add-item__single-value,
-.add-item__placeholder {
-  color: inherit !important;
+.chakra-ui-dark .add-item__input,
+.chakra-ui-dark .add-item__single-value,
+.chakra-ui-dark .add-item__placeholder {
+  color: white !important;
   background-color: inherit !important;
 }
 
 .chakra-ui-dark .add-item__menu {
-  background-color: #0e1117 !important;
+  color: inherit;
+  background-color: var(--chakra-colors-gray-700);
+}
+
+.chakra-ui-dark .add-item__menu-notice--no-options {
+  color: inherit;
+  background-color: var(--chakra-colors-gray-700);
 }
 
 .chakra-ui-dark .add-item__control {
@@ -31,4 +41,8 @@
 
 .chakra-ui-dark .add-item__control:hover {
   border-color: var(--chakra-colors-whiteAlpha-400) !important;
+}
+
+.add-item__option--is-focused {
+  background-color: darkgray !important;
 }
