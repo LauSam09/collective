@@ -13,7 +13,7 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { createRef, FormEvent, useState } from "react";
+import { createRef, FormEvent, useEffect, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
@@ -62,6 +62,14 @@ export const AddItem = () => {
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [itemAlreadyAdded, setItemAdded] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setItemAdded(false);
+      setSelectedItem(undefined);
+      setCategory(undefined);
+    }
+  }, [isOpen]);
 
   if (!isOpen) {
     return (
