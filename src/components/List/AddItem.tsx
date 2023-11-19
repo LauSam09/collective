@@ -1,5 +1,7 @@
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Alert,
+  AlertIcon,
   Button,
   Modal,
   ModalBody,
@@ -55,10 +57,11 @@ export const AddItem = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const inputRef = createRef<SelectRef>();
   const [category, setCategory] = useState<string>();
-  const { unaddedItems, categories } = useList();
+  const { items, addedItems, categories } = useList();
   const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<Item>();
+  const [itemAlreadyAdded, setItemAdded] = useState(false);
 
   if (!isOpen) {
     return (
@@ -81,7 +84,7 @@ export const AddItem = () => {
     const lowerName = inputValue.toLowerCase();
 
     return callback(
-      unaddedItems
+      items
         .filter((o) => o.lowerName.includes(lowerName))
         .map((i) => ({
           label: i.name,
@@ -98,11 +101,16 @@ export const AddItem = () => {
       value: string;
     }>,
   ) => {
-    const item = unaddedItems.find((o) => o.lowerName === value?.value);
+    setItemAdded(false);
+    const item = items.find((o) => o.lowerName === value?.value);
 
     if (item) {
       setCategory(item.category);
       setSelectedItem(item);
+
+      if (addedItems.find((i) => i.id === item.id)) {
+        setItemAdded(true);
+      }
     } else if (value?.value) {
       setSelectedItem({
         id: "",
@@ -123,7 +131,7 @@ export const AddItem = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!selectedItem) {
+    if (!selectedItem || itemAlreadyAdded) {
       return;
     }
 
@@ -207,6 +215,11 @@ export const AddItem = () => {
                   </option>
                 ))}
               </Select>
+              {itemAlreadyAdded && (
+                <Alert status="success">
+                  <AlertIcon /> Item already added
+                </Alert>
+              )}
             </Stack>
           </ModalBody>
           <ModalFooter>

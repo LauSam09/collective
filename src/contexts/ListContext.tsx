@@ -10,6 +10,7 @@ interface List {
   categories: Array<Category>;
   addedItems: Array<Item>;
   unaddedItems: Array<Item>;
+  items: Array<Item>;
 }
 
 export const ListContext = createContext<List>({
@@ -17,6 +18,7 @@ export const ListContext = createContext<List>({
   categories: [],
   addedItems: [],
   unaddedItems: [],
+  items: [],
 });
 
 interface ListContextProviderProps {
@@ -91,7 +93,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
 
   return (
     <ListContext.Provider
-      value={{ isLoading, categories, addedItems, unaddedItems }}
+      value={{ isLoading, categories, addedItems, unaddedItems, items }}
     >
       {children}
     </ListContext.Provider>
