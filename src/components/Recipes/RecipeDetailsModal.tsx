@@ -57,18 +57,18 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
         <ModalBody>
           <VStack alignItems="flex-start">
             <HStack spacing={1} rowGap={1} flexWrap="wrap">
-              {["Sun"].map((day) => (
+              {recipe?.days?.map((day) => (
                 <Tag
                   key={day}
                   borderRadius="full"
                   variant="solid"
                   colorScheme="blue"
                 >
-                  <TagLabel>{day}</TagLabel>
+                  <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
                   <TagCloseButton />
                 </Tag>
               ))}
-              {["Wed", "Thu", "Fri", "Sat"].map((day) => (
+              {/* {["Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <Tag
                   key={day}
                   borderRadius="full"
@@ -88,7 +88,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                     <AddIcon boxSize="12px" />
                   </TagCloseButton>
                 </Tag>
-              ))}
+              ))} */}
             </HStack>
 
             {recipe?.url && (
@@ -138,4 +138,23 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
       </ModalContent>
     </Modal>
   );
+};
+
+const dayNumberToDisplay = (dayNumber: number) => {
+  switch (dayNumber) {
+    case 0:
+      return "Mon";
+    case 1:
+      return "Tue";
+    case 2:
+      return "Wed";
+    case 3:
+      return "Thu";
+    case 4:
+      return "Fri";
+    case 5:
+      return "Sat";
+    case 6:
+      return "Sun";
+  }
 };

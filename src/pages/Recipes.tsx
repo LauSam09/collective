@@ -23,6 +23,7 @@ import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { Recipe } from "../models/recipe";
 import { useAuthentication, useFirebase } from "../hooks";
+import { useDebounce } from "../hooks/useDebounce";
 
 export const RecipesPage = () => {
   const editDisclosure = useDisclosure();
@@ -33,6 +34,7 @@ export const RecipesPage = () => {
     [],
   );
   const [filterValue, setFilterValue] = useState("");
+  const debouncedFilterValue = useDebounce(filterValue, 300);
   const { firestore } = useFirebase();
   const { appUser } = useAuthentication();
 
@@ -76,10 +78,10 @@ export const RecipesPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!filterValue) {
+    if (!debouncedFilterValue) {
       setFilteredRecipes([]);
     } else {
-      const normalisedFilterValue = filterValue.trim().toLowerCase();
+      const normalisedFilterValue = debouncedFilterValue.trim().toLowerCase();
       const filtered = recipes.filter(
         (r) =>
           r.name.toLowerCase().includes(normalisedFilterValue) ||
@@ -89,9 +91,9 @@ export const RecipesPage = () => {
       );
       setFilteredRecipes(filtered);
     }
-  }, [filterValue]);
+  }, [debouncedFilterValue]);
 
-  const displayRecipes = filterValue ? filteredRecipes : recipes;
+  const displayRecipes = debouncedFilterValue ? filteredRecipes : recipes;
 
   return (
     <>
@@ -133,14 +135,14 @@ export const RecipesPage = () => {
                           {recipe.name}
                         </Text>
                         <HStack spacing={1}>
-                          {["Sun"].map((day) => (
+                          {recipe.days?.map((day) => (
                             <Tag
                               key={day}
                               borderRadius="full"
                               variant="solid"
                               colorScheme="blue"
                             >
-                              <TagLabel>{day}</TagLabel>
+                              <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
                             </Tag>
                           ))}
                         </HStack>
@@ -163,4 +165,23 @@ export const RecipesPage = () => {
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </>
   );
+};
+
+const dayNumberToDisplay = (dayNumber: number) => {
+  switch (dayNumber) {
+    case 0:
+      return "Mon";
+    case 1:
+      return "Tue";
+    case 2:
+      return "Wed";
+    case 3:
+      return "Thu";
+    case 4:
+      return "Fri";
+    case 5:
+      return "Sat";
+    case 6:
+      return "Sun";
+  }
 };
