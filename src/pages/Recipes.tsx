@@ -29,6 +29,10 @@ export const RecipesPage = () => {
   const detailsDisclose = useDisclosure();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const [recipes, setRecipes] = useState<ReadonlyArray<Recipe>>([]);
+  const [filteredRecipes, setFilteredRecipes] = useState<ReadonlyArray<Recipe>>(
+    [],
+  );
+  const [filterValue, setFilterValue] = useState("");
   const { firestore } = useFirebase();
   const { appUser } = useAuthentication();
 
@@ -71,6 +75,24 @@ export const RecipesPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!filterValue) {
+      setFilteredRecipes([]);
+    } else {
+      const normalisedFilterValue = filterValue.trim().toLowerCase();
+      const filtered = recipes.filter(
+        (r) =>
+          r.name.toLowerCase().includes(normalisedFilterValue) ||
+          r.ingredients.some((i) =>
+            i.toLowerCase().includes(normalisedFilterValue),
+          ),
+      );
+      setFilteredRecipes(filtered);
+    }
+  }, [filterValue]);
+
+  const displayRecipes = filterValue ? filteredRecipes : recipes;
+
   return (
     <>
       <Box>
@@ -86,13 +108,17 @@ export const RecipesPage = () => {
               <InputLeftElement pointerEvents="none">
                 <SearchIcon color="gray.300" />
               </InputLeftElement>
-              <Input placeholder="Search by name" />
+              <Input
+                placeholder="Search by name"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+              />
             </InputGroup>
           </form>
         </Box>
         <Box>
           <Stack>
-            {recipes.map((recipe) => (
+            {displayRecipes.map((recipe) => (
               <Card
                 key={recipe.id}
                 size="sm"
