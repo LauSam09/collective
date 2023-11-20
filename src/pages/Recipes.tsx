@@ -85,7 +85,7 @@ export const RecipesPage = () => {
       const filtered = recipes.filter(
         (r) =>
           r.name.toLowerCase().includes(normalisedFilterValue) ||
-          r.ingredients.some((i) =>
+          r.ingredients?.some((i) =>
             i.toLowerCase().includes(normalisedFilterValue),
           ),
       );
@@ -105,18 +105,16 @@ export const RecipesPage = () => {
           </Button>
         </Flex>
         <Box mb={4}>
-          <form>
-            <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <SearchIcon color="gray.300" />
-              </InputLeftElement>
-              <Input
-                placeholder="Search by name"
-                value={filterValue}
-                onChange={(e) => setFilterValue(e.target.value)}
-              />
-            </InputGroup>
-          </form>
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              placeholder="Search by name or ingredient"
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+            />
+          </InputGroup>
         </Box>
         <Box>
           <Stack>
@@ -147,7 +145,9 @@ export const RecipesPage = () => {
                           ))}
                         </HStack>
                       </Flex>
-                      <Text fontSize="sm">{recipe.ingredients.join(", ")}</Text>
+                      <Text fontSize="sm">
+                        {recipe.ingredients?.join(", ")}
+                      </Text>
                     </Box>
                   </Flex>
                 </CardBody>
