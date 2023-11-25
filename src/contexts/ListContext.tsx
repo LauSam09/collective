@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
 
 import { useAuthentication, useFirebase } from "../hooks";
@@ -22,7 +22,7 @@ export const ListContext = createContext<List>({
 });
 
 interface ListContextProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const ListContextProvider = ({ children }: ListContextProviderProps) => {

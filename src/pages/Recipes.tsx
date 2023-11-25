@@ -25,14 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  query,
-  updateDoc,
-} from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
@@ -41,14 +34,15 @@ import { useAuthentication, useFirebase } from "../hooks";
 import { useDebounce } from "../hooks/useDebounce";
 import { logEvent } from "firebase/analytics";
 import { AddRecipeModal } from "../components/Recipes/AddRecipeModal";
+import useRecipes from "../hooks/useRecipes";
 
 export const RecipesPage = () => {
+  const { recipes } = useRecipes();
   const addDisclosure = useDisclosure();
   const editDisclosure = useDisclosure();
   const detailsDisclosure = useDisclosure();
   const confirmDeletionDisclose = useDisclosure();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
-  const [recipes, setRecipes] = useState<ReadonlyArray<Recipe>>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<ReadonlyArray<Recipe>>(
     [],
   );
@@ -97,27 +91,6 @@ export const RecipesPage = () => {
     });
     setSelectedRecipe((r) => ({ ...r!, days }));
   };
-
-  // TODO: Likely move into a context to share between recipes and planning
-  useEffect(() => {
-    const q = query(
-      collection(firestore, "groups", appUser!.group!.id, "recipes"),
-    );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const recipes: Array<Recipe> = [];
-      querySnapshot.forEach((doc) => {
-        recipes.push({ ...doc.data(), id: doc.id } as unknown as Recipe);
-      });
-      const sortedRecipes = recipes.sort((a, b) =>
-        a.name.localeCompare(b.name),
-      );
-      setRecipes(sortedRecipes);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   useEffect(() => {
     if (!debouncedFilterValue) {
