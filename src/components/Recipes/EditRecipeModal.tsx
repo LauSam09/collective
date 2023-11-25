@@ -21,10 +21,10 @@ import {
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
+import { logEvent } from "firebase/analytics";
 
 import { Recipe } from "../../models/recipe";
 import { useAuthentication, useFirebase } from "../../hooks";
-import { logEvent } from "firebase/analytics";
 
 interface Form {
   name: string;
@@ -58,6 +58,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       ...recipe,
       ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
     });
+    setIngredient("");
   }, [recipe, isOpen]);
 
   const handleAddIngredient = () => {

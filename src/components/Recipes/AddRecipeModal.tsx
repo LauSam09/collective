@@ -48,6 +48,7 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
 
   useEffect(() => {
     reset();
+    setIngredient("");
   }, [isOpen]);
 
   const handleAddIngredient = () => {
