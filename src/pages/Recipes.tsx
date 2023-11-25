@@ -17,7 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
@@ -54,6 +60,14 @@ export const RecipesPage = () => {
     setSelectedRecipe(undefined);
     editDisclosure.onClose();
     detailsDisclose.onClose();
+  };
+
+  const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
+    const docRef = doc(firestore, "groups", appUser!.group!.id, "recipes", id);
+    await updateDoc(docRef, {
+      days,
+    });
+    setSelectedRecipe((r) => ({ ...r!, days }));
   };
 
   // TODO: Likely move into a context to share between recipes and planning
@@ -167,6 +181,9 @@ export const RecipesPage = () => {
         selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
         onClickDelete={handleClickDelete}
+        onUpdateDays={(days: Array<number>) =>
+          handleUpdateRecipeDays(selectedRecipe!.id, days)
+        }
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </>

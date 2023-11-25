@@ -32,11 +32,26 @@ export type RecipeDetailsModalProps = {
   onClose: () => void;
   onClickEdit: () => void;
   onClickDelete: () => void;
+  onUpdateDays: (days: Array<number>) => void;
 };
 
 export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
-  const { isOpen, recipe, selectedDays, onClose, onClickEdit, onClickDelete } =
-    props;
+  const {
+    isOpen,
+    recipe,
+    selectedDays,
+    onClose,
+    onClickEdit,
+    onClickDelete,
+    onUpdateDays,
+  } = props;
+
+  const recipeDays = recipe?.days ?? [];
+
+  const handleAddDayClick = (day: number) => onUpdateDays([...recipeDays, day]);
+
+  const handleRemoveDayClick = (day: number) =>
+    onUpdateDays(recipeDays.filter((d) => d !== day) ?? []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -60,8 +75,8 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
           <VStack alignItems="flex-start">
             <HStack spacing={1} rowGap={1} flexWrap="wrap">
               {[0, 1, 2, 3, 4, 5, 6].map((day) => {
-                const thisRecipeIsOnThisDay = recipe?.days?.includes(day);
-                const anotherRecipeIsOnThisDay = selectedDays?.includes(day);
+                const thisRecipeIsOnThisDay = recipeDays.includes(day);
+                const anotherRecipeIsOnThisDay = selectedDays.includes(day);
 
                 return (
                   <Tag
@@ -73,15 +88,17 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                       thisRecipeIsOnThisDay
                         ? "blue"
                         : anotherRecipeIsOnThisDay
-                          ? undefined
+                          ? "blue"
                           : "green"
                     }
                   >
                     <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
                     {thisRecipeIsOnThisDay ? (
-                      <TagCloseButton />
+                      <TagCloseButton
+                        onClick={() => handleRemoveDayClick(day)}
+                      />
                     ) : (
-                      <TagCloseButton>
+                      <TagCloseButton onClick={() => handleAddDayClick(day)}>
                         <AddIcon boxSize="12px" />
                       </TagCloseButton>
                     )}
