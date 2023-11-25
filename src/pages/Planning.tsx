@@ -4,6 +4,12 @@
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Card,
@@ -14,13 +20,16 @@
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useRef } from "react";
 
 import { Recipe } from "../models/recipe";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import useRecipes from "../hooks/useRecipes";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { logEvent } from "firebase/analytics";
+import { deleteDoc, doc } from "firebase/firestore";
+import { useFirebase, useAuthentication } from "../hooks";
 
 // const initialRecipes: ReadonlyArray<Recipe> = [
 //   {
@@ -57,7 +66,11 @@ export const PlanningPage = () => {
   const { recipes } = useRecipes();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const editDisclosure = useDisclosure();
-  const detailsDisclose = useDisclosure();
+  const detailsDisclosure = useDisclosure();
+  const confirmDeletionDisclose = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const { analytics, firestore } = useFirebase();
+  const { appUser } = useAuthentication();
   const today = new Date();
   const [expandedDays, setExpandedDays] = useState([today.getDay()]);
   const allDaysExpanded = expandedDays.length === 7;
@@ -90,20 +103,34 @@ export const PlanningPage = () => {
   ) => {
     event.stopPropagation();
     setSelectedRecipe(recipe);
-    detailsDisclose.onOpen();
+    detailsDisclosure.onOpen();
   };
 
   const handleClickDetailsEdit = () => {
-    detailsDisclose.onClose();
+    detailsDisclosure.onClose();
     editDisclosure.onOpen();
   };
 
-  const handleClickDelete = () => {
-    // TODO: Add confirmation
-    // setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id));
-    setSelectedRecipe(undefined);
+  const handleClickDelete = () => confirmDeletionDisclose.onOpen();
+
+  const handleConfirmDelete = async () => {
+    confirmDeletionDisclose.onClose();
     editDisclosure.onClose();
-    detailsDisclose.onClose();
+    detailsDisclosure.onClose();
+
+    await deleteDoc(
+      doc(
+        firestore,
+        "groups",
+        appUser!.group!.id,
+        "recipes",
+        selectedRecipe!.id,
+      ),
+    );
+
+    logEvent(analytics, "delete_recipe", { from: "planning" });
+
+    setSelectedRecipe(undefined);
   };
 
   const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
@@ -186,7 +213,7 @@ export const PlanningPage = () => {
         ))}
       </Accordion>
       <RecipeDetailsModal
-        {...detailsDisclose}
+        {...detailsDisclosure}
         recipe={selectedRecipe}
         selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
@@ -194,6 +221,32 @@ export const PlanningPage = () => {
         onUpdateDays={() => {}}
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
+      <AlertDialog
+        isOpen={confirmDeletionDisclose.isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={confirmDeletionDisclose.onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Recipe
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can&apos;t undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={confirmDeletionDisclose.onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

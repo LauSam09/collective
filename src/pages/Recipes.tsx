@@ -79,7 +79,7 @@ export const RecipesPage = () => {
       ),
     );
 
-    logEvent(analytics, "delete_recipe");
+    logEvent(analytics, "delete_recipe", { from: "recipes" });
 
     setSelectedRecipe(undefined);
   };
