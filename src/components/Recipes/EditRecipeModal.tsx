@@ -85,7 +85,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       name,
       recipeUrl,
       notes,
-      ingredients: ingredients.map((i) => i.name),
+      ingredients: ingredients.map((i) => i.name.trim()),
     });
 
     logEvent(analytics, "edit_recipe");

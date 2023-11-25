@@ -69,7 +69,7 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
         name,
         recipeUrl,
         notes,
-        ingredients: ingredients?.map((i) => i.name) ?? [],
+        ingredients: ingredients?.map((i) => i.name.trim()) ?? [],
       },
     );
 
