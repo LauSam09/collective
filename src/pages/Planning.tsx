@@ -43,8 +43,6 @@ export const PlanningPage = () => {
   const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
   const today = new Date();
-  const [expandedDays, setExpandedDays] = useState([today.getDay()]);
-  const allDaysExpanded = expandedDays.length === 7;
 
   const days: ReadonlyArray<{
     name: string;
@@ -59,6 +57,11 @@ export const PlanningPage = () => {
     { name: "Saturday", recipes: [], jsIndex: 6 },
     { name: "Sunday", recipes: [], jsIndex: 0 },
   ];
+
+  const [expandedDays, setExpandedDays] = useState([
+    days.findIndex((d) => d.jsIndex === today.getDay()),
+  ]);
+  const allDaysExpanded = expandedDays.length === 7;
 
   for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
     recipe.days?.forEach((d) => days[d].recipes.push(recipe));
@@ -174,8 +177,6 @@ export const PlanningPage = () => {
           <AccordionItem key={i} onClick={() => handleClickDay(i)}>
             <AccordionButton>
               <Box as="span" flex="1" textAlign="left">
-                {/* JS: 0 Sun, 1 Mon, 2 Tue, 3 Wed, 4 Thu, 5 Fri, 6 Sat */}
-                {/* DB: 0 Mon, 1 Tue, 2 Wed, 3 Thu, 4 Fri, 5 Sat, 6 Sun,*/}
                 <Heading as="h3" size="sm">
                   {day.name} {today.getDay() === day.jsIndex && "*"}
                 </Heading>
