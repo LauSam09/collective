@@ -95,6 +95,11 @@ export const RecipesPage = () => {
 
   const displayRecipes = debouncedFilterValue ? filteredRecipes : recipes;
 
+  const selectedDays = recipes
+    .filter((r) => r.days && r.days.length > 0)
+    .map((r) => r.days as number[])
+    .flat();
+
   return (
     <>
       <Box>
@@ -159,6 +164,7 @@ export const RecipesPage = () => {
       <RecipeDetailsModal
         {...detailsDisclose}
         recipe={selectedRecipe}
+        selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
         onClickDelete={handleClickDelete}
       />

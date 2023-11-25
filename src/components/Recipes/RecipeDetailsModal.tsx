@@ -28,13 +28,15 @@ import { Recipe } from "../../models/recipe";
 export type RecipeDetailsModalProps = {
   isOpen: boolean;
   recipe: Recipe | undefined;
+  selectedDays: number[];
   onClose: () => void;
   onClickEdit: () => void;
   onClickDelete: () => void;
 };
 
 export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
-  const { isOpen, recipe, onClose, onClickEdit, onClickDelete } = props;
+  const { isOpen, recipe, selectedDays, onClose, onClickEdit, onClickDelete } =
+    props;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -57,38 +59,35 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
         <ModalBody>
           <VStack alignItems="flex-start">
             <HStack spacing={1} rowGap={1} flexWrap="wrap">
-              {recipe?.days?.map((day) => (
-                <Tag
-                  key={day}
-                  borderRadius="full"
-                  variant="solid"
-                  colorScheme="blue"
-                >
-                  <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
-                  <TagCloseButton />
-                </Tag>
-              ))}
-              {/* {["Wed", "Thu", "Fri", "Sat"].map((day) => (
-                <Tag
-                  key={day}
-                  borderRadius="full"
-                  variant="subtle"
-                  colorScheme="green"
-                >
-                  <TagLabel>{day}</TagLabel>
-                  <TagCloseButton>
-                    <AddIcon boxSize="12px" />
-                  </TagCloseButton>
-                </Tag>
-              ))}
-              {["Mon", "Tue"].map((day) => (
-                <Tag key={day} borderRadius="full" variant="subtle">
-                  <TagLabel>{day}</TagLabel>
-                  <TagCloseButton>
-                    <AddIcon boxSize="12px" />
-                  </TagCloseButton>
-                </Tag>
-              ))} */}
+              {[0, 1, 2, 3, 4, 5, 6].map((day) => {
+                const thisRecipeIsOnThisDay = recipe?.days?.includes(day);
+                const anotherRecipeIsOnThisDay = selectedDays?.includes(day);
+
+                return (
+                  <Tag
+                    key={day}
+                    borderRadius="full"
+                    size="sm"
+                    variant={thisRecipeIsOnThisDay ? "solid" : "subtle"}
+                    colorScheme={
+                      thisRecipeIsOnThisDay
+                        ? "blue"
+                        : anotherRecipeIsOnThisDay
+                          ? undefined
+                          : "green"
+                    }
+                  >
+                    <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
+                    {thisRecipeIsOnThisDay ? (
+                      <TagCloseButton />
+                    ) : (
+                      <TagCloseButton>
+                        <AddIcon boxSize="12px" />
+                      </TagCloseButton>
+                    )}
+                  </Tag>
+                );
+              })}
             </HStack>
 
             {recipe?.url && (
