@@ -13,6 +13,7 @@ import {
   Flex,
   Heading,
   HStack,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -39,8 +40,10 @@ import { Recipe } from "../models/recipe";
 import { useAuthentication, useFirebase } from "../hooks";
 import { useDebounce } from "../hooks/useDebounce";
 import { logEvent } from "firebase/analytics";
+import { AddRecipeModal } from "../components/Recipes/AddRecipeModal";
 
 export const RecipesPage = () => {
+  const addDisclosure = useDisclosure();
   const editDisclosure = useDisclosure();
   const detailsDisclosure = useDisclosure();
   const confirmDeletionDisclose = useDisclosure();
@@ -144,9 +147,9 @@ export const RecipesPage = () => {
       <Box>
         <Flex justifyContent="space-between" alignItems="center" mb={2}>
           <Heading size="md">Recipes</Heading>
-          <Button>
+          <IconButton onClick={addDisclosure.onOpen} aria-label="Add recipe">
             <AddIcon />
-          </Button>
+          </IconButton>
         </Flex>
         <Box mb={4}>
           <InputGroup>
@@ -216,6 +219,7 @@ export const RecipesPage = () => {
           </Stack>
         </Box>
       </Box>
+      <AddRecipeModal {...addDisclosure} />
       <RecipeDetailsModal
         {...detailsDisclosure}
         recipe={selectedRecipe}
