@@ -35,7 +35,7 @@ const initialRecipes: ReadonlyArray<Recipe> = [
   {
     id: "3",
     name: "Penne Arrabiata",
-    url: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
+    recipeUrl: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
     notes:
       "A spicy pasta dish that has many words that we're using to test what happens",
     ingredients: [

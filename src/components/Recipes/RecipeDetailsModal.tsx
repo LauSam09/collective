@@ -109,12 +109,12 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
               })}
             </HStack>
 
-            {recipe?.url && (
+            {recipe?.recipeUrl && (
               <>
                 <Heading size="sm">
                   Recipe link <ExternalLinkIcon mx="2px" />
                 </Heading>
-                <Link isExternal href={recipe?.url} width="100%">
+                <Link isExternal href={recipe?.recipeUrl} width="100%">
                   <Flex>
                     <Text
                       fontSize="sm"
@@ -122,7 +122,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                       overflow="hidden"
                       textOverflow="ellipsis"
                     >
-                      {recipe?.url}
+                      {recipe?.recipeUrl}
                     </Text>
                   </Flex>
                 </Link>

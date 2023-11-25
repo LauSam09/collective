@@ -1,4 +1,4 @@
-import { SearchIcon, AddIcon } from "@chakra-ui/icons";
+import { SearchIcon, AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -16,6 +16,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link,
   Stack,
   Tag,
   TagLabel,
@@ -175,6 +176,17 @@ export const RecipesPage = () => {
                         <Text whiteSpace="nowrap" mr={2}>
                           {recipe.name}
                         </Text>
+                        {recipe.recipeUrl && (
+                          <Link
+                            href={recipe.recipeUrl}
+                            target="_blank"
+                            mr={2}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ExternalLinkIcon />
+                          </Link>
+                        )}
+
                         <HStack spacing={1}>
                           {recipe.days?.map((day) => (
                             <Tag

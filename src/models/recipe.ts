@@ -1,8 +1,8 @@
 export interface Recipe {
-  id: string
-  name: string
-  ingredients: ReadonlyArray<string>
-  days?: ReadonlyArray<number>
-  url?: string
-  notes?: string
+  id: string;
+  name: string;
+  ingredients: ReadonlyArray<string>;
+  days?: ReadonlyArray<number>;
+  recipeUrl?: string;
+  notes?: string;
 }
