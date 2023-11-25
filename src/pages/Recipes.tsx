@@ -41,7 +41,7 @@ export const RecipesPage = () => {
   const addDisclosure = useDisclosure();
   const editDisclosure = useDisclosure();
   const detailsDisclosure = useDisclosure();
-  const confirmDeletionDisclose = useDisclosure();
+  const confirmDeletionDisclosure = useDisclosure();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const [filteredRecipes, setFilteredRecipes] = useState<ReadonlyArray<Recipe>>(
     [],
@@ -62,10 +62,10 @@ export const RecipesPage = () => {
     editDisclosure.onOpen();
   };
 
-  const handleClickDelete = () => confirmDeletionDisclose.onOpen();
+  const handleClickDelete = () => confirmDeletionDisclosure.onOpen();
 
   const handleConfirmDelete = async () => {
-    confirmDeletionDisclose.onClose();
+    confirmDeletionDisclosure.onClose();
     editDisclosure.onClose();
     detailsDisclosure.onClose();
 
@@ -205,9 +205,9 @@ export const RecipesPage = () => {
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
       <AlertDialog
-        isOpen={confirmDeletionDisclose.isOpen}
+        isOpen={confirmDeletionDisclosure.isOpen}
         leastDestructiveRef={cancelRef}
-        onClose={confirmDeletionDisclose.onClose}
+        onClose={confirmDeletionDisclosure.onClose}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -220,7 +220,10 @@ export const RecipesPage = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={confirmDeletionDisclose.onClose}>
+              <Button
+                ref={cancelRef}
+                onClick={confirmDeletionDisclosure.onClose}
+              >
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>

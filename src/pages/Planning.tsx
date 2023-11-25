@@ -21,59 +21,48 @@
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState, MouseEvent, useRef } from "react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { logEvent } from "firebase/analytics";
+import { deleteDoc, doc, updateDoc, writeBatch } from "firebase/firestore";
 
 import { Recipe } from "../models/recipe";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import useRecipes from "../hooks/useRecipes";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { logEvent } from "firebase/analytics";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useFirebase, useAuthentication } from "../hooks";
-
-// const initialRecipes: ReadonlyArray<Recipe> = [
-//   {
-//     id: "1",
-//     name: "Lasagne",
-//     ingredients: ["eggs", "milk", "flour"],
-//     days: [6],
-//   },
-//   {
-//     id: "2",
-//     name: "Pancakes",
-//     ingredients: ["eggs", "milk", "flour"],
-//     days: [1, 2],
-//   },
-//   {
-//     id: "3",
-//     name: "Penne Arrabiata",
-//     recipeUrl: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
-//     notes:
-//       "A spicy pasta dish that has many words that we're using to test what happens",
-//     ingredients: [
-//       "penne",
-//       "tomatoes",
-//       "garlic",
-//       "chilli flakes",
-//       "sugar",
-//       "parmesan",
-//     ],
-//     days: [0, 3, 5],
-//   },
-// ];
 
 export const PlanningPage = () => {
   const { recipes } = useRecipes();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const editDisclosure = useDisclosure();
   const detailsDisclosure = useDisclosure();
-  const confirmDeletionDisclose = useDisclosure();
-  const cancelRef = useRef<HTMLButtonElement>(null);
+  const confirmDeletionDisclosure = useDisclosure();
+  const confirmClearWeekDisclosure = useDisclosure();
+  const deleteCancelRef = useRef<HTMLButtonElement>(null);
+  const clearCancelRef = useRef<HTMLButtonElement>(null);
   const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
   const today = new Date();
   const [expandedDays, setExpandedDays] = useState([today.getDay()]);
   const allDaysExpanded = expandedDays.length === 7;
+
+  const days: ReadonlyArray<{
+    name: string;
+    recipes: Array<Recipe>;
+    jsIndex: number;
+  }> = [
+    { name: "Monday", recipes: [], jsIndex: 1 },
+    { name: "Tuesday", recipes: [], jsIndex: 2 },
+    { name: "Wednesday", recipes: [], jsIndex: 3 },
+    { name: "Thursday", recipes: [], jsIndex: 4 },
+    { name: "Friday", recipes: [], jsIndex: 5 },
+    { name: "Saturday", recipes: [], jsIndex: 6 },
+    { name: "Sunday", recipes: [], jsIndex: 0 },
+  ];
+
+  for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
+    recipe.days?.forEach((d) => days[d].recipes.push(recipe));
+  }
 
   const handleClickDay = (day: number) => {
     if (expandedDays.includes(day)) {
@@ -83,10 +72,31 @@ export const PlanningPage = () => {
     }
   };
 
-  const handleClickClearWeek = () => {
-    // TODO: Add confirmation
-    // setRecipes((old) => old.map((r) => ({ ...r, days: [] })));
-    // setExpandedDays([]);
+  const handleClickClearWeek = () => confirmClearWeekDisclosure.onOpen();
+
+  const handleConfirmClearWeek = async () => {
+    confirmClearWeekDisclosure.onClose();
+
+    const batch = writeBatch(firestore);
+
+    days.forEach((d) => {
+      d.recipes.forEach((r) => {
+        const docRef = doc(
+          firestore,
+          "groups",
+          appUser!.group!.id,
+          "recipes",
+          r.id,
+        );
+        batch.update(docRef, {
+          days: [],
+        });
+      });
+    });
+
+    await batch.commit();
+
+    logEvent(analytics, "clear_week");
   };
 
   const handleToggleExpandAllDays = () => {
@@ -111,10 +121,10 @@ export const PlanningPage = () => {
     editDisclosure.onOpen();
   };
 
-  const handleClickDelete = () => confirmDeletionDisclose.onOpen();
+  const handleClickDelete = () => confirmDeletionDisclosure.onOpen();
 
   const handleConfirmDelete = async () => {
-    confirmDeletionDisclose.onClose();
+    confirmDeletionDisclosure.onClose();
     editDisclosure.onClose();
     detailsDisclosure.onClose();
 
@@ -141,20 +151,6 @@ export const PlanningPage = () => {
     setSelectedRecipe((r) => ({ ...r!, days }));
   };
 
-  const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
-    { name: "Monday", recipes: [] },
-    { name: "Tuesday", recipes: [] },
-    { name: "Wednesday", recipes: [] },
-    { name: "Thursday", recipes: [] },
-    { name: "Friday", recipes: [] },
-    { name: "Saturday", recipes: [] },
-    { name: "Sunday", recipes: [] },
-  ];
-
-  for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
-    recipe.days?.forEach((d) => days[d].recipes.push(recipe));
-  }
-
   const selectedDays = recipes
     .filter((r) => r.days && r.days.length > 0)
     .map((r) => r.days as number[])
@@ -178,8 +174,10 @@ export const PlanningPage = () => {
           <AccordionItem key={i} onClick={() => handleClickDay(i)}>
             <AccordionButton>
               <Box as="span" flex="1" textAlign="left">
+                {/* JS: 0 Sun, 1 Mon, 2 Tue, 3 Wed, 4 Thu, 5 Fri, 6 Sat */}
+                {/* DB: 0 Mon, 1 Tue, 2 Wed, 3 Thu, 4 Fri, 5 Sat, 6 Sun,*/}
                 <Heading as="h3" size="sm">
-                  {day.name} {i === today.getDay() && "*"}
+                  {day.name} {today.getDay() === day.jsIndex && "*"}
                 </Heading>
               </Box>
               <AccordionIcon />
@@ -232,9 +230,9 @@ export const PlanningPage = () => {
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
       <AlertDialog
-        isOpen={confirmDeletionDisclose.isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={confirmDeletionDisclose.onClose}
+        isOpen={confirmDeletionDisclosure.isOpen}
+        leastDestructiveRef={deleteCancelRef}
+        onClose={confirmDeletionDisclosure.onClose}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -247,11 +245,43 @@ export const PlanningPage = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={confirmDeletionDisclose.onClose}>
+              <Button
+                ref={deleteCancelRef}
+                onClick={confirmDeletionDisclosure.onClose}
+              >
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>
                 Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={confirmClearWeekDisclosure.isOpen}
+        leastDestructiveRef={clearCancelRef}
+        onClose={confirmClearWeekDisclosure.onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Clear week
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can&apos;t undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={clearCancelRef}
+                onClick={confirmClearWeekDisclosure.onClose}
+              >
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleConfirmClearWeek} ml={3}>
+                Clear
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
