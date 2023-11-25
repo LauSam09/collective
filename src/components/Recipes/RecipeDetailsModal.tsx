@@ -53,6 +53,8 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
   const handleRemoveDayClick = (day: number) =>
     onUpdateDays(recipeDays.filter((d) => d !== day) ?? []);
 
+  const handleClickDelete = () => onClickDelete();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -64,7 +66,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
               <Button onClick={onClickEdit}>
                 <EditIcon />
               </Button>
-              <Button onClick={onClickDelete}>
+              <Button onClick={handleClickDelete}>
                 <DeleteIcon />
               </Button>
             </Flex>

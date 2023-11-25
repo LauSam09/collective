@@ -1,5 +1,11 @@
 import { SearchIcon, AddIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Card,
@@ -16,9 +22,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   collection,
+  deleteDoc,
   doc,
   onSnapshot,
   query,
@@ -33,7 +40,8 @@ import { useDebounce } from "../hooks/useDebounce";
 
 export const RecipesPage = () => {
   const editDisclosure = useDisclosure();
-  const detailsDisclose = useDisclosure();
+  const detailsDisclosure = useDisclosure();
+  const confirmDeletionDisclose = useDisclosure();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const [recipes, setRecipes] = useState<ReadonlyArray<Recipe>>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<ReadonlyArray<Recipe>>(
@@ -43,23 +51,35 @@ export const RecipesPage = () => {
   const debouncedFilterValue = useDebounce(filterValue, 300);
   const { firestore } = useFirebase();
   const { appUser } = useAuthentication();
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const handleClickDetails = (recipe: Recipe) => {
     setSelectedRecipe(recipe);
-    detailsDisclose.onOpen();
+    detailsDisclosure.onOpen();
   };
 
   const handleClickDetailsEdit = () => {
-    detailsDisclose.onClose();
+    detailsDisclosure.onClose();
     editDisclosure.onOpen();
   };
 
-  const handleClickDelete = () => {
-    // TODO: Add confirmation
-    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id));
-    setSelectedRecipe(undefined);
+  const handleClickDelete = () => confirmDeletionDisclose.onOpen();
+
+  const handleConfirmDelete = async () => {
+    confirmDeletionDisclose.onClose();
     editDisclosure.onClose();
-    detailsDisclose.onClose();
+    detailsDisclosure.onClose();
+
+    await deleteDoc(
+      doc(
+        firestore,
+        "groups",
+        appUser!.group!.id,
+        "recipes",
+        selectedRecipe!.id,
+      ),
+    );
+    setSelectedRecipe(undefined);
   };
 
   const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
@@ -181,7 +201,7 @@ export const RecipesPage = () => {
         </Box>
       </Box>
       <RecipeDetailsModal
-        {...detailsDisclose}
+        {...detailsDisclosure}
         recipe={selectedRecipe}
         selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
@@ -191,6 +211,32 @@ export const RecipesPage = () => {
         }
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
+      <AlertDialog
+        isOpen={confirmDeletionDisclose.isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={confirmDeletionDisclose.onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Recipe
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can&apos;t undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={confirmDeletionDisclose.onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };
