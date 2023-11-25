@@ -20,14 +20,17 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { doc, updateDoc } from "firebase/firestore";
 
 import { Recipe } from "../../models/recipe";
+import { useAuthentication, useFirebase } from "../../hooks";
+import { logEvent } from "firebase/analytics";
 
 interface Form {
   name: string;
   ingredients: ReadonlyArray<{ name: string }>;
   notes: string;
-  url?: string;
+  recipeUrl?: string;
 }
 
 export type EditRecipeModalProps = {
@@ -38,12 +41,15 @@ export type EditRecipeModalProps = {
 
 export const EditRecipeModal = (props: EditRecipeModalProps) => {
   const { isOpen, recipe, onClose } = props;
-  const { control, register, handleSubmit, reset, watch } = useForm<Form>({
-    defaultValues: {
-      ...recipe,
-      ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
-    },
-  });
+  const { appUser } = useAuthentication();
+  const { analytics, firestore } = useFirebase();
+  const { control, formState, register, handleSubmit, reset, watch } =
+    useForm<Form>({
+      defaultValues: {
+        ...recipe,
+        ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
+      },
+    });
   const { append, remove } = useFieldArray({ control, name: "ingredients" });
   const [ingredient, setIngredient] = useState("");
 
@@ -52,7 +58,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       ...recipe,
       ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
     });
-  }, [recipe]);
+  }, [recipe, isOpen]);
 
   const handleAddIngredient = () => {
     if (!ingredient) {
@@ -63,9 +69,25 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
     setIngredient("");
   };
 
-  const handleSave = (recipe: Form) => {
-    // TODO: save here
-    console.log(recipe);
+  const handleSave = async (form: Form) => {
+    const { name, recipeUrl, notes, ingredients } = form;
+
+    const docRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "recipes",
+      recipe!.id,
+    );
+
+    await updateDoc(docRef, {
+      name,
+      recipeUrl,
+      notes,
+      ingredients: ingredients.map((i) => i.name),
+    });
+
+    logEvent(analytics, "edit_recipe");
 
     onClose();
   };
@@ -87,7 +109,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
               </FormControl>
               <FormControl>
                 <FormLabel>External link</FormLabel>
-                <Input {...register("url")} />
+                <Input {...register("recipeUrl")} />
               </FormControl>
               <FormControl>
                 <FormLabel>Notes</FormLabel>
@@ -117,7 +139,12 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} type="submit">
+            <Button
+              colorScheme="blue"
+              mr={3}
+              type="submit"
+              isLoading={formState.isSubmitting}
+            >
               Save
             </Button>
             <Button variant="ghost" onClick={onClose}>

@@ -37,6 +37,7 @@ import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { Recipe } from "../models/recipe";
 import { useAuthentication, useFirebase } from "../hooks";
 import { useDebounce } from "../hooks/useDebounce";
+import { logEvent } from "firebase/analytics";
 
 export const RecipesPage = () => {
   const editDisclosure = useDisclosure();
@@ -49,7 +50,7 @@ export const RecipesPage = () => {
   );
   const [filterValue, setFilterValue] = useState("");
   const debouncedFilterValue = useDebounce(filterValue, 300);
-  const { firestore } = useFirebase();
+  const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -79,6 +80,9 @@ export const RecipesPage = () => {
         selectedRecipe!.id,
       ),
     );
+
+    logEvent(analytics, "delete_recipe");
+
     setSelectedRecipe(undefined);
   };
 
