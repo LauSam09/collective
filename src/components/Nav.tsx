@@ -2,25 +2,40 @@ import {
   Avatar,
   Box,
   Button,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
   Flex,
   Heading,
+  IconButton,
   Link,
   Menu,
   MenuButton,
   MenuDivider,
   MenuItem,
   MenuList,
+  Show,
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link as RouterLink, NavLink } from "react-router-dom";
+import {
+  CalendarIcon,
+  CheckIcon,
+  HamburgerIcon,
+  SearchIcon,
+} from "@chakra-ui/icons";
+import { useRef } from "react";
 
 import { useAuthentication } from "../hooks/useAuthentication";
 import { version } from "../../package.json";
 
 export default function Nav() {
   const { state, user, signOut } = useAuthentication();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -31,9 +46,20 @@ export default function Nav() {
         top={0}
         zIndex={100}
       >
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+        <Flex h={16} alignItems="center" justifyContent="space-between">
           <Box>
             <Heading>
+              <Show below="md">
+                <IconButton
+                  onClick={onOpen}
+                  ref={btnRef}
+                  aria-label="Expand nav menu"
+                  ml={-2}
+                  mr={2}
+                >
+                  <HamburgerIcon boxSize={6} />
+                </IconButton>
+              </Show>
               <Link as={RouterLink} to="/">
                 Collective
               </Link>
@@ -41,23 +67,25 @@ export default function Nav() {
           </Box>
 
           {state === "Authenticated" && (
-            <Flex alignItems={"center"}>
-              <Stack direction={"row"} spacing={4} alignItems={"center"}>
-                <Link as={NavLink} to="/">
-                  List
-                </Link>
-                <Link as={NavLink} to="/planning">
-                  Planning
-                </Link>
-                <Link as={NavLink} to="/recipes">
-                  Recipes
-                </Link>
+            <Flex alignItems="center">
+              <Stack direction="row" spacing={4} alignItems="center">
+                <Show above="md">
+                  <Link as={NavLink} to="/">
+                    List
+                  </Link>
+                  <Link as={NavLink} to="/planning">
+                    Planning
+                  </Link>
+                  <Link as={NavLink} to="/recipes">
+                    Recipes
+                  </Link>
+                </Show>
                 <Menu>
                   <MenuButton
                     as={Button}
-                    rounded={"full"}
-                    variant={"link"}
-                    cursor={"pointer"}
+                    rounded="full"
+                    variant="link"
+                    cursor="pointer"
                     minW={0}
                   >
                     <Avatar size={"sm"} src={user?.displayName ?? "User"} />
@@ -80,6 +108,77 @@ export default function Nav() {
           )}
         </Flex>
       </Box>
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <Stack p={2}>
+            <Heading>
+              <Link as={RouterLink} to="/" onClick={onClose}>
+                Collective
+              </Link>
+            </Heading>
+            <Link
+              as={NavLink}
+              to="/"
+              p={2}
+              onClick={onClose}
+              borderRadius="md"
+              _hover={{
+                textDecor: "none",
+                backgroundColor: "var(--chakra-colors-gray-200)",
+              }}
+              _dark={{
+                _hover: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                },
+              }}
+            >
+              <CheckIcon /> List
+            </Link>
+            <Link
+              as={NavLink}
+              to="/planning"
+              p={2}
+              borderRadius="md"
+              onClick={onClose}
+              _hover={{
+                textDecor: "none",
+                backgroundColor: "var(--chakra-colors-gray-200)",
+              }}
+              _dark={{
+                _hover: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                },
+              }}
+            >
+              <CalendarIcon /> Planning
+            </Link>
+            <Link
+              as={NavLink}
+              to="/recipes"
+              p={2}
+              onClick={onClose}
+              borderRadius="md"
+              _hover={{
+                textDecor: "none",
+                backgroundColor: "var(--chakra-colors-gray-200)",
+              }}
+              _dark={{
+                _hover: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                },
+              }}
+            >
+              <SearchIcon /> Recipes
+            </Link>
+          </Stack>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
