@@ -28,7 +28,7 @@ import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import useRecipes from "../hooks/useRecipes";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { logEvent } from "firebase/analytics";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useFirebase, useAuthentication } from "../hooks";
 
 // const initialRecipes: ReadonlyArray<Recipe> = [
@@ -133,14 +133,22 @@ export const PlanningPage = () => {
     setSelectedRecipe(undefined);
   };
 
+  const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
+    const docRef = doc(firestore, "groups", appUser!.group!.id, "recipes", id);
+    await updateDoc(docRef, {
+      days,
+    });
+    setSelectedRecipe((r) => ({ ...r!, days }));
+  };
+
   const days: ReadonlyArray<{ name: string; recipes: Array<Recipe> }> = [
-    { name: "Sunday", recipes: [] },
     { name: "Monday", recipes: [] },
     { name: "Tuesday", recipes: [] },
     { name: "Wednesday", recipes: [] },
     { name: "Thursday", recipes: [] },
     { name: "Friday", recipes: [] },
     { name: "Saturday", recipes: [] },
+    { name: "Sunday", recipes: [] },
   ];
 
   for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
@@ -154,7 +162,7 @@ export const PlanningPage = () => {
 
   return (
     <Box>
-      <Flex justifyContent="space-between" alignItems="center" mb={2}>
+      <Flex justifyContent="space-between" alignItems="center" mb={4}>
         <Heading size="md">Planning</Heading>
         <Flex gap={2}>
           <Button variant="outline" onClick={handleToggleExpandAllDays}>
@@ -218,7 +226,9 @@ export const PlanningPage = () => {
         selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
         onClickDelete={handleClickDelete}
-        onUpdateDays={() => {}}
+        onUpdateDays={(days: Array<number>) =>
+          handleUpdateRecipeDays(selectedRecipe!.id, days)
+        }
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
       <AlertDialog
