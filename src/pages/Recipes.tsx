@@ -165,7 +165,12 @@ export const RecipesPage = () => {
                         </HStack>
                       </Flex>
                       <Text fontSize="sm">
-                        {recipe.ingredients?.join(", ")}
+                        {recipe.ingredients
+                          ?.slice(0, 4)
+                          .map((i) => i.trim())
+                          .join(", ")}
+                        {recipe.ingredients?.length > 4 &&
+                          ` + ${recipe.ingredients.length - 4} more`}
                       </Text>
                     </Box>
                   </Flex>
