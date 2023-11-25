@@ -10,6 +10,7 @@
   CardBody,
   Flex,
   Heading,
+  Link,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -18,44 +19,46 @@ import { useState, MouseEvent } from "react";
 import { Recipe } from "../models/recipe";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
+import useRecipes from "../hooks/useRecipes";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
-const initialRecipes: ReadonlyArray<Recipe> = [
-  {
-    id: "1",
-    name: "Lasagne",
-    ingredients: ["eggs", "milk", "flour"],
-    days: [6],
-  },
-  {
-    id: "2",
-    name: "Pancakes",
-    ingredients: ["eggs", "milk", "flour"],
-    days: [1, 2],
-  },
-  {
-    id: "3",
-    name: "Penne Arrabiata",
-    recipeUrl: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
-    notes:
-      "A spicy pasta dish that has many words that we're using to test what happens",
-    ingredients: [
-      "penne",
-      "tomatoes",
-      "garlic",
-      "chilli flakes",
-      "sugar",
-      "parmesan",
-    ],
-    days: [0, 3, 5],
-  },
-];
+// const initialRecipes: ReadonlyArray<Recipe> = [
+//   {
+//     id: "1",
+//     name: "Lasagne",
+//     ingredients: ["eggs", "milk", "flour"],
+//     days: [6],
+//   },
+//   {
+//     id: "2",
+//     name: "Pancakes",
+//     ingredients: ["eggs", "milk", "flour"],
+//     days: [1, 2],
+//   },
+//   {
+//     id: "3",
+//     name: "Penne Arrabiata",
+//     recipeUrl: "https://www.bbc.co.uk/food/recipes/pennealarrabiatapast_83813",
+//     notes:
+//       "A spicy pasta dish that has many words that we're using to test what happens",
+//     ingredients: [
+//       "penne",
+//       "tomatoes",
+//       "garlic",
+//       "chilli flakes",
+//       "sugar",
+//       "parmesan",
+//     ],
+//     days: [0, 3, 5],
+//   },
+// ];
 
 export const PlanningPage = () => {
-  const today = new Date();
-  const [recipes, setRecipes] = useState(initialRecipes);
+  const { recipes } = useRecipes();
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
   const editDisclosure = useDisclosure();
   const detailsDisclose = useDisclosure();
+  const today = new Date();
   const [expandedDays, setExpandedDays] = useState([today.getDay()]);
   const allDaysExpanded = expandedDays.length === 7;
 
@@ -69,8 +72,8 @@ export const PlanningPage = () => {
 
   const handleClickClearWeek = () => {
     // TODO: Add confirmation
-    setRecipes((old) => old.map((r) => ({ ...r, days: [] })));
-    setExpandedDays([]);
+    // setRecipes((old) => old.map((r) => ({ ...r, days: [] })));
+    // setExpandedDays([]);
   };
 
   const handleToggleExpandAllDays = () => {
@@ -97,7 +100,7 @@ export const PlanningPage = () => {
 
   const handleClickDelete = () => {
     // TODO: Add confirmation
-    setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id));
+    // setRecipes((r) => r.filter((x) => x.id !== selectedRecipe?.id));
     setSelectedRecipe(undefined);
     editDisclosure.onClose();
     detailsDisclose.onClose();
@@ -116,6 +119,11 @@ export const PlanningPage = () => {
   for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
     recipe.days?.forEach((d) => days[d].recipes.push(recipe));
   }
+
+  const selectedDays = recipes
+    .filter((r) => r.days && r.days.length > 0)
+    .map((r) => r.days as number[])
+    .flat();
 
   return (
     <Box>
@@ -152,11 +160,23 @@ export const PlanningPage = () => {
                   >
                     <CardBody>
                       <Flex>
-                        <Box flex={1}>
-                          <Text>{recipe.name}</Text>
-                        </Box>
+                        <Flex flex={1}>
+                          <Text mr={2}>{recipe.name}</Text>
+                          {recipe.recipeUrl && (
+                            <Link
+                              href={recipe.recipeUrl}
+                              target="_blank"
+                              mr={2}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ExternalLinkIcon />
+                            </Link>
+                          )}
+                        </Flex>
                       </Flex>
-                      <Text fontSize="sm">{recipe.ingredients.join(", ")}</Text>
+                      <Text fontSize="sm">
+                        {recipe.ingredients?.map((i) => i.trim()).join(", ")}
+                      </Text>
                     </CardBody>
                   </Card>
                 ))}
@@ -168,8 +188,10 @@ export const PlanningPage = () => {
       <RecipeDetailsModal
         {...detailsDisclose}
         recipe={selectedRecipe}
+        selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
         onClickDelete={handleClickDelete}
+        onUpdateDays={() => {}}
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
     </Box>
