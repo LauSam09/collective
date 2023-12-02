@@ -22,6 +22,7 @@ interface List {
   unaddedItems: Array<Item>;
   items: Array<Item>;
   upsertItem: (item: Item) => Promise<void>;
+  upsertItemByName: (name: string) => Promise<void>;
 }
 
 export const ListContext = createContext<List>({
@@ -31,6 +32,7 @@ export const ListContext = createContext<List>({
   unaddedItems: [],
   items: [],
   upsertItem: async () => {},
+  upsertItemByName: async () => {},
 });
 
 interface ListContextProviderProps {
@@ -103,6 +105,17 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
     unaddedItems: Array<Item> = [];
   items.forEach((i) => (i.added ? addedItems.push(i) : unaddedItems.push(i)));
 
+  const upsertItemByName = async (name: string) => {
+    const normalisedName = name.toLowerCase();
+    const existingItem = items.find((i) => i.lowerName === normalisedName);
+
+    if (!existingItem) {
+      throw Error("Adding new items not supported from recipe modal");
+    }
+
+    await upsertItem({ ...existingItem, name });
+  };
+
   const upsertItem = async (item: Item) => {
     const { id, category, name, lowerName } = item;
 
@@ -158,6 +171,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         unaddedItems,
         items,
         upsertItem,
+        upsertItemByName,
       }}
     >
       {children}

@@ -49,7 +49,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
     onUpdateDays,
   } = props;
   // TODO: Add normalised version of added items in context
-  const { addedItems } = useList();
+  const { addedItems, upsertItemByName } = useList();
   const normalisedAddedItems = addedItems.map((i) => i.lowerName);
 
   const recipeDays = recipe?.days ?? [];
@@ -144,6 +144,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                 <HStack wrap="wrap" rowGap="2" mb={2}>
                   {recipe.ingredients.map((i) => {
                     const normalised = i.toLowerCase();
+
                     const isAdded = normalisedAddedItems.includes(normalised);
 
                     if (isAdded) {
@@ -158,6 +159,9 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                     return (
                       <Tag key={i}>
                         <TagLabel>{i}</TagLabel>
+                        <TagCloseButton onClick={() => upsertItemByName(i)}>
+                          <AddIcon boxSize="12px" />
+                        </TagCloseButton>
                       </Tag>
                     );
                   })}
