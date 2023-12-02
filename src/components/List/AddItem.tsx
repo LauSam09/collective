@@ -144,6 +144,8 @@ export const AddItem = () => {
     }
 
     if (selectedItem.id) {
+      console.log("Updating item");
+
       const itemRef = doc(
         firestore,
         "groups",
@@ -156,10 +158,12 @@ export const AddItem = () => {
       await updateDoc(itemRef, {
         added: true,
         category: category ?? categories[0].id,
+        notes: "",
         count: increment(1),
       });
       logEvent(analytics, "add_item");
     } else {
+      console.log("Adding item");
       await addDoc(
         collection(
           firestore,
@@ -173,7 +177,7 @@ export const AddItem = () => {
           name: selectedItem.name,
           lowerName: selectedItem.lowerName,
           completed: false,
-          notes: undefined,
+          notes: "",
           added: true,
           category: category ?? categories[0].id,
           count: 1,
