@@ -15,13 +15,24 @@ import { useAuthentication, useFirebase } from "../hooks";
 import { Category } from "../models/category";
 import { Item } from "../models/item";
 
+type CreateItem = {
+  name: string;
+  category?: string;
+};
+
+type ReaddItem = {
+  id: string;
+  name: string;
+  category: string;
+};
+
 interface List {
   isLoading: boolean;
   categories: Array<Category>;
   addedItems: Array<Item>;
   unaddedItems: Array<Item>;
   items: Array<Item>;
-  upsertItem: (item: Item) => Promise<void>;
+  upsertItem: (item: CreateItem | ReaddItem) => Promise<void>;
   upsertItemByName: (name: string) => Promise<void>;
 }
 
@@ -107,28 +118,22 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
 
   const upsertItemByName = async (name: string) => {
     const normalisedName = name.toLowerCase();
-    const existingItem = items.find((i) => i.lowerName === normalisedName);
-
-    if (!existingItem) {
-      throw Error("Adding new items not supported from recipe modal");
-    }
+    const existingItem = items.find((i) => i.lowerName === normalisedName) ?? {
+      name,
+    };
 
     await upsertItem({ ...existingItem, name });
   };
 
-  const upsertItem = async (item: Item) => {
-    const { id, category, name, lowerName } = item;
-
+  const upsertItem = async (item: CreateItem | ReaddItem) => {
     const itemEntity = {
       added: true,
       completed: false,
-      category,
-      name,
-      lowerName,
+      name: item.name,
       notes: "",
     };
 
-    if (id) {
+    if ("id" in item) {
       const itemRef = doc(
         firestore,
         "groups",
@@ -136,10 +141,11 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         "lists",
         appUser!.group.defaultList,
         "items",
-        id,
+        item.id,
       );
       await updateDoc(itemRef, {
         ...itemEntity,
+        category: item.category,
         count: increment(1),
       });
       logEvent(analytics, "add_item");
@@ -155,6 +161,9 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         ),
         {
           ...itemEntity,
+          category: item.category ?? "",
+          // TODO: Factor out normalisation and account for plurals
+          lowerName: item.name.toLowerCase(),
           count: 1,
         },
       );
