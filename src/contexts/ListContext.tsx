@@ -134,7 +134,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
       notes: "",
     };
 
-    if ("id" in item) {
+    if ("id" in item && item.id) {
       const itemRef = doc(
         firestore,
         "groups",
