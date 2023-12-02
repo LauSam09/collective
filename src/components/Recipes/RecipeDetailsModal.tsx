@@ -1,5 +1,6 @@
 import {
   AddIcon,
+  CheckIcon,
   DeleteIcon,
   EditIcon,
   ExternalLinkIcon,
@@ -21,9 +22,11 @@ import {
   Button,
   ModalFooter,
   TagCloseButton,
+  TagRightIcon,
 } from "@chakra-ui/react";
 
 import { Recipe } from "../../models/recipe";
+import { useList } from "../../hooks/useList";
 
 export type RecipeDetailsModalProps = {
   isOpen: boolean;
@@ -45,6 +48,9 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
     onClickDelete,
     onUpdateDays,
   } = props;
+  // TODO: Add normalised version of added items in context
+  const { addedItems } = useList();
+  const normalisedAddedItems = addedItems.map((i) => i.lowerName);
 
   const recipeDays = recipe?.days ?? [];
 
@@ -75,7 +81,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
 
         <ModalBody>
           <VStack alignItems="flex-start">
-            <HStack spacing={1} rowGap={1} flexWrap="wrap">
+            <HStack spacing={1} rowGap={1} flexWrap="wrap" mb={2}>
               {[0, 1, 2, 3, 4, 5, 6].map((day) => {
                 const thisRecipeIsOnThisDay = recipeDays.includes(day);
                 const anotherRecipeIsOnThisDay = selectedDays.includes(day);
@@ -87,11 +93,9 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                     size="sm"
                     variant={thisRecipeIsOnThisDay ? "solid" : "subtle"}
                     colorScheme={
-                      thisRecipeIsOnThisDay
+                      thisRecipeIsOnThisDay || anotherRecipeIsOnThisDay
                         ? "blue"
-                        : anotherRecipeIsOnThisDay
-                          ? "blue"
-                          : "green"
+                        : undefined
                     }
                   >
                     <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
@@ -138,11 +142,25 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
               <>
                 <Heading size="sm">Ingredients</Heading>
                 <HStack wrap="wrap" rowGap="2" mb={2}>
-                  {recipe.ingredients.map((i) => (
-                    <Tag key={i}>
-                      <TagLabel>{i}</TagLabel>
-                    </Tag>
-                  ))}
+                  {recipe.ingredients.map((i) => {
+                    const normalised = i.toLowerCase();
+                    const isAdded = normalisedAddedItems.includes(normalised);
+
+                    if (isAdded) {
+                      return (
+                        <Tag colorScheme={"blue"} key={i}>
+                          <TagLabel>{i}</TagLabel>
+                          <TagRightIcon as={CheckIcon} />
+                        </Tag>
+                      );
+                    }
+
+                    return (
+                      <Tag key={i}>
+                        <TagLabel>{i}</TagLabel>
+                      </Tag>
+                    );
+                  })}
                 </HStack>
               </>
             )}
