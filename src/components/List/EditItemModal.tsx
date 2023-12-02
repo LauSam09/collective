@@ -8,6 +8,8 @@ import {
   ModalFooter,
   Button,
   Textarea,
+  Select,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -16,8 +18,10 @@ import { logEvent } from "firebase/analytics";
 
 import { Item } from "../../models/item";
 import { useAuthentication, useFirebase } from "../../hooks";
+import { useList } from "../../hooks/useList";
 
 interface Form {
+  category: string;
   notes: string;
 }
 
@@ -30,32 +34,32 @@ export type EditItemModalProps = {
 export const EditItemModal = (props: EditItemModalProps) => {
   const { isOpen, item, onClose } = props;
   const { register, handleSubmit, reset } = useForm<Form>({
-    defaultValues: { notes: item?.notes },
+    defaultValues: { notes: item?.notes, category: item?.category ?? "" },
   });
   const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
+  const { categories } = useList();
 
   useEffect(() => {
-    reset({ notes: item?.notes });
-  }, [item]);
+    reset({ notes: item?.notes, category: item?.category ?? "" });
+  }, [item, isOpen]);
 
   const handleSave = async (item: Form) => {
-    if (item.notes !== props.item?.notes) {
-      const itemRef = doc(
-        firestore,
-        "groups",
-        appUser!.group.id,
-        "lists",
-        appUser!.group.defaultList,
-        "items",
-        props.item!.id,
-      );
-      await updateDoc(itemRef, {
-        notes: item.notes,
-      });
+    const itemRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "lists",
+      appUser!.group.defaultList,
+      "items",
+      props.item!.id,
+    );
+    await updateDoc(itemRef, {
+      category: item.category,
+      notes: item.notes,
+    });
 
-      logEvent(analytics, "edit_item_details");
-    }
+    logEvent(analytics, "edit_item_details");
 
     onClose();
   };
@@ -68,10 +72,24 @@ export const EditItemModal = (props: EditItemModalProps) => {
           <ModalHeader>[Edit] {item?.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <label>
+            <FormLabel>
+              Category
+              <Select
+                {...register("category")}
+                placeholder="Select a category"
+                mt={1}
+              >
+                {categories.map((category) => (
+                  <option value={category.id} key={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </Select>
+            </FormLabel>
+            <FormLabel>
               Notes
-              <Textarea {...register("notes")} />
-            </label>
+              <Textarea {...register("notes")} mt={1} />
+            </FormLabel>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} type="submit">
