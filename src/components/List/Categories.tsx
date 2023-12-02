@@ -80,7 +80,14 @@ export const Categories = () => {
     }))
     .sort((a, b) => a.order - b.order);
 
-  // TODO: Handle uncategorised. Doing .forEach results in duplicate items.
+  const uncategorisedItems = items.filter((item) => !item.category);
+  displayCategories.unshift({
+    id: "",
+    name: "Uncategorised",
+    colour: "#d4d5d6",
+    order: 0,
+    items: uncategorisedItems,
+  });
 
   return (
     <>
