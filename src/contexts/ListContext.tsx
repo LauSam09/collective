@@ -1,5 +1,15 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  increment,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import { logEvent } from "firebase/analytics";
 
 import { useAuthentication, useFirebase } from "../hooks";
 import { Category } from "../models/category";
@@ -11,6 +21,7 @@ interface List {
   addedItems: Array<Item>;
   unaddedItems: Array<Item>;
   items: Array<Item>;
+  upsertItem: (item: Item) => Promise<void>;
 }
 
 export const ListContext = createContext<List>({
@@ -19,6 +30,7 @@ export const ListContext = createContext<List>({
   addedItems: [],
   unaddedItems: [],
   items: [],
+  upsertItem: async () => {},
 });
 
 interface ListContextProviderProps {
@@ -26,7 +38,7 @@ interface ListContextProviderProps {
 }
 
 export const ListContextProvider = ({ children }: ListContextProviderProps) => {
-  const { firestore } = useFirebase();
+  const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [items, setItems] = useState<Array<Item>>([]);
@@ -91,9 +103,62 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
     unaddedItems: Array<Item> = [];
   items.forEach((i) => (i.added ? addedItems.push(i) : unaddedItems.push(i)));
 
+  const upsertItem = async (item: Item) => {
+    const { id, category, name, lowerName } = item;
+
+    const itemEntity = {
+      added: true,
+      completed: false,
+      category,
+      name,
+      lowerName,
+      notes: "",
+    };
+
+    if (id) {
+      const itemRef = doc(
+        firestore,
+        "groups",
+        appUser!.group.id,
+        "lists",
+        appUser!.group.defaultList,
+        "items",
+        id,
+      );
+      await updateDoc(itemRef, {
+        ...itemEntity,
+        count: increment(1),
+      });
+      logEvent(analytics, "add_item");
+    } else {
+      await addDoc(
+        collection(
+          firestore,
+          "groups",
+          appUser!.group.id,
+          "lists",
+          appUser!.group.defaultList,
+          "items",
+        ),
+        {
+          ...itemEntity,
+          count: 1,
+        },
+      );
+      logEvent(analytics, "create_item");
+    }
+  };
+
   return (
     <ListContext.Provider
-      value={{ isLoading, categories, addedItems, unaddedItems, items }}
+      value={{
+        isLoading,
+        categories,
+        addedItems,
+        unaddedItems,
+        items,
+        upsertItem,
+      }}
     >
       {children}
     </ListContext.Provider>

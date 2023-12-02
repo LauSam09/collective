@@ -17,17 +17,8 @@ import { createRef, FormEvent, useEffect, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
-import {
-  addDoc,
-  collection,
-  doc,
-  increment,
-  updateDoc,
-} from "firebase/firestore";
-import { logEvent } from "firebase/analytics";
 
 import { useList } from "../../hooks/useList";
-import { useAuthentication, useFirebase } from "../../hooks";
 import { Item } from "../../models/item";
 
 export type LoadOptionsCallback = (
@@ -57,9 +48,7 @@ export const AddItem = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const inputRef = createRef<SelectRef>();
   const [category, setCategory] = useState<string>();
-  const { items, addedItems, categories } = useList();
-  const { firestore, analytics } = useFirebase();
-  const { appUser } = useAuthentication();
+  const { items, addedItems, categories, upsertItem } = useList();
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [itemAlreadyAdded, setItemAdded] = useState(false);
 
@@ -143,48 +132,9 @@ export const AddItem = () => {
       return;
     }
 
-    if (selectedItem.id) {
-      console.log("Updating item");
+    const itemCategory = category ?? categories[0].id;
 
-      const itemRef = doc(
-        firestore,
-        "groups",
-        appUser!.group.id,
-        "lists",
-        appUser!.group.defaultList,
-        "items",
-        selectedItem.id,
-      );
-      await updateDoc(itemRef, {
-        added: true,
-        category: category ?? categories[0].id,
-        notes: "",
-        count: increment(1),
-      });
-      logEvent(analytics, "add_item");
-    } else {
-      console.log("Adding item");
-      await addDoc(
-        collection(
-          firestore,
-          "groups",
-          appUser!.group.id,
-          "lists",
-          appUser!.group.defaultList,
-          "items",
-        ),
-        {
-          name: selectedItem.name,
-          lowerName: selectedItem.lowerName,
-          completed: false,
-          notes: "",
-          added: true,
-          category: category ?? categories[0].id,
-          count: 1,
-        },
-      );
-      logEvent(analytics, "create_item");
-    }
+    await upsertItem({ ...selectedItem, category: itemCategory });
 
     inputRef.current?.clearValue();
     inputRef.current?.focus();
