@@ -69,7 +69,7 @@ export const EditItemModal = (props: EditItemModalProps) => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(handleSave)}>
-          <ModalHeader>[Edit] {item?.name}</ModalHeader>
+          <ModalHeader>{item?.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormLabel>

@@ -57,6 +57,11 @@ export const Categories = () => {
     logEvent(analytics, "clear_completed");
   };
 
+  const handleClickDetailsEdit = () => {
+    detailsDisclosure.onClose();
+    editDisclosure.onOpen();
+  };
+
   if (loading) {
     return (
       <Stack>
@@ -110,7 +115,11 @@ export const Categories = () => {
           </Category>
         ))}
       </Stack>
-      <ItemDetailsModal {...detailsDisclosure} item={selectedItem} />
+      <ItemDetailsModal
+        {...detailsDisclosure}
+        item={selectedItem}
+        onEdit={handleClickDetailsEdit}
+      />
       <EditItemModal {...editDisclosure} item={selectedItem} />
     </>
   );
