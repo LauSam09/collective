@@ -14,6 +14,7 @@ import { logEvent } from "firebase/analytics";
 import { useAuthentication, useFirebase } from "../hooks";
 import { Category } from "../models/category";
 import { Item } from "../models/item";
+import { normalizeName } from "../utilities/normalization";
 
 type CreateItem = {
   name: string;
@@ -117,8 +118,8 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
   items.forEach((i) => (i.added ? addedItems.push(i) : unaddedItems.push(i)));
 
   const upsertItemByName = async (name: string) => {
-    const normalisedName = name.toLowerCase();
-    const existingItem = items.find((i) => i.lowerName === normalisedName) ?? {
+    const normalizedName = normalizeName(name);
+    const existingItem = items.find((i) => i.lowerName === normalizedName) ?? {
       name,
     };
 
@@ -162,8 +163,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         {
           ...itemEntity,
           category: item.category ?? "",
-          // TODO: Factor out normalisation and account for plurals
-          lowerName: item.name.toLowerCase(),
+          lowerName: normalizeName(item.name),
           count: 1,
         },
       );

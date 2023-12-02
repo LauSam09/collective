@@ -27,6 +27,7 @@ import {
 
 import { Recipe } from "../../models/recipe";
 import { useList } from "../../hooks/useList";
+import { normalizeName } from "../../utilities/normalization";
 
 export type RecipeDetailsModalProps = {
   isOpen: boolean;
@@ -143,9 +144,8 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                 <Heading size="sm">Ingredients</Heading>
                 <HStack wrap="wrap" rowGap="2" mb={2}>
                   {recipe.ingredients.map((i) => {
-                    const normalised = i.toLowerCase();
-
-                    const isAdded = normalisedAddedItems.includes(normalised);
+                    const normalized = normalizeName(i);
+                    const isAdded = normalisedAddedItems.includes(normalized);
 
                     if (isAdded) {
                       return (

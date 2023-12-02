@@ -20,6 +20,7 @@ import ReactSelect from "react-select/dist/declarations/src/Select";
 
 import { useList } from "../../hooks/useList";
 import { Item } from "../../models/item";
+import { normalizeName } from "../../utilities/normalization";
 
 export type LoadOptionsCallback = (
   options: OptionsOrGroups<
@@ -78,11 +79,11 @@ export const AddItem = () => {
   }
 
   const loadOptions = (inputValue: string, callback: LoadOptionsCallback) => {
-    const lowerName = inputValue.toLowerCase();
+    const normalized = normalizeName(inputValue);
 
     return callback(
       items
-        .filter((o) => o.lowerName.includes(lowerName))
+        .filter((o) => o.lowerName.includes(normalized))
         .map((i) => ({
           label: i.name,
           value: i.lowerName,
@@ -112,7 +113,7 @@ export const AddItem = () => {
       setSelectedItem({
         id: "",
         name: value.value,
-        lowerName: value.value.toLowerCase(),
+        lowerName: normalizeName(value.value),
         category: category ?? categories[0].id,
         notes: "",
         completed: false,
