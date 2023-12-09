@@ -17,9 +17,5 @@ export const Protected = ({ children }: ProtectedProps) => {
     }
   }, [state]);
 
-  if (state !== "Authenticated") {
-    return null;
-  }
-
   return <>{children}</>;
 };

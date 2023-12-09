@@ -15,6 +15,7 @@ import {
   MenuItem,
   MenuList,
   Show,
+  SkeletonCircle,
   Stack,
   Text,
   useColorModeValue,
@@ -106,6 +107,7 @@ export default function Nav() {
               </Stack>
             </Flex>
           )}
+          {state === "Loading" && <SkeletonCircle size="8" />}
         </Flex>
       </Box>
       <Drawer

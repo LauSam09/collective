@@ -26,7 +26,7 @@ export const Categories = () => {
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<ItemModel>();
   const [hideCompleted, setHideCompleted] = useState(false);
-  const { isLoading: loading, categories, addedItems: items } = useList();
+  const { isLoading: isLoading, categories, addedItems: items } = useList();
 
   const handleOpenDetails = (item: ItemModel) => {
     setSelectedItem(item);
@@ -69,7 +69,9 @@ export const Categories = () => {
     editDisclosure.onOpen();
   };
 
-  if (loading) {
+  if (isLoading) {
+    console.log("Rendering skeleton categories");
+
     return (
       <Stack>
         {[
@@ -84,6 +86,7 @@ export const Categories = () => {
       </Stack>
     );
   }
+  console.log("Rendering Categories");
 
   const displayCategories: Array<CategoryModel> = categories
     .map((category) => ({
