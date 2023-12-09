@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { Button, Flex, Skeleton, Stack, useDisclosure } from "@chakra-ui/react";
+import {
+  Flex,
+  IconButton,
+  Skeleton,
+  Stack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { deleteField, doc, writeBatch } from "firebase/firestore";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 import { Category } from "./Category";
 import { EditItemModal } from "./EditItemModal";
@@ -19,6 +25,7 @@ export const Categories = () => {
   const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<ItemModel>();
+  const [hideCompleted, setHideCompleted] = useState(false);
   const { isLoading: loading, categories, addedItems: items } = useList();
 
   const handleOpenDetails = (item: ItemModel) => {
@@ -81,7 +88,11 @@ export const Categories = () => {
   const displayCategories: Array<CategoryModel> = categories
     .map((category) => ({
       ...category,
-      items: items.filter((item) => item.category === category.id),
+      items: items.filter(
+        (item) =>
+          item.category === category.id &&
+          ((hideCompleted && !item.completed) || !hideCompleted),
+      ),
     }))
     .sort((a, b) => a.order - b.order);
 
@@ -100,9 +111,18 @@ export const Categories = () => {
   return (
     <>
       <Flex justify="flex-end" mb={2}>
-        <Button colorScheme="red" onClick={handleClickClear}>
-          <DeleteIcon />
-        </Button>
+        <IconButton
+          mr={2}
+          icon={hideCompleted ? <ViewIcon /> : <ViewOffIcon />}
+          aria-label="Toggle displaying completed items"
+          onClick={() => setHideCompleted((hideCompleted) => !hideCompleted)}
+        />
+        <IconButton
+          colorScheme="red"
+          icon={<DeleteIcon />}
+          aria-label="Clear completed items"
+          onClick={handleClickClear}
+        />
       </Flex>
       <Stack>
         {displayCategories.map((category) => (
