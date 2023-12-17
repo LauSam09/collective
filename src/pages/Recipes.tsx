@@ -36,6 +36,8 @@ import { useDebounce } from "../hooks/useDebounce";
 import { AddRecipeModal } from "../components/Recipes/AddRecipeModal";
 import useRecipes from "../hooks/useRecipes";
 
+const INCREMENT = 20;
+
 export const RecipesPage = () => {
   const { recipes } = useRecipes();
   const addDisclosure = useDisclosure();
@@ -51,6 +53,7 @@ export const RecipesPage = () => {
   const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const [displayCount, setDisplayCount] = useState(INCREMENT);
 
   const handleClickDetails = (recipe: Recipe) => {
     setSelectedRecipe(recipe);
@@ -105,10 +108,13 @@ export const RecipesPage = () => {
           ),
       );
       setFilteredRecipes(filtered);
+      setDisplayCount(INCREMENT);
     }
   }, [debouncedFilterValue]);
 
-  const displayRecipes = debouncedFilterValue ? filteredRecipes : recipes;
+  const totalDisplayRecipes = debouncedFilterValue ? filteredRecipes : recipes;
+
+  const displayRecipes = totalDisplayRecipes.slice(0, displayCount);
 
   const selectedDays = recipes
     .filter((r) => r.days && r.days.length > 0)
@@ -191,6 +197,13 @@ export const RecipesPage = () => {
             ))}
           </Stack>
         </Box>
+        <HStack justifyContent="center" p={2}>
+          {totalDisplayRecipes.length > displayCount && (
+            <Button onClick={() => setDisplayCount((old) => old + INCREMENT)}>
+              Load more
+            </Button>
+          )}
+        </HStack>
       </Box>
       <AddRecipeModal {...addDisclosure} />
       <RecipeDetailsModal
