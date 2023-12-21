@@ -1,5 +1,12 @@
-import { CalendarIcon, CheckIcon, SearchIcon } from "@chakra-ui/icons";
-import { Box, HStack, Link, Show, useColorModeValue } from "@chakra-ui/react";
+import { AddIcon, CalendarIcon, CheckIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  HStack,
+  Link,
+  Show,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
 export default function MobileNav() {
@@ -16,6 +23,28 @@ export default function MobileNav() {
       >
         <HStack>
           {/* TODO: Factor out these components */}
+          <Button
+            variant="ghost"
+            display="flex"
+            flexDir="column"
+            alignItems="center"
+            flex={1}
+            padding={2}
+            aria-label="Add item"
+            height="100%"
+            fontWeight="normal"
+            _hover={{
+              backgroundColor: "var(--chakra-colors-gray-200)",
+            }}
+            _dark={{
+              _hover: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+          >
+            <AddIcon />
+            Add
+          </Button>
           <Link
             as={NavLink}
             to="/"
@@ -31,7 +60,7 @@ export default function MobileNav() {
             }}
             _dark={{
               _hover: {
-                backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
             }}
           >
@@ -52,7 +81,7 @@ export default function MobileNav() {
             }}
             _dark={{
               _hover: {
-                backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
             }}
           >
@@ -73,7 +102,7 @@ export default function MobileNav() {
             }}
             _dark={{
               _hover: {
-                backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
             }}
           >

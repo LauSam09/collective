@@ -136,7 +136,7 @@ export default function Nav() {
               }}
               _dark={{
                 _hover: {
-                  backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
                 },
               }}
             >
@@ -154,7 +154,7 @@ export default function Nav() {
               }}
               _dark={{
                 _hover: {
-                  backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
                 },
               }}
             >
@@ -172,7 +172,7 @@ export default function Nav() {
               }}
               _dark={{
                 _hover: {
-                  backgroundColor: "var(--chakra-colors-whiteAlpha-300)",
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
                 },
               }}
             >

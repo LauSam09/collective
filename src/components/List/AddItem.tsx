@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Show,
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -63,18 +64,20 @@ export const AddItem = () => {
 
   if (!isOpen) {
     return (
-      <Button
-        variant="solid"
-        size="lg"
-        position="fixed"
-        colorScheme={"blue"}
-        bottom={{ base: "20", sm: "4" }}
-        right="2"
-        zIndex={10}
-        onClick={() => onOpen()}
-      >
-        <AddIcon />
-      </Button>
+      <Show above="sm">
+        <Button
+          variant="solid"
+          size="lg"
+          position="fixed"
+          colorScheme={"blue"}
+          bottom={{ base: "20", sm: "4" }}
+          right="2"
+          zIndex={10}
+          onClick={() => onOpen()}
+        >
+          <AddIcon />
+        </Button>
+      </Show>
     );
   }
 
