@@ -12,7 +12,6 @@ import {
   Select,
   Show,
   Stack,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { createRef, FormEvent, useEffect, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
@@ -46,8 +45,14 @@ export type SelectRef = ReactSelect<
   GroupBase<{ label: string; value: string }>
 >;
 
-export const AddItem = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+export type AddItemProps = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+};
+
+export const AddItem = (props: AddItemProps) => {
+  const { isOpen, onClose, onOpen } = props;
   const inputRef = createRef<SelectRef>();
   const [category, setCategory] = useState<string>();
   const { items, addedItems, categories, upsertItem } = useList();

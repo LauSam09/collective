@@ -50,7 +50,7 @@ export default function Nav() {
         <Flex h={16} alignItems="center" justifyContent="space-between">
           <Box>
             <Heading>
-              <Show below="md">
+              <Show below="sm">
                 <IconButton
                   onClick={onOpen}
                   ref={btnRef}
@@ -70,7 +70,7 @@ export default function Nav() {
           {state === "Authenticated" && (
             <Flex alignItems="center">
               <Stack direction="row" spacing={4} alignItems="center">
-                <Show above="md">
+                <Show above="sm">
                   <Link as={NavLink} to="/">
                     List
                   </Link>

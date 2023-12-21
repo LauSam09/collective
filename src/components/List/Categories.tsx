@@ -70,8 +70,6 @@ export const Categories = () => {
   };
 
   if (isLoading) {
-    console.log("Rendering skeleton categories");
-
     return (
       <Stack>
         {[
@@ -86,7 +84,6 @@ export const Categories = () => {
       </Stack>
     );
   }
-  console.log("Rendering Categories");
 
   const displayCategories: Array<CategoryModel> = categories
     .map((category) => ({

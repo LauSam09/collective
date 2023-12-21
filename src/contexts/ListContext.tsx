@@ -10,11 +10,13 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
+import { useDisclosure } from "@chakra-ui/react";
 
 import { useAuthentication, useFirebase } from "../hooks";
 import { Category } from "../models/category";
 import { Item } from "../models/item";
 import { normalizeName } from "../utilities/normalization";
+import { AddItem } from "../components/List/AddItem";
 
 type CreateItem = {
   name: string;
@@ -33,6 +35,7 @@ interface List {
   addedItems: Array<Item>;
   unaddedItems: Array<Item>;
   items: Array<Item>;
+  openAddItemModal: () => void;
   upsertItem: (item: CreateItem | ReaddItem) => Promise<void>;
   upsertItemByName: (name: string) => Promise<void>;
 }
@@ -43,6 +46,7 @@ export const ListContext = createContext<List>({
   addedItems: [],
   unaddedItems: [],
   items: [],
+  openAddItemModal: () => {},
   upsertItem: async () => {},
   upsertItemByName: async () => {},
 });
@@ -57,6 +61,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [items, setItems] = useState<Array<Item>>([]);
   const [isLoading, setLoading] = useState(true);
+  const addItemModalDisclosure = useDisclosure();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -116,6 +121,8 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
   const addedItems: Array<Item> = [],
     unaddedItems: Array<Item> = [];
   items.forEach((i) => (i.added ? addedItems.push(i) : unaddedItems.push(i)));
+
+  const openAddItemModal = () => addItemModalDisclosure.onOpen();
 
   const upsertItemByName = async (name: string) => {
     const normalizedName = normalizeName(name);
@@ -179,11 +186,13 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         addedItems,
         unaddedItems,
         items,
+        openAddItemModal,
         upsertItem,
         upsertItemByName,
       }}
     >
       {children}
+      <AddItem {...addItemModalDisclosure} />
     </ListContext.Provider>
   );
 };

@@ -9,8 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
+import { useList } from "../hooks/useList";
+
 export default function MobileNav() {
   const backgroundColor = useColorModeValue("gray.100", "gray.700");
+  const { openAddItemModal } = useList();
 
   return (
     <Show below="sm">
@@ -33,6 +36,7 @@ export default function MobileNav() {
             aria-label="Add item"
             height="100%"
             fontWeight="normal"
+            onClick={openAddItemModal}
             _hover={{
               backgroundColor: "var(--chakra-colors-gray-200)",
             }}
