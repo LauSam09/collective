@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { deleteField, doc, writeBatch } from "firebase/firestore";
 import { DeleteIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { logEvent } from "firebase/analytics";
 
 import { Category } from "./Category";
 import { EditItemModal } from "./EditItemModal";
@@ -17,7 +18,6 @@ import { Item as ItemModel } from "../../models/item";
 import { Category as CategoryModel } from "../../models/category";
 import { useList } from "../../hooks/useList";
 import { useAuthentication, useFirebase } from "../../hooks";
-import { logEvent } from "firebase/analytics";
 
 export const Categories = () => {
   const detailsDisclosure = useDisclosure();
@@ -88,11 +88,13 @@ export const Categories = () => {
   const displayCategories: Array<CategoryModel> = categories
     .map((category) => ({
       ...category,
-      items: items.filter(
-        (item) =>
-          item.category === category.id &&
-          ((hideCompleted && !item.completed) || !hideCompleted),
-      ),
+      items: items
+        .filter(
+          (item) =>
+            item.category === category.id &&
+            ((hideCompleted && !item.completed) || !hideCompleted),
+        )
+        .sort((a, b) => a.name.localeCompare(b.name)),
     }))
     .sort((a, b) => a.order - b.order);
 
