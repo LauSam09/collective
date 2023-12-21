@@ -36,6 +36,7 @@ interface List {
   unaddedItems: Array<Item>;
   items: Array<Item>;
   openAddItemModal: () => void;
+  quickAddItem: (id: string) => Promise<void>;
   upsertItem: (item: CreateItem | ReaddItem) => Promise<void>;
   upsertItemByName: (name: string) => Promise<void>;
 }
@@ -47,6 +48,7 @@ export const ListContext = createContext<List>({
   unaddedItems: [],
   items: [],
   openAddItemModal: () => {},
+  quickAddItem: async () => {},
   upsertItem: async () => {},
   upsertItemByName: async () => {},
 });
@@ -178,6 +180,24 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
     }
   };
 
+  const quickAddItem = async (id: string) => {
+    const itemRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "lists",
+      appUser!.group.defaultList,
+      "items",
+      id,
+    );
+
+    await updateDoc(itemRef, {
+      count: increment(1),
+      added: true,
+    });
+    logEvent(analytics, "quick_add_item");
+  };
+
   return (
     <ListContext.Provider
       value={{
@@ -187,6 +207,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         unaddedItems,
         items,
         openAddItemModal,
+        quickAddItem,
         upsertItem,
         upsertItemByName,
       }}

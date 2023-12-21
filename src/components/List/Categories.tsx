@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { deleteField, doc, writeBatch } from "firebase/firestore";
-import { DeleteIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { DeleteIcon, StarIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { logEvent } from "firebase/analytics";
 
 import { Category } from "./Category";
@@ -18,10 +18,12 @@ import { Item as ItemModel } from "../../models/item";
 import { Category as CategoryModel } from "../../models/category";
 import { useList } from "../../hooks/useList";
 import { useAuthentication, useFirebase } from "../../hooks";
+import { FavouritesModal } from "./FavouritesModal";
 
 export const Categories = () => {
   const detailsDisclosure = useDisclosure();
   const editDisclosure = useDisclosure();
+  const favouritesDisclosure = useDisclosure();
   const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<ItemModel>();
@@ -107,16 +109,23 @@ export const Categories = () => {
 
   return (
     <>
-      <Flex justify="flex-end" mb={2}>
+      <Flex justify="flex-end" mb={2} gap={2}>
         <IconButton
-          mr={2}
+          icon={<StarIcon />}
+          size="lg"
+          aria-label="Favourite items"
+          onClick={favouritesDisclosure.onOpen}
+        />
+        <IconButton
           icon={hideCompleted ? <ViewIcon /> : <ViewOffIcon />}
+          size="lg"
           aria-label="Toggle displaying completed items"
           onClick={() => setHideCompleted((hideCompleted) => !hideCompleted)}
         />
         <IconButton
           colorScheme="red"
           icon={<DeleteIcon />}
+          size="lg"
           aria-label="Clear completed items"
           onClick={handleClickClear}
         />
@@ -140,6 +149,7 @@ export const Categories = () => {
         onEdit={handleClickDetailsEdit}
       />
       <EditItemModal {...editDisclosure} item={selectedItem} />
+      <FavouritesModal {...favouritesDisclosure} />
     </>
   );
 };
