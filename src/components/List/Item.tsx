@@ -81,7 +81,7 @@ export const Item = (props: ItemProps) => {
     <Flex key={name} justifyContent="space-between">
       <Checkbox
         onChange={handleCheckboxChange}
-        defaultChecked={completed}
+        isChecked={completed}
         size="lg"
         whiteSpace="nowrap"
         overflow="hidden"
