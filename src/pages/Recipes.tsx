@@ -1,4 +1,9 @@
-import { SearchIcon, AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import {
+  SearchIcon,
+  AddIcon,
+  ExternalLinkIcon,
+  CloseIcon,
+} from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -17,6 +22,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Link,
   Stack,
   Tag,
@@ -49,7 +55,10 @@ export const RecipesPage = () => {
     [],
   );
   const [filterValue, setFilterValue] = useState("");
-  const debouncedFilterValue = useDebounce(filterValue, 300);
+  const [debouncedFilterValue, setDebouncedFilterValue] = useDebounce(
+    filterValue,
+    300,
+  );
   const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -112,6 +121,11 @@ export const RecipesPage = () => {
     }
   }, [debouncedFilterValue]);
 
+  const handleClearSearch = () => {
+    setDebouncedFilterValue("");
+    setFilterValue("");
+  };
+
   const totalDisplayRecipes = debouncedFilterValue ? filteredRecipes : recipes;
 
   const displayRecipes = totalDisplayRecipes.slice(0, displayCount);
@@ -140,6 +154,16 @@ export const RecipesPage = () => {
               value={filterValue}
               onChange={(e) => setFilterValue(e.target.value)}
             />
+            <InputRightElement>
+              <IconButton
+                size="sm"
+                variant="ghost"
+                aria-label="Clear recipe search"
+                onClick={handleClearSearch}
+              >
+                <CloseIcon />
+              </IconButton>
+            </InputRightElement>
           </InputGroup>
         </Box>
         <Box>
