@@ -33,11 +33,6 @@ export const Categories = () => {
     detailsDisclosure.onOpen();
   };
 
-  const handleOpenEdit = (item: ItemModel) => {
-    setSelectedItem(item);
-    editDisclosure.onOpen();
-  };
-
   const handleClickClear = () => {
     const batch = writeBatch(firestore);
 
@@ -134,7 +129,6 @@ export const Categories = () => {
                 key={item.id}
                 item={item}
                 openDetails={() => handleOpenDetails(item)}
-                openEdit={() => handleOpenEdit(item)}
               />
             ))}
           </Category>

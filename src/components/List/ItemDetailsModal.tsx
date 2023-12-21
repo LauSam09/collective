@@ -12,11 +12,14 @@ import {
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import { EditIcon, MinusIcon } from "@chakra-ui/icons";
+import { logEvent } from "firebase/analytics";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 import { Item } from "../../models/item";
 import useRecipes from "../../hooks/useRecipes";
 import { normalizeName } from "../../utilities/normalization";
+import { useFirebase, useAuthentication } from "../../hooks";
 
 type ItemDetailsModalProps = {
   isOpen: boolean;
@@ -28,6 +31,9 @@ type ItemDetailsModalProps = {
 export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
   const { isOpen, item, onClose, onEdit } = props;
   const { recipes } = useRecipes();
+
+  const { firestore, analytics } = useFirebase();
+  const { appUser } = useAuthentication();
   // TODO: Move to context
   const addedRecipes = recipes.filter((r) => r.days && r.days.length > 0);
 
@@ -44,6 +50,29 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
     }
   });
 
+  const handleRemoveClick = async () => {
+    const itemRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "lists",
+      appUser!.group.defaultList,
+      "items",
+      item!.id,
+    );
+
+    await updateDoc(itemRef, {
+      added: false,
+      completed: false,
+      notes: "",
+      count: increment(-1),
+    });
+
+    onClose();
+
+    logEvent(analytics, "item_removal");
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -52,6 +81,9 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
           <Flex justifyContent="space-between">
             <Text>{item?.name}</Text>
             <Flex gap={2}>
+              <Button onClick={handleRemoveClick} aria-label="Remove">
+                <MinusIcon />
+              </Button>
               <Button onClick={onEdit}>
                 <EditIcon />
               </Button>

@@ -1,16 +1,6 @@
-import { HamburgerIcon, EditIcon, InfoIcon, MinusIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Checkbox,
-  Flex,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from "@chakra-ui/react";
-import { doc, updateDoc, increment } from "firebase/firestore";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { Box, Checkbox, Flex, IconButton, Text } from "@chakra-ui/react";
+import { doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
 import { Item as ItemModel } from "../../models/item";
@@ -20,14 +10,12 @@ import { useFirebase, useAuthentication } from "../../hooks";
 export type ItemProps = {
   item: ItemModel;
   openDetails: () => void;
-  openEdit: () => void;
 };
 
 export const Item = (props: ItemProps) => {
   const {
     item: { id, name, completed, notes },
     openDetails,
-    openEdit,
   } = props;
   const { firestore, analytics } = useFirebase();
   const { appUser } = useAuthentication();
@@ -56,27 +44,6 @@ export const Item = (props: ItemProps) => {
     logEvent(analytics, "toggle_completion", { completed });
   };
 
-  const handleRemoveClick = async () => {
-    const itemRef = doc(
-      firestore,
-      "groups",
-      appUser!.group.id,
-      "lists",
-      appUser!.group.defaultList,
-      "items",
-      id,
-    );
-
-    await updateDoc(itemRef, {
-      added: false,
-      completed: false,
-      notes: "",
-      count: increment(-1),
-    });
-
-    logEvent(analytics, "item_removal");
-  };
-
   return (
     <Flex key={name} justifyContent="space-between">
       <Checkbox
@@ -100,25 +67,9 @@ export const Item = (props: ItemProps) => {
           )}
         </Box>
       </Checkbox>
-      <Menu>
-        <MenuButton
-          as={IconButton}
-          aria-label="Options"
-          icon={<HamburgerIcon />}
-          variant="solid"
-        />
-        <MenuList>
-          <MenuItem icon={<InfoIcon />} onClick={openDetails}>
-            Details
-          </MenuItem>
-          <MenuItem icon={<EditIcon />} onClick={openEdit}>
-            Edit
-          </MenuItem>
-          <MenuItem icon={<MinusIcon />} onClick={handleRemoveClick}>
-            Remove
-          </MenuItem>
-        </MenuList>
-      </Menu>
+      <IconButton aria-label="Open item details" onClick={openDetails}>
+        <HamburgerIcon />
+      </IconButton>
     </Flex>
   );
 };
