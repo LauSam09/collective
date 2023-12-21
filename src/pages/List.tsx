@@ -6,7 +6,7 @@ import { Categories } from "../components/List/Categories";
 export const ListPage = () => (
   <Box>
     <Categories />
-    <Box mb="12" />
+    <Box mb={{ base: "32", sm: "14" }} />
     <AddItem />
   </Box>
 );

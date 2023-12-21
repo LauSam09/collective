@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 
+import MobileNav from "./components/MobileNav";
 import Nav from "./components/Nav";
 import { LoginPage } from "./pages/Login";
 import { Protected } from "./components/Protected";
@@ -42,6 +43,7 @@ function App() {
           />
         </Routes>
       </Box>
+      <MobileNav />
     </div>
   );
 }

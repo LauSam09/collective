@@ -68,8 +68,8 @@ export const AddItem = () => {
         size="lg"
         position="fixed"
         colorScheme={"blue"}
-        bottom="4"
-        right="4"
+        bottom={{ base: "20", sm: "4" }}
+        right="2"
         zIndex={10}
         onClick={() => onOpen()}
       >
