@@ -9,11 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
-import { useList } from "../hooks/useList";
+import { useAuthentication, useList } from "../hooks";
 
 export default function MobileNav() {
   const backgroundColor = useColorModeValue("gray.100", "gray.700");
   const { openAddItemModal } = useList();
+  const { state } = useAuthentication();
+
+  if (state !== "Authenticated") return null;
 
   return (
     <Show below="sm">
