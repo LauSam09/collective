@@ -17,9 +17,8 @@ import { logEvent } from "firebase/analytics";
 import { doc, updateDoc, increment } from "firebase/firestore";
 
 import { Item } from "../../models/item";
-import useRecipes from "../../hooks/useRecipes";
 import { normalizeName } from "../../utilities/normalization";
-import { useFirebase, useAuthentication } from "../../hooks";
+import { useFirebase, useAuthentication, useRecipes } from "../../hooks";
 
 type ItemDetailsModalProps = {
   isOpen: boolean;

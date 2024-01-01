@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { RecipeContext } from "../contexts/RecipeContext";
 
-const useRecipes = () => {
+export const useRecipes = () => {
   const recipesContext = useContext(RecipeContext);
 
   if (!recipesContext) {

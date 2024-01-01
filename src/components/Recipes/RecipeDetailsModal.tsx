@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Recipe } from "../../models/recipe";
-import { useList } from "../../hooks/useList";
+import { useList } from "../../hooks";
 import { normalizeName } from "../../utilities/normalization";
 
 export type RecipeDetailsModalProps = {

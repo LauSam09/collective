@@ -34,13 +34,16 @@ import { useEffect, useRef, useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
+import { AddRecipeModal } from "../components/Recipes/AddRecipeModal";
 import { EditRecipeModal } from "../components/Recipes/EditRecipeModal";
 import { RecipeDetailsModal } from "../components/Recipes/RecipeDetailsModal";
 import { Recipe } from "../models/recipe";
-import { useAuthentication, useFirebase } from "../hooks";
-import { useDebounce } from "../hooks/useDebounce";
-import { AddRecipeModal } from "../components/Recipes/AddRecipeModal";
-import useRecipes from "../hooks/useRecipes";
+import {
+  useAuthentication,
+  useFirebase,
+  useRecipes,
+  useDebounce,
+} from "../hooks";
 
 const INCREMENT = 20;
 

@@ -16,8 +16,7 @@ import { Item } from "./Item";
 import { ItemDetailsModal } from "./ItemDetailsModal";
 import { Item as ItemModel } from "../../models/item";
 import { Category as CategoryModel } from "../../models/category";
-import { useList } from "../../hooks/useList";
-import { useAuthentication, useFirebase } from "../../hooks";
+import { useAuthentication, useFirebase, useList } from "../../hooks";
 import { FavouritesModal } from "./FavouritesModal";
 
 export const Categories = () => {

@@ -17,8 +17,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
 import { Item } from "../../models/item";
-import { useAuthentication, useFirebase } from "../../hooks";
-import { useList } from "../../hooks/useList";
+import { useAuthentication, useFirebase, useList } from "../../hooks";
 
 interface Form {
   category: string;

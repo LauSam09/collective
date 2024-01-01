@@ -2,7 +2,7 @@ import { Box, Button, Flex, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-import { useAuthentication } from "../hooks/useAuthentication";
+import { useAuthentication } from "../hooks";
 
 export const LoginPage = () => {
   const { state, signIn } = useAuthentication();

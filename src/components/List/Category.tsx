@@ -1,6 +1,5 @@
 import { Card, CardBody, CardHeader, Heading, Stack } from "@chakra-ui/react";
-import React from "react";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 export type CategoryProps = {
   colour: string;

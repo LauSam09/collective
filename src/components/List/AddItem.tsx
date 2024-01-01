@@ -18,7 +18,7 @@ import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
 
-import { useList } from "../../hooks/useList";
+import { useList } from "../../hooks";
 import { Item } from "../../models/item";
 import { normalizeName } from "../../utilities/normalization";
 
