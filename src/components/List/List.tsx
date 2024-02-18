@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Box,
   Flex,
   IconButton,
   Skeleton,
@@ -19,7 +20,7 @@ import { Category as CategoryModel } from "../../models/category";
 import { useAuthentication, useFirebase, useList } from "../../hooks";
 import { FavouritesModal } from "./FavouritesModal";
 
-export const Categories = () => {
+export const List = () => {
   const detailsDisclosure = useDisclosure();
   const editDisclosure = useDisclosure();
   const favouritesDisclosure = useDisclosure();
@@ -67,7 +68,7 @@ export const Categories = () => {
 
   if (isLoading) {
     return (
-      <Stack>
+      <Stack py={2}>
         {[
           { name: "", colour: "" },
           { name: "", colour: "" },
@@ -107,7 +108,7 @@ export const Categories = () => {
   }
 
   return (
-    <>
+    <Box py={2}>
       <Flex justify="flex-end" mb={2} gap={2}>
         <IconButton
           icon={<StarIcon />}
@@ -149,6 +150,6 @@ export const Categories = () => {
       />
       <EditItemModal {...editDisclosure} item={selectedItem} />
       <FavouritesModal {...favouritesDisclosure} />
-    </>
+    </Box>
   );
 };

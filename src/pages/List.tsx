@@ -1,9 +1,3 @@
-import { Box } from "@chakra-ui/react";
+import { List } from "../components/List/List";
 
-import { Categories } from "../components/List/Categories";
-
-export const ListPage = () => (
-  <Box py={2}>
-    <Categories />
-  </Box>
-);
+export const ListPage = () => <List />;
