@@ -1,29 +1,14 @@
-import {
-  SearchIcon,
-  AddIcon,
-  ExternalLinkIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  Card,
-  CardBody,
   Flex,
   Heading,
   HStack,
   IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  Link,
   Stack,
-  Tag,
-  TagLabel,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
@@ -39,6 +24,8 @@ import {
   useDebounce,
 } from "../../hooks";
 import { ConfirmDeleteRecipeAlert } from "./ConfirmDeleteRecipeAlert";
+import { RecipeCard } from "./RecipeCard";
+import { FilterRecipes } from "./FilterRecipes";
 
 const INCREMENT = 20;
 
@@ -142,79 +129,20 @@ export const Recipes = () => {
           </IconButton>
         </Flex>
         <Box mb={4}>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <SearchIcon color="gray.300" />
-            </InputLeftElement>
-            <Input
-              placeholder="Search by name or ingredient"
-              value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
-            />
-            <InputRightElement>
-              <IconButton
-                size="sm"
-                variant="ghost"
-                aria-label="Clear recipe search"
-                onClick={handleClearSearch}
-              >
-                <CloseIcon />
-              </IconButton>
-            </InputRightElement>
-          </InputGroup>
+          <FilterRecipes
+            filterValue={filterValue}
+            onUpdateFilterValue={setFilterValue}
+            onClearSearch={handleClearSearch}
+          />
         </Box>
         <Box>
           <Stack>
             {displayRecipes.map((recipe) => (
-              <Card
+              <RecipeCard
                 key={recipe.id}
-                size="sm"
-                cursor="pointer"
-                onClick={() => handleClickDetails(recipe)}
-              >
-                <CardBody>
-                  <Flex>
-                    <Box maxW="100%" flex={1}>
-                      <Flex maxW="100%" overflow="hidden">
-                        <Text whiteSpace="nowrap" mr={2}>
-                          {recipe.name}
-                        </Text>
-                        {recipe.recipeUrl && (
-                          <Link
-                            href={recipe.recipeUrl}
-                            target="_blank"
-                            mr={2}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <ExternalLinkIcon />
-                          </Link>
-                        )}
-
-                        <HStack spacing={1}>
-                          {recipe.days?.map((day) => (
-                            <Tag
-                              key={day}
-                              borderRadius="full"
-                              variant="solid"
-                              colorScheme="blue"
-                            >
-                              <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
-                            </Tag>
-                          ))}
-                        </HStack>
-                      </Flex>
-                      <Text fontSize="sm">
-                        {recipe.ingredients
-                          ?.slice(0, 4)
-                          .map((i) => i.trim())
-                          .join(", ")}
-                        {recipe.ingredients?.length > 4 &&
-                          ` + ${recipe.ingredients.length - 4} more`}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </CardBody>
-              </Card>
+                recipe={recipe}
+                onClickDetails={() => handleClickDetails(recipe)}
+              />
             ))}
           </Stack>
         </Box>
@@ -233,7 +161,7 @@ export const Recipes = () => {
         selectedDays={selectedDays}
         onClickEdit={handleClickDetailsEdit}
         onClickDelete={handleClickDelete}
-        onUpdateDays={(days: Array<number>) =>
+        onUpdateDays={(days) =>
           handleUpdateRecipeDays(selectedRecipe!.id, days)
         }
       />
@@ -244,23 +172,4 @@ export const Recipes = () => {
       />
     </>
   );
-};
-
-const dayNumberToDisplay = (dayNumber: number) => {
-  switch (dayNumber) {
-    case 0:
-      return "Mon";
-    case 1:
-      return "Tue";
-    case 2:
-      return "Wed";
-    case 3:
-      return "Thu";
-    case 4:
-      return "Fri";
-    case 5:
-      return "Sat";
-    case 6:
-      return "Sun";
-  }
 };
