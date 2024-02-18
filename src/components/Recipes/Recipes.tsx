@@ -5,12 +5,6 @@ import {
   CloseIcon,
 } from "@chakra-ui/icons";
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Box,
   Button,
   Card,
@@ -30,7 +24,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
@@ -44,6 +38,7 @@ import {
   useRecipes,
   useDebounce,
 } from "../../hooks";
+import { ConfirmDeleteRecipeAlert } from "./ConfirmDeleteRecipeAlert";
 
 const INCREMENT = 20;
 
@@ -64,7 +59,6 @@ export const Recipes = () => {
   );
   const { analytics, firestore } = useFirebase();
   const { appUser } = useAuthentication();
-  const cancelRef = useRef<HTMLButtonElement>(null);
   const [displayCount, setDisplayCount] = useState(INCREMENT);
 
   const handleClickDetails = (recipe: Recipe) => {
@@ -244,35 +238,10 @@ export const Recipes = () => {
         }
       />
       <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
-      <AlertDialog
-        isOpen={confirmDeletionDisclosure.isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={confirmDeletionDisclosure.onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Recipe
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure? You can&apos;t undo this action afterwards.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={confirmDeletionDisclosure.onClose}
-              >
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+      <ConfirmDeleteRecipeAlert
+        {...confirmDeletionDisclosure}
+        onConfirmDelete={handleConfirmDelete}
+      />
     </>
   );
 };
