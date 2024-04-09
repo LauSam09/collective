@@ -37,9 +37,8 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
   const addedRecipes = recipes.filter((r) => r.days && r.days.length > 0);
 
   const matchingRecipes = addedRecipes.filter((r) => {
-    const normalizedRecipeIngredients = r.ingredients.map((i) =>
-      normalizeName(i),
-    );
+    const normalizedRecipeIngredients =
+      r.ingredients?.map((i) => normalizeName(i)) ?? [];
 
     if (
       item?.lowerName &&
