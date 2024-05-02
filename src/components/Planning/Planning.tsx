@@ -17,6 +17,7 @@ import {
   Flex,
   Heading,
   Link,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -183,7 +184,7 @@ export const Planning = () => {
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel pb={4}>
-              <Box>
+              <Stack>
                 {day.recipes.map((recipe) => (
                   <Card
                     key={recipe.id}
@@ -213,7 +214,7 @@ export const Planning = () => {
                     </CardBody>
                   </Card>
                 ))}
-              </Box>
+              </Stack>
             </AccordionPanel>
           </AccordionItem>
         ))}
