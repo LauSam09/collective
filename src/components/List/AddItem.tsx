@@ -13,7 +13,7 @@ import {
   Show,
   Stack,
 } from "@chakra-ui/react";
-import { createRef, FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { OptionsOrGroups, GroupBase, SingleValue } from "react-select";
 import AsyncSelect from "react-select/async-creatable";
 import ReactSelect from "react-select/dist/declarations/src/Select";
@@ -53,7 +53,7 @@ export type AddItemProps = {
 
 export const AddItem = (props: AddItemProps) => {
   const { isOpen, onClose, onOpen } = props;
-  const inputRef = createRef<SelectRef>();
+  const inputRef = useRef<SelectRef>(null);
   const [category, setCategory] = useState<string>();
   const { items, addedItems, categories, upsertItem } = useList();
   const [selectedItem, setSelectedItem] = useState<Item>();
