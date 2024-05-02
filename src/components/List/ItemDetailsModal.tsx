@@ -79,11 +79,11 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
           <Flex justifyContent="space-between">
             <Text>{item?.name}</Text>
             <Flex gap={2}>
-              <Button onClick={handleRemoveClick} aria-label="Remove">
-                <MinusIcon />
-              </Button>
               <Button onClick={onEdit}>
                 <EditIcon />
+              </Button>
+              <Button onClick={handleRemoveClick} aria-label="Remove">
+                <MinusIcon />
               </Button>
             </Flex>
           </Flex>
