@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 
-import { useList } from "../../hooks";
+import { useList } from "@/hooks";
 
 export type FavouritesModalProps = {
   isOpen: boolean;

@@ -15,9 +15,9 @@ import { Category } from "./Category";
 import { EditItemModal } from "./EditItemModal";
 import { Item } from "./Item";
 import { ItemDetailsModal } from "./ItemDetailsModal";
-import { Item as ItemModel } from "../../models/item";
-import { Category as CategoryModel } from "../../models/category";
-import { useAuthentication, useFirebase, useList } from "../../hooks";
+import { Item as ItemModel } from "@/models/item";
+import { Category as CategoryModel } from "@/models/category";
+import { useAuthentication, useFirebase, useList } from "@/hooks";
 import { FavouritesModal } from "./FavouritesModal";
 
 export const List = () => {

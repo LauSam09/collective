@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 
-import MobileNav from "./components/MobileNav";
-import Nav from "./components/Nav";
-import { LoginPage } from "./pages/Login";
-import { Protected } from "./components/Protected";
-import { ListPage } from "./pages/List";
-import { RecipesPage } from "./pages/Recipes";
-import { PlanningPage } from "./pages/Planning";
+import MobileNav from "@/components/MobileNav";
+import Nav from "@/components/Nav";
+import { LoginPage } from "@/pages/Login";
+import { Protected } from "@/components/Protected";
+import { ListPage } from "@/pages/List";
+import { RecipesPage } from "@/pages/Recipes";
+import { PlanningPage } from "@/pages/Planning";
 import "./App.css";
 
 function App() {

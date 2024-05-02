@@ -1,8 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { query, collection, onSnapshot } from "firebase/firestore";
 
-import { Recipe } from "../models/recipe";
-import { useAuthentication, useFirebase } from "../hooks";
+import { Recipe } from "@/models/recipe";
+import { useAuthentication, useFirebase } from "@/hooks";
 
 interface RecipeContextValue {
   recipes: Array<Recipe>;

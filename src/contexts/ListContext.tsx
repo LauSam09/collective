@@ -12,11 +12,11 @@ import {
 import { logEvent } from "firebase/analytics";
 import { useDisclosure } from "@chakra-ui/react";
 
-import { useAuthentication, useFirebase } from "../hooks";
-import { Category } from "../models/category";
-import { Item } from "../models/item";
-import { normalizeName } from "../utilities/normalization";
-import { AddItem } from "../components/List/AddItem";
+import { useAuthentication, useFirebase } from "@/hooks";
+import { Category } from "@/models/category";
+import { Item } from "@/models/item";
+import { normalizeName } from "@/utilities/normalization";
+import { AddItem } from "@/components/List/AddItem";
 
 type CreateItem = {
   name: string;

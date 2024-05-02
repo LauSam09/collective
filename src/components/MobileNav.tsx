@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
-import { useAuthentication, useList } from "../hooks";
+import { useAuthentication, useList } from "@/hooks";
 
 export default function MobileNav() {
   const backgroundColor = useColorModeValue("gray.100", "gray.700");

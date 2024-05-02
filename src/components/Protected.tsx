@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useAuthentication } from "../hooks";
+import { useAuthentication } from "@/hooks";
 
 type ProtectedProps = {
   children: ReactNode;

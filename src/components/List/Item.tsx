@@ -3,8 +3,8 @@ import { Box, Checkbox, Flex, IconButton, Text } from "@chakra-ui/react";
 import { doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
-import { Item as ItemModel } from "../../models/item";
-import { useFirebase, useAuthentication } from "../../hooks";
+import { Item as ItemModel } from "@/models/item";
+import { useFirebase, useAuthentication } from "@/hooks";
 
 export type ItemProps = {
   item: ItemModel;

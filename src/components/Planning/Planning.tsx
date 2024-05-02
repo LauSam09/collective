@@ -26,10 +26,10 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { logEvent } from "firebase/analytics";
 import { deleteDoc, doc, updateDoc, writeBatch } from "firebase/firestore";
 
-import { Recipe } from "../../models/recipe";
-import { RecipeDetailsModal } from "../../components/Recipes/RecipeDetailsModal";
-import { EditRecipeModal } from "../../components/Recipes/EditRecipeModal";
-import { useFirebase, useAuthentication, useRecipes } from "../../hooks";
+import { Recipe } from "@/models/recipe";
+import { RecipeDetailsModal } from "@/components/Recipes/RecipeDetailsModal";
+import { EditRecipeModal } from "@/components/Recipes/EditRecipeModal";
+import { useFirebase, useAuthentication, useRecipes } from "@/hooks";
 
 export const Planning = () => {
   const { recipes } = useRecipes();

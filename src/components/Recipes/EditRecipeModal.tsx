@@ -23,8 +23,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
-import { Recipe } from "../../models/recipe";
-import { useAuthentication, useFirebase } from "../../hooks";
+import { Recipe } from "@/models/recipe";
+import { useAuthentication, useFirebase } from "@/hooks";
 
 interface Form {
   name: string;
@@ -102,12 +102,17 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
 
   const ingredients = watch("ingredients");
 
+  // TODO: Determine if there is a better way of dealing with this.
+  if (!recipe) {
+    return <></>;
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(handleSave)}>
-          <ModalHeader>{recipe!.name}</ModalHeader>
+          <ModalHeader>{recipe.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack>
@@ -127,7 +132,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
               <FormControl>
                 <FormLabel>Ingredients</FormLabel>
                 <HStack wrap="wrap" rowGap="2" mb={2}>
-                  {ingredients?.map((ingredient, i) => (
+                  {ingredients.map((ingredient, i) => (
                     <Tag key={i}>
                       <TagLabel>{ingredient.name}</TagLabel>
                       <TagCloseButton onClick={() => remove(i)} />

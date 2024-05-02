@@ -30,7 +30,7 @@ import {
 } from "@chakra-ui/icons";
 import { useRef } from "react";
 
-import { useAuthentication } from "../hooks";
+import { useAuthentication } from "@/hooks";
 import { version } from "../../package.json";
 
 export default function Nav() {

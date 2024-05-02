@@ -10,7 +10,7 @@ import {
   TagLabel,
 } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
-import { Recipe } from "../../models/recipe";
+import { Recipe } from "@/models/recipe";
 
 export type RecipeCardProps = {
   recipe: Recipe;

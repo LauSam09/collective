@@ -23,7 +23,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { addDoc, collection } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
-import { useAuthentication, useFirebase } from "../../hooks";
+import { useAuthentication, useFirebase } from "@/hooks";
 
 interface Form {
   name: string;

@@ -25,9 +25,9 @@ import {
   TagRightIcon,
 } from "@chakra-ui/react";
 
-import { Recipe } from "../../models/recipe";
-import { useList } from "../../hooks";
-import { normalizeName } from "../../utilities/normalization";
+import { Recipe } from "@/models/recipe";
+import { useList } from "@/hooks";
+import { normalizeName } from "@/utilities/normalization";
 
 export type RecipeDetailsModalProps = {
   isOpen: boolean;

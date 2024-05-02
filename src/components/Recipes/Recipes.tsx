@@ -13,16 +13,16 @@ import { useEffect, useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
-import { AddRecipeModal } from "../../components/Recipes/AddRecipeModal";
-import { EditRecipeModal } from "../../components/Recipes/EditRecipeModal";
-import { RecipeDetailsModal } from "../../components/Recipes/RecipeDetailsModal";
-import { Recipe } from "../../models/recipe";
+import { AddRecipeModal } from "@/components/Recipes/AddRecipeModal";
+import { EditRecipeModal } from "@/components/Recipes/EditRecipeModal";
+import { RecipeDetailsModal } from "@/components/Recipes/RecipeDetailsModal";
+import { Recipe } from "@/models/recipe";
 import {
   useAuthentication,
   useFirebase,
   useRecipes,
   useDebounce,
-} from "../../hooks";
+} from "@/hooks";
 import { ConfirmDeleteRecipeAlert } from "./ConfirmDeleteRecipeAlert";
 import { RecipeCard } from "./RecipeCard";
 import { FilterRecipes } from "./FilterRecipes";

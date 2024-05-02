@@ -16,9 +16,9 @@ import { EditIcon, MinusIcon } from "@chakra-ui/icons";
 import { logEvent } from "firebase/analytics";
 import { doc, updateDoc, increment } from "firebase/firestore";
 
-import { Item } from "../../models/item";
-import { normalizeName } from "../../utilities/normalization";
-import { useFirebase, useAuthentication, useRecipes } from "../../hooks";
+import { Item } from "@/models/item";
+import { normalizeName } from "@/utilities/normalization";
+import { useFirebase, useAuthentication, useRecipes } from "@/hooks";
 
 type ItemDetailsModalProps = {
   isOpen: boolean;

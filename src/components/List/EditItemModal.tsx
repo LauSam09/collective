@@ -16,8 +16,8 @@ import { useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
-import { Item } from "../../models/item";
-import { useAuthentication, useFirebase, useList } from "../../hooks";
+import { Item } from "@/models/item";
+import { useAuthentication, useFirebase, useList } from "@/hooks";
 
 interface Form {
   category: string;
