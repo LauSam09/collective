@@ -30,7 +30,8 @@ export default function MobileNav() {
         <HStack>
           {/* TODO: Factor out these components */}
           <Button
-            variant="ghost"
+            colorScheme="blue"
+            variant="solid"
             display="flex"
             flexDir="column"
             alignItems="center"

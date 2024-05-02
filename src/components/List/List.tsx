@@ -8,7 +8,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { deleteField, doc, writeBatch } from "firebase/firestore";
-import { DeleteIcon, StarIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  DeleteIcon,
+  RepeatIcon,
+  ViewIcon,
+  ViewOffIcon,
+} from "@chakra-ui/icons";
 import { logEvent } from "firebase/analytics";
 
 import { Category } from "./Category";
@@ -28,7 +34,12 @@ export const List = () => {
   const { appUser } = useAuthentication();
   const [selectedItem, setSelectedItem] = useState<ItemModel>();
   const [hideCompleted, setHideCompleted] = useState(false);
-  const { isLoading: isLoading, categories, addedItems: items } = useList();
+  const {
+    isLoading: isLoading,
+    categories,
+    addedItems: items,
+    openAddItemModal,
+  } = useList();
 
   const handleOpenDetails = (item: ItemModel) => {
     setSelectedItem(item);
@@ -111,9 +122,16 @@ export const List = () => {
     <Box py={2}>
       <Flex justify="flex-end" mb={2} gap={2}>
         <IconButton
-          icon={<StarIcon />}
+          colorScheme="blue"
+          icon={<AddIcon />}
           size="lg"
-          aria-label="Favourite items"
+          aria-label="Add item"
+          onClick={openAddItemModal}
+        />
+        <IconButton
+          icon={<RepeatIcon />}
+          size="lg"
+          aria-label="Frequent items"
           onClick={favouritesDisclosure.onOpen}
         />
         <IconButton

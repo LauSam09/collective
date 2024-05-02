@@ -33,7 +33,7 @@ export const FavouritesModal = (props: FavouritesModalProps) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Favourite items</ModalHeader>
+        <ModalHeader>Frequent items</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack alignItems="flex-start" gap={2}>
