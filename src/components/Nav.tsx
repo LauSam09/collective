@@ -52,6 +52,7 @@ export default function Nav() {
             <Heading>
               <Show below="sm">
                 <IconButton
+                  variant="ghost"
                   onClick={onOpen}
                   ref={btnRef}
                   aria-label="Expand nav menu"
@@ -89,7 +90,7 @@ export default function Nav() {
                     cursor="pointer"
                     minW={0}
                   >
-                    <Avatar size={"sm"} src={user?.displayName ?? "User"} />
+                    <Avatar size={"sm"} src={user?.photoURL ?? undefined} />
                   </MenuButton>
                   <MenuList alignItems={"center"}>
                     <Flex px={3} direction="column">
