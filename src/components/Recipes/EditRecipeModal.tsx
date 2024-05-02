@@ -18,7 +18,7 @@ import {
   Tag,
   TagLabel,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
@@ -52,6 +52,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
     });
   const { append, remove } = useFieldArray({ control, name: "ingredients" });
   const [ingredient, setIngredient] = useState("");
+  const ingredientInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     reset({
@@ -68,6 +69,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
 
     append({ name: ingredient });
     setIngredient("");
+    ingredientInputRef.current?.focus();
   };
 
   const handleSave = async (form: Form) => {
@@ -100,7 +102,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={handleSubmit(handleSave)}>
-          <ModalHeader>[Edit] {recipe?.name}</ModalHeader>
+          <ModalHeader>{recipe!.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack>
@@ -129,6 +131,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
                 </HStack>
                 <HStack>
                   <Input
+                    ref={ingredientInputRef}
                     value={ingredient}
                     onChange={(e) => setIngredient(e.target.value)}
                   />
