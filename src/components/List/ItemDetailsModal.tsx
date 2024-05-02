@@ -13,12 +13,10 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { EditIcon, MinusIcon } from "@chakra-ui/icons";
-import { logEvent } from "firebase/analytics";
-import { doc, updateDoc, increment } from "firebase/firestore";
 
 import { Item } from "@/models/item";
 import { normalizeName } from "@/utilities/normalization";
-import { useFirebase, useAuthentication, useRecipes } from "@/hooks";
+import { useRecipes, useList } from "@/hooks";
 
 type ItemDetailsModalProps = {
   isOpen: boolean;
@@ -30,9 +28,8 @@ type ItemDetailsModalProps = {
 export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
   const { isOpen, item, onClose, onEdit } = props;
   const { recipes } = useRecipes();
+  const { removeItem } = useList();
 
-  const { firestore, analytics } = useFirebase();
-  const { appUser } = useAuthentication();
   // TODO: Move to context
   const addedRecipes = recipes.filter((r) => r.days && r.days.length > 0);
 
@@ -49,26 +46,13 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
   });
 
   const handleRemoveClick = async () => {
-    const itemRef = doc(
-      firestore,
-      "groups",
-      appUser!.group.id,
-      "lists",
-      appUser!.group.defaultList,
-      "items",
-      item!.id,
-    );
+    if (!item) {
+      return;
+    }
 
-    await updateDoc(itemRef, {
-      added: false,
-      completed: false,
-      notes: "",
-      count: increment(-1),
-    });
+    await removeItem(item.id);
 
     onClose();
-
-    logEvent(analytics, "item_removal");
   };
 
   return (

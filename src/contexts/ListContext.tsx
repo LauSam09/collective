@@ -39,6 +39,7 @@ interface List {
   quickAddItem: (id: string) => Promise<void>;
   upsertItem: (item: CreateItem | ReaddItem) => Promise<void>;
   upsertItemByName: (name: string) => Promise<void>;
+  removeItem: (id: string) => Promise<void>;
 }
 
 export const ListContext = createContext<List>({
@@ -51,6 +52,7 @@ export const ListContext = createContext<List>({
   quickAddItem: async () => {},
   upsertItem: async () => {},
   upsertItemByName: async () => {},
+  removeItem: async () => {},
 });
 
 interface ListContextProviderProps {
@@ -198,6 +200,27 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
     logEvent(analytics, "quick_add_item");
   };
 
+  const removeItem = async (id: string) => {
+    const itemRef = doc(
+      firestore,
+      "groups",
+      appUser!.group.id,
+      "lists",
+      appUser!.group.defaultList,
+      "items",
+      id,
+    );
+
+    await updateDoc(itemRef, {
+      added: false,
+      completed: false,
+      notes: "",
+      count: increment(-1),
+    });
+
+    logEvent(analytics, "item_removal");
+  };
+
   return (
     <ListContext.Provider
       value={{
@@ -210,6 +233,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         quickAddItem,
         upsertItem,
         upsertItemByName,
+        removeItem,
       }}
     >
       {children}
