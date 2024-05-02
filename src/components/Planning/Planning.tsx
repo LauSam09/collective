@@ -177,7 +177,7 @@ export const Planning = () => {
           <AccordionItem key={i} onClick={() => handleClickDay(i)}>
             <AccordionButton>
               <Box as="span" flex="1" textAlign="left">
-                <Heading as="h3" size="sm">
+                <Heading as="h3" size="xs">
                   {day.name} {today.getDay() === day.jsIndex && "*"}
                 </Heading>
               </Box>
@@ -189,6 +189,7 @@ export const Planning = () => {
                   <Card
                     key={recipe.id}
                     cursor="pointer"
+                    variant="filled"
                     onClick={(e) => handleClickDetails(e, recipe)}
                     size="sm"
                   >
@@ -208,7 +209,7 @@ export const Planning = () => {
                           )}
                         </Flex>
                       </Flex>
-                      <Text fontSize="sm">
+                      <Text fontSize="xs">
                         {recipe.ingredients?.map((i) => i.trim()).join(", ")}
                       </Text>
                     </CardBody>
