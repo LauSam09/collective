@@ -75,6 +75,11 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
   const handleSave = async (form: Form) => {
     const { name, recipeUrl, notes, ingredients } = form;
 
+    if (ingredient) {
+      handleAddIngredient();
+      return;
+    }
+
     const docRef = doc(
       firestore,
       "groups",
