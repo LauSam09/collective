@@ -1,9 +1,9 @@
 import {
   AddIcon,
-  CheckIcon,
   DeleteIcon,
   EditIcon,
   ExternalLinkIcon,
+  MinusIcon,
 } from "@chakra-ui/icons";
 import {
   Modal,
@@ -22,7 +22,6 @@ import {
   Button,
   ModalFooter,
   TagCloseButton,
-  TagRightIcon,
 } from "@chakra-ui/react";
 
 import { Recipe } from "@/models/recipe";
@@ -50,8 +49,11 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
     onUpdateDays,
   } = props;
   // TODO: Add normalised version of added items in context
-  const { addedItems, upsertItemByName } = useList();
-  const normalisedAddedItems = addedItems.map((i) => i.lowerName);
+  const { addedItems, upsertItemByName, removeItem } = useList();
+  const normalisedAddedItems = addedItems.map((i) => ({
+    lowerName: i.lowerName,
+    id: i.id,
+  }));
 
   const recipeDays = recipe?.days ?? [];
 
@@ -145,13 +147,19 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
                 <HStack wrap="wrap" rowGap="2" mb={2}>
                   {recipe.ingredients.map((i) => {
                     const normalized = normalizeName(i);
-                    const isAdded = normalisedAddedItems.includes(normalized);
+                    const isAdded = normalisedAddedItems.filter(
+                      (i) => i.lowerName == normalized,
+                    )?.[0];
 
                     if (isAdded) {
                       return (
                         <Tag colorScheme={"blue"} key={i}>
                           <TagLabel>{i}</TagLabel>
-                          <TagRightIcon as={CheckIcon} />
+                          <TagCloseButton
+                            onClick={() => removeItem(isAdded.id)}
+                          >
+                            <MinusIcon boxSize="12px" />
+                          </TagCloseButton>
                         </Tag>
                       );
                     }
