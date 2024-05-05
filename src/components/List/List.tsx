@@ -119,7 +119,7 @@ export const List = () => {
   }
 
   return (
-    <Box py={2}>
+    <Box>
       <Flex justify="flex-end" mb={2} gap={2}>
         <IconButton
           colorScheme="blue"

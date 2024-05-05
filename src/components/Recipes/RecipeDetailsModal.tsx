@@ -75,7 +75,7 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
               <Button onClick={onClickEdit}>
                 <EditIcon />
               </Button>
-              <Button onClick={handleClickDelete}>
+              <Button colorScheme="red" onClick={handleClickDelete}>
                 <DeleteIcon />
               </Button>
             </Flex>
