@@ -1,4 +1,10 @@
-import { AddIcon, CalendarIcon, CheckIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  CalendarIcon,
+  CheckIcon,
+  SearchIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -29,30 +35,6 @@ export default function MobileNav() {
       >
         <HStack>
           {/* TODO: Factor out these components */}
-          <Button
-            colorScheme="blue"
-            variant="solid"
-            display="flex"
-            flexDir="column"
-            alignItems="center"
-            flex={1}
-            padding={2}
-            aria-label="Add item"
-            height="100%"
-            fontWeight="normal"
-            onClick={openAddItemModal}
-            _hover={{
-              backgroundColor: "var(--chakra-colors-gray-200)",
-            }}
-            _dark={{
-              _hover: {
-                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
-              },
-            }}
-          >
-            <AddIcon />
-            Add
-          </Button>
           <Link
             as={NavLink}
             to="/"
@@ -72,7 +54,7 @@ export default function MobileNav() {
               },
             }}
           >
-            <CheckIcon /> List
+            <CheckIcon />
           </Link>
           <Link
             as={NavLink}
@@ -93,8 +75,32 @@ export default function MobileNav() {
               },
             }}
           >
-            <CalendarIcon /> Planning
+            <CalendarIcon />
           </Link>
+
+          <Button
+            colorScheme="blue"
+            variant="solid"
+            display="flex"
+            flexDir="column"
+            alignItems="center"
+            flex={1}
+            paddingY={4}
+            aria-label="Add item"
+            height="100%"
+            fontWeight="normal"
+            onClick={openAddItemModal}
+            _hover={{
+              backgroundColor: "var(--chakra-colors-gray-200)",
+            }}
+            _dark={{
+              _hover: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+          >
+            <AddIcon />
+          </Button>
           <Link
             as={NavLink}
             to="/recipes"
@@ -115,7 +121,29 @@ export default function MobileNav() {
             }}
           >
             <SearchIcon />
-            <span>Recipes</span>
+            {/* <span>Recipes</span> */}
+          </Link>
+          <Link
+            as={NavLink}
+            to="/settings"
+            p={2}
+            borderRadius="md"
+            flex={1}
+            display="flex"
+            flexDir="column"
+            alignItems="center"
+            _hover={{
+              textDecor: "none",
+              backgroundColor: "var(--chakra-colors-gray-200)",
+            }}
+            _dark={{
+              _hover: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+          >
+            <SettingsIcon />
+            {/* <span>Settings</span> */}
           </Link>
         </HStack>
       </Box>

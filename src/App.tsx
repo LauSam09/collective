@@ -9,6 +9,7 @@ import { ListPage } from "@/pages/List";
 import { RecipesPage } from "@/pages/Recipes";
 import { PlanningPage } from "@/pages/Planning";
 import "./App.css";
+import { Settings } from "./components/Settings/Settings";
 
 function App() {
   return (
@@ -38,6 +39,14 @@ function App() {
             element={
               <Protected>
                 <PlanningPage />
+              </Protected>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Protected>
+                <Settings />
               </Protected>
             }
           />
