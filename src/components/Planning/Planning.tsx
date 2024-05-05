@@ -16,13 +16,14 @@ import {
   CardBody,
   Flex,
   Heading,
+  IconButton,
   Link,
   Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState, MouseEvent, useRef } from "react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { DeleteIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { logEvent } from "firebase/analytics";
 import { deleteDoc, doc, updateDoc, writeBatch } from "firebase/firestore";
 
@@ -30,6 +31,7 @@ import { Recipe } from "@/models/recipe";
 import { RecipeDetailsModal } from "@/components/Recipes/RecipeDetailsModal";
 import { EditRecipeModal } from "@/components/Recipes/EditRecipeModal";
 import { useFirebase, useAuthentication, useRecipes } from "@/hooks";
+import { CompressIcon, ExpandIcon } from "@/components/icons";
 
 export const Planning = () => {
   const { recipes } = useRecipes();
@@ -164,12 +166,28 @@ export const Planning = () => {
       <Flex justifyContent="space-between" alignItems="center" mb={4}>
         <Heading size="md">Planning</Heading>
         <Flex gap={2}>
-          <Button variant="outline" onClick={handleToggleExpandAllDays}>
-            {allDaysExpanded ? "Collapse all" : "Expand all"}
-          </Button>
-          <Button variant="outline" onClick={handleClickClearWeek}>
-            Clear
-          </Button>
+          {allDaysExpanded ? (
+            <IconButton
+              aria-label="Expand all"
+              size="lg"
+              onClick={handleToggleExpandAllDays}
+              icon={<ExpandIcon />}
+            />
+          ) : (
+            <IconButton
+              aria-label="Collapse all"
+              size="lg"
+              onClick={handleToggleExpandAllDays}
+              icon={<CompressIcon />}
+            />
+          )}
+          <IconButton
+            icon={<DeleteIcon />}
+            aria-label="Clear week"
+            size="lg"
+            colorScheme="red"
+            onClick={handleClickClearWeek}
+          />
         </Flex>
       </Flex>
       <Accordion allowMultiple mb={4} index={expandedDays}>
