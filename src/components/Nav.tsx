@@ -27,6 +27,7 @@ import {
   CheckIcon,
   HamburgerIcon,
   SearchIcon,
+  SettingsIcon,
 } from "@chakra-ui/icons";
 import { useRef } from "react";
 
@@ -139,6 +140,12 @@ export default function Nav() {
                 _hover: {
                   backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
                 },
+                _activeLink: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+                },
+              }}
+              _activeLink={{
+                backgroundColor: "var(--chakra-colors-gray-200)",
               }}
             >
               <CheckIcon /> List
@@ -157,6 +164,12 @@ export default function Nav() {
                 _hover: {
                   backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
                 },
+                _activeLink: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+                },
+              }}
+              _activeLink={{
+                backgroundColor: "var(--chakra-colors-gray-200)",
               }}
             >
               <CalendarIcon /> Planning
@@ -175,9 +188,39 @@ export default function Nav() {
                 _hover: {
                   backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
                 },
+                _activeLink: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+                },
+              }}
+              _activeLink={{
+                backgroundColor: "var(--chakra-colors-gray-200)",
               }}
             >
               <SearchIcon /> Recipes
+            </Link>
+            <Link
+              as={NavLink}
+              to="/settings"
+              p={2}
+              onClick={onClose}
+              borderRadius="md"
+              _hover={{
+                textDecor: "none",
+                backgroundColor: "var(--chakra-colors-gray-200)",
+              }}
+              _dark={{
+                _hover: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+                },
+                _activeLink: {
+                  backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+                },
+              }}
+              _activeLink={{
+                backgroundColor: "var(--chakra-colors-gray-200)",
+              }}
+            >
+              <SettingsIcon /> Settings
             </Link>
           </Stack>
         </DrawerContent>

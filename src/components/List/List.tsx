@@ -120,7 +120,7 @@ export const List = () => {
 
   return (
     <Box>
-      <Flex justify="flex-end" mb={2} gap={2}>
+      <Flex justify={{ base: "space-evenly", sm: "flex-end" }} mb={2} gap={2}>
         <IconButton
           colorScheme="blue"
           icon={<AddIcon />}

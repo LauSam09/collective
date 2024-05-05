@@ -33,7 +33,7 @@ export default function MobileNav() {
         width="100%"
         backgroundColor={backgroundColor}
       >
-        <HStack>
+        <HStack alignItems="stretch" gap={1}>
           {/* TODO: Factor out these components */}
           <Link
             as={NavLink}
@@ -44,6 +44,7 @@ export default function MobileNav() {
             display="flex"
             flexDir="column"
             alignItems="center"
+            justifyContent="center"
             _hover={{
               textDecor: "none",
               backgroundColor: "var(--chakra-colors-gray-200)",
@@ -52,6 +53,12 @@ export default function MobileNav() {
               _hover: {
                 backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
+              _activeLink: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+            _activeLink={{
+              backgroundColor: "var(--chakra-colors-gray-200)",
             }}
           >
             <CheckIcon />
@@ -65,6 +72,7 @@ export default function MobileNav() {
             display="flex"
             flexDir="column"
             alignItems="center"
+            justifyContent="center"
             _hover={{
               textDecor: "none",
               backgroundColor: "var(--chakra-colors-gray-200)",
@@ -73,6 +81,12 @@ export default function MobileNav() {
               _hover: {
                 backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
+              _activeLink: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+            _activeLink={{
+              backgroundColor: "var(--chakra-colors-gray-200)",
             }}
           >
             <CalendarIcon />
@@ -84,6 +98,7 @@ export default function MobileNav() {
             display="flex"
             flexDir="column"
             alignItems="center"
+            justifyContent="center"
             flex={1}
             paddingY={4}
             aria-label="Add item"
@@ -110,6 +125,7 @@ export default function MobileNav() {
             display="flex"
             flexDir="column"
             alignItems="center"
+            justifyContent="center"
             _hover={{
               textDecor: "none",
               backgroundColor: "var(--chakra-colors-gray-200)",
@@ -118,10 +134,15 @@ export default function MobileNav() {
               _hover: {
                 backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
+              _activeLink: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+            _activeLink={{
+              backgroundColor: "var(--chakra-colors-gray-200)",
             }}
           >
             <SearchIcon />
-            {/* <span>Recipes</span> */}
           </Link>
           <Link
             as={NavLink}
@@ -132,6 +153,7 @@ export default function MobileNav() {
             display="flex"
             flexDir="column"
             alignItems="center"
+            justifyContent="center"
             _hover={{
               textDecor: "none",
               backgroundColor: "var(--chakra-colors-gray-200)",
@@ -140,10 +162,15 @@ export default function MobileNav() {
               _hover: {
                 backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
               },
+              _activeLink: {
+                backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
+              },
+            }}
+            _activeLink={{
+              backgroundColor: "var(--chakra-colors-gray-200)",
             }}
           >
             <SettingsIcon />
-            {/* <span>Settings</span> */}
           </Link>
         </HStack>
       </Box>
