@@ -68,6 +68,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       tags: recipe?.tags?.map((t) => ({ id: t })) ?? [],
     });
     setIngredient("");
+    setTag("");
   }, [recipe, isOpen]);
 
   const handleAddIngredient = () => {
@@ -78,6 +79,15 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
     ingredientsArray.append({ name: ingredient });
     setIngredient("");
     ingredientInputRef.current?.focus();
+  };
+
+  const handleAddTag = (tag: string) => {
+    if (tag === "" || tagIds.includes(tag)) {
+      return;
+    }
+
+    tagsArray.append({ id: tag });
+    setTag("");
   };
 
   const handleSave = async (form: Form) => {
@@ -109,19 +119,9 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
     onClose();
   };
 
-  const handleAddTag = (tag: string) => {
-    if (tag === "" || tagIds.includes(tag)) {
-      return;
-    }
-
-    tagsArray.append({ id: tag });
-    setTag("");
-  };
-
   const ingredients = watch("ingredients");
   const tags = watch("tags");
   const tagIds = tags.map((t) => t.id);
-
   const unaddedTags = allTags.filter((at) => !tagIds.includes(at.id));
 
   // TODO: Determine if there is a better way of dealing with this.

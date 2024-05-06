@@ -17,6 +17,8 @@ import {
   TagCloseButton,
   Tag,
   TagLabel,
+  IconButton,
+  Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -24,12 +26,14 @@ import { addDoc, collection } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 
 import { useAuthentication, useFirebase } from "@/hooks";
+import { tagDictionary, tags as allTags } from "@/models/recipeTags";
 
 interface Form {
   name: string;
   ingredients: ReadonlyArray<{ name: string }>;
   notes: string;
   recipeUrl?: string;
+  tags: ReadonlyArray<{ id: string }>;
 }
 
 export type AddRecipeModalProps = {
@@ -43,12 +47,15 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
   const { analytics, firestore } = useFirebase();
   const { control, formState, register, handleSubmit, reset, watch } =
     useForm<Form>();
-  const { append, remove } = useFieldArray({ control, name: "ingredients" });
+  const ingredientsFieldArray = useFieldArray({ control, name: "ingredients" });
+  const tagsFieldArray = useFieldArray({ control, name: "tags" });
   const [ingredient, setIngredient] = useState("");
+  const [tag, setTag] = useState("");
 
   useEffect(() => {
     reset();
     setIngredient("");
+    setTag("");
   }, [isOpen]);
 
   const handleAddIngredient = () => {
@@ -56,8 +63,17 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
       return;
     }
 
-    append({ name: ingredient });
+    ingredientsFieldArray.append({ name: ingredient });
     setIngredient("");
+  };
+
+  const handleAddTag = (tag: string) => {
+    if (tag === "" || tagIds.includes(tag)) {
+      return;
+    }
+
+    tagsFieldArray.append({ id: tag });
+    setTag("");
   };
 
   const handleSave = async (form: Form) => {
@@ -70,6 +86,7 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
         recipeUrl,
         notes,
         ingredients: ingredients?.map((i) => i.name.trim()) ?? [],
+        tags: tags?.map((t) => t.id) ?? [],
       },
     );
 
@@ -79,6 +96,9 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
   };
 
   const ingredients = watch("ingredients");
+  const tags = watch("tags") ?? [];
+  const tagIds = tags.map((t) => t.id);
+  const unaddedTags = allTags.filter((at) => !tagIds.includes(at.id));
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -93,10 +113,47 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
                 <FormLabel>Name</FormLabel>
                 <Input {...register("name")} />
               </FormControl>
+
+              <FormControl>
+                <FormLabel>Tags</FormLabel>
+                <HStack rowGap="2" wrap="wrap" mb={2}>
+                  {tags.map((t, i) => (
+                    <Tag key={i}>
+                      <TagLabel>{tagDictionary[t.id].name}</TagLabel>
+                      <TagCloseButton
+                        onClick={() => tagsFieldArray.remove(i)}
+                      />
+                    </Tag>
+                  ))}
+                </HStack>
+                <HStack gap={1}>
+                  <Select
+                    size="sm"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                  >
+                    <option key="">-</option>
+                    {unaddedTags.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </Select>
+                  <IconButton
+                    type="button"
+                    icon={<AddIcon />}
+                    aria-label="Add tag"
+                    size="sm"
+                    onClick={() => handleAddTag(tag)}
+                  />
+                </HStack>
+              </FormControl>
+
               <FormControl>
                 <FormLabel>External link</FormLabel>
                 <Input {...register("recipeUrl")} />
               </FormControl>
+
               <FormControl>
                 <FormLabel>Notes</FormLabel>
                 <Textarea {...register("notes")} />
@@ -108,7 +165,9 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
                   {ingredients?.map((ingredient, i) => (
                     <Tag key={i}>
                       <TagLabel>{ingredient.name}</TagLabel>
-                      <TagCloseButton onClick={() => remove(i)} />
+                      <TagCloseButton
+                        onClick={() => ingredientsFieldArray.remove(i)}
+                      />
                     </Tag>
                   ))}
                 </HStack>
