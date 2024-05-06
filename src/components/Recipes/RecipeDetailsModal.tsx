@@ -22,11 +22,13 @@ import {
   Button,
   ModalFooter,
   TagCloseButton,
+  Box,
 } from "@chakra-ui/react";
 
 import { Recipe } from "@/models/recipe";
 import { useList } from "@/hooks";
 import { normalizeName } from "@/utilities/normalization";
+import { tags } from "@/models/recipeTags";
 
 export type RecipeDetailsModalProps = {
   isOpen: boolean;
@@ -116,6 +118,17 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
               })}
             </HStack>
 
+            <Heading size="sm">Tags</Heading>
+            {recipe?.tags === undefined || recipe.tags.length === 0 ? (
+              <Text>No tags yet</Text>
+            ) : (
+              <HStack spacing={1} rowGap={1}>
+                {recipe.tags.map((t) => (
+                  <Tag key={t}>{tags.find((tag) => tag.id === t)?.name}</Tag>
+                ))}
+              </HStack>
+            )}
+
             {recipe?.recipeUrl && (
               <>
                 <Heading size="sm">
@@ -136,10 +149,10 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
               </>
             )}
             {recipe?.notes && (
-              <>
+              <Box>
                 <Heading size="sm">Notes</Heading>
                 <Text>{recipe.notes}</Text>
-              </>
+              </Box>
             )}
             {recipe?.ingredients && recipe.ingredients.length > 0 && (
               <>

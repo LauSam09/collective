@@ -1,4 +1,3 @@
-import { tagTypes, tags } from "@/models/recipeTags";
 import {
   Button,
   Checkbox,
@@ -13,6 +12,8 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { FormEvent } from "react";
+
+import { tagTypes, tags } from "@/models/recipeTags";
 
 export type FilterRecipesModal = {
   filterTags: ReadonlyArray<string>;
