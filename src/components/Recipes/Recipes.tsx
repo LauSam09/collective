@@ -132,7 +132,7 @@ export const Recipes = () => {
       setFilteredRecipes(filtered);
       setDisplayCount(INCREMENT);
     }
-  }, [debouncedFilterValue, filterTags]);
+  }, [debouncedFilterValue, filterTags, recipes]);
 
   const handleClearSearch = () => {
     setDebouncedFilterValue("");
