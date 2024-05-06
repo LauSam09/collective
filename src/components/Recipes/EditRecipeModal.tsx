@@ -56,9 +56,9 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       },
     });
   const ingredientsArray = useFieldArray({ control, name: "ingredients" });
+  const ingredientInputRef = useRef<HTMLInputElement>(null);
   const tagsArray = useFieldArray({ control, name: "tags" });
   const [ingredient, setIngredient] = useState("");
-  const ingredientInputRef = useRef<HTMLInputElement>(null);
   const [tag, setTag] = useState("");
 
   useEffect(() => {

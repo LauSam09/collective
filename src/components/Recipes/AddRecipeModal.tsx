@@ -20,7 +20,7 @@ import {
   IconButton,
   Select,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { addDoc, collection } from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
@@ -48,6 +48,7 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
   const { control, formState, register, handleSubmit, reset, watch } =
     useForm<Form>();
   const ingredientsFieldArray = useFieldArray({ control, name: "ingredients" });
+  const ingredientInputRef = useRef<HTMLInputElement>(null);
   const tagsFieldArray = useFieldArray({ control, name: "tags" });
   const [ingredient, setIngredient] = useState("");
   const [tag, setTag] = useState("");
@@ -65,6 +66,7 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
 
     ingredientsFieldArray.append({ name: ingredient });
     setIngredient("");
+    ingredientInputRef.current?.focus();
   };
 
   const handleAddTag = (tag: string) => {
@@ -78,6 +80,11 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
 
   const handleSave = async (form: Form) => {
     const { name, recipeUrl, notes, ingredients } = form;
+
+    if (ingredient) {
+      handleAddIngredient();
+      return;
+    }
 
     await addDoc(
       collection(firestore, "groups", appUser!.group.id, "recipes"),
@@ -173,6 +180,7 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
                 </HStack>
                 <HStack>
                   <Input
+                    ref={ingredientInputRef}
                     value={ingredient}
                     onChange={(e) => setIngredient(e.target.value)}
                   />
