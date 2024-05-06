@@ -5,4 +5,5 @@ export interface Recipe {
   days?: ReadonlyArray<number>;
   recipeUrl?: string;
   notes?: string;
+  tags?: ReadonlyArray<string>;
 }

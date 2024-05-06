@@ -40,6 +40,7 @@ export const Recipes = () => {
     [],
   );
   const [filterValue, setFilterValue] = useState("");
+  const [filterTags, setFilterTags] = useState<ReadonlyArray<string>>([]);
   const [debouncedFilterValue, setDebouncedFilterValue] = useDebounce(
     filterValue,
     300,
@@ -89,28 +90,45 @@ export const Recipes = () => {
   };
 
   useEffect(() => {
-    if (!debouncedFilterValue) {
+    if (!debouncedFilterValue && filterTags.length === 0) {
       setFilteredRecipes([]);
     } else {
       const normalisedFilterValue = debouncedFilterValue.trim().toLowerCase();
-      const filtered = recipes.filter(
+
+      let workingRecipes = [...recipes];
+
+      if (filterTags.length > 0) {
+        // TODO: This is a simplification. For some tags (e.g. cuisine), we want an OR
+        // logical check, but for others (e.g. type), we want an AND condition.
+        // For example, we want any recipe that is Mexican or Spanish, but they all have to be rapid.
+        // This requires two separate checks, one using `.some` for the cuisine, and one using `.every`
+        // for the type, and requires a 'type' of tag.
+        workingRecipes = recipes.filter((r) =>
+          filterTags.some((t) => r.tags?.includes(t)),
+        );
+      }
+
+      const filtered = workingRecipes.filter(
         (r) =>
           r.name.toLowerCase().includes(normalisedFilterValue) ||
           r.ingredients?.some((i) =>
             i.toLowerCase().includes(normalisedFilterValue),
           ),
       );
+
       setFilteredRecipes(filtered);
       setDisplayCount(INCREMENT);
     }
-  }, [debouncedFilterValue]);
+  }, [debouncedFilterValue, filterTags]);
 
   const handleClearSearch = () => {
     setDebouncedFilterValue("");
     setFilterValue("");
   };
 
-  const totalDisplayRecipes = debouncedFilterValue ? filteredRecipes : recipes;
+  const filteringActive = filterTags.length > 0 || filterValue;
+
+  const totalDisplayRecipes = filteringActive ? filteredRecipes : recipes;
 
   const displayRecipes = totalDisplayRecipes.slice(0, displayCount);
 
@@ -131,7 +149,9 @@ export const Recipes = () => {
         <Box mb={4}>
           <FilterRecipes
             filterValue={filterValue}
+            filterTags={filterTags}
             onUpdateFilterValue={setFilterValue}
+            onUpdateFilterTags={setFilterTags}
             onClearSearch={handleClearSearch}
           />
         </Box>
