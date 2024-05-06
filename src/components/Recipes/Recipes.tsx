@@ -26,6 +26,7 @@ import {
 import { ConfirmDeleteRecipeAlert } from "./ConfirmDeleteRecipeAlert";
 import { RecipeCard } from "./RecipeCard";
 import { FilterRecipes } from "./FilterRecipes";
+import { tags } from "@/models/recipeTags";
 
 const INCREMENT = 20;
 
@@ -98,14 +99,26 @@ export const Recipes = () => {
       let workingRecipes = [...recipes];
 
       if (filterTags.length > 0) {
-        // TODO: This is a simplification. For some tags (e.g. cuisine), we want an OR
-        // logical check, but for others (e.g. type), we want an AND condition.
-        // For example, we want any recipe that is Mexican or Spanish, but they all have to be rapid.
-        // This requires two separate checks, one using `.some` for the cuisine, and one using `.every`
-        // for the type, and requires a 'type' of tag.
-        workingRecipes = recipes.filter((r) =>
-          filterTags.some((t) => r.tags?.includes(t)),
+        const tagObjects = filterTags.map(
+          (ft) => tags.find((t) => t.id === ft)!,
         );
+
+        const orTags = tagObjects
+          .filter((t) => t.type === "cuisine")
+          .map((t) => t.id);
+        const andTags = tagObjects
+          .filter((t) => t.type === "type")
+          .map((t) => t.id);
+
+        workingRecipes = workingRecipes
+          .filter(
+            (r) =>
+              orTags.length === 0 || orTags.some((t) => r.tags?.includes(t)),
+          )
+          .filter(
+            (r) =>
+              andTags.length === 0 || andTags.every((t) => r.tags?.includes(t)),
+          );
       }
 
       const filtered = workingRecipes.filter(

@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FilterIcon } from "../icons";
-import { FilterRecipesModal } from "./FilterRecipesByTagModal";
+import { FilterRecipesModal } from "./FilterRecipesModal";
 
 export type FilterRecipesProps = {
   filterValue: string;
