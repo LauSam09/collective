@@ -17,6 +17,8 @@ import {
   TagCloseButton,
   Tag,
   TagLabel,
+  Select,
+  IconButton,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -25,12 +27,14 @@ import { logEvent } from "firebase/analytics";
 
 import { Recipe } from "@/models/recipe";
 import { useAuthentication, useFirebase } from "@/hooks";
+import { tagDictionary, tags as allTags } from "@/models/recipeTags";
 
 interface Form {
   name: string;
   ingredients: ReadonlyArray<{ name: string }>;
   notes: string;
   recipeUrl?: string;
+  tags: ReadonlyArray<{ id: string }>;
 }
 
 export type EditRecipeModalProps = {
@@ -48,16 +52,20 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       defaultValues: {
         ...recipe,
         ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
+        tags: recipe?.tags?.map((t) => ({ id: t })) ?? [],
       },
     });
-  const { append, remove } = useFieldArray({ control, name: "ingredients" });
+  const ingredientsArray = useFieldArray({ control, name: "ingredients" });
+  const tagsArray = useFieldArray({ control, name: "tags" });
   const [ingredient, setIngredient] = useState("");
   const ingredientInputRef = useRef<HTMLInputElement>(null);
+  const [tag, setTag] = useState("");
 
   useEffect(() => {
     reset({
       ...recipe,
       ingredients: recipe?.ingredients?.map((i) => ({ name: i })) ?? [],
+      tags: recipe?.tags?.map((t) => ({ id: t })) ?? [],
     });
     setIngredient("");
   }, [recipe, isOpen]);
@@ -67,7 +75,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       return;
     }
 
-    append({ name: ingredient });
+    ingredientsArray.append({ name: ingredient });
     setIngredient("");
     ingredientInputRef.current?.focus();
   };
@@ -93,6 +101,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       recipeUrl,
       notes,
       ingredients: ingredients.map((i) => i.name.trim()),
+      tags: tags.map((t) => t.id),
     });
 
     logEvent(analytics, "edit_recipe");
@@ -100,7 +109,20 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
     onClose();
   };
 
+  const handleAddTag = (tag: string) => {
+    if (tag === "" || tagIds.includes(tag)) {
+      return;
+    }
+
+    tagsArray.append({ id: tag });
+    setTag("");
+  };
+
   const ingredients = watch("ingredients");
+  const tags = watch("tags");
+  const tagIds = tags.map((t) => t.id);
+
+  const unaddedTags = allTags.filter((at) => !tagIds.includes(at.id));
 
   // TODO: Determine if there is a better way of dealing with this.
   if (!recipe) {
@@ -120,6 +142,40 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
                 <FormLabel>Name</FormLabel>
                 <Input {...register("name")} />
               </FormControl>
+
+              <FormControl>
+                <FormLabel>Tags</FormLabel>
+                <HStack rowGap="2" wrap="wrap" mb={2}>
+                  {tags.map((t, i) => (
+                    <Tag key={i}>
+                      <TagLabel>{tagDictionary[t.id].name}</TagLabel>
+                      <TagCloseButton onClick={() => tagsArray.remove(i)} />
+                    </Tag>
+                  ))}
+                </HStack>
+                <HStack gap={1}>
+                  <Select
+                    size="sm"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                  >
+                    <option key="">-</option>
+                    {unaddedTags.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </Select>
+                  <IconButton
+                    type="button"
+                    icon={<AddIcon />}
+                    aria-label="Add tag"
+                    size="sm"
+                    onClick={() => handleAddTag(tag)}
+                  />
+                </HStack>
+              </FormControl>
+
               <FormControl>
                 <FormLabel>External link</FormLabel>
                 <Input {...register("recipeUrl")} />
@@ -135,7 +191,9 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
                   {ingredients.map((ingredient, i) => (
                     <Tag key={i}>
                       <TagLabel>{ingredient.name}</TagLabel>
-                      <TagCloseButton onClick={() => remove(i)} />
+                      <TagCloseButton
+                        onClick={() => ingredientsArray.remove(i)}
+                      />
                     </Tag>
                   ))}
                 </HStack>
