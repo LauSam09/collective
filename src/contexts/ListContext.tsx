@@ -3,7 +3,7 @@ import {
   addDoc,
   collection,
   doc,
-  getDocs,
+  getDocsFromCache,
   increment,
   onSnapshot,
   query,
@@ -69,7 +69,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
 
   useEffect(() => {
     async function fetchCategories() {
-      const querySnapshot = await getDocs(
+      const querySnapshot = await getDocsFromCache(
         collection(
           firestore,
           "groups",
