@@ -155,14 +155,14 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         "items",
         item.id,
       );
-      await updateDoc(itemRef, {
+      updateDoc(itemRef, {
         ...itemEntity,
         category: item.category,
         count: increment(1),
       });
       logEvent(analytics, "add_item");
     } else {
-      await addDoc(
+      addDoc(
         collection(
           firestore,
           "groups",
@@ -193,7 +193,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
       id,
     );
 
-    await updateDoc(itemRef, {
+    updateDoc(itemRef, {
       count: increment(1),
       added: true,
     });
@@ -211,7 +211,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
       id,
     );
 
-    await updateDoc(itemRef, {
+    updateDoc(itemRef, {
       added: false,
       completed: false,
       notes: "",
