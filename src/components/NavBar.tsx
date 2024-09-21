@@ -31,20 +31,12 @@ import {
 import { useRef } from "react";
 
 import { version } from "../../package.json";
-import { getAuth } from "@/firebase";
+import { useAuth } from "@/contexts";
 
 export function NavBar() {
+  const { signOut } = useAuth();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
-  const auth = getAuth();
-
-  const signOut = async () => {
-    try {
-      await auth.signOut();
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <>
