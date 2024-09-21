@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { app } from "@/firebase";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "@/firebase";
+import { NavBar } from "@/components";
 
 export const App = () => {
-  console.log(app); //  TODO: This is a bodge to ensure the app is initialised. Need to find a better way to do this.
   const [state, setState] = useState<
     "loading" | "unauthenticated" | "authenticated"
   >("loading");
@@ -31,19 +30,21 @@ export const App = () => {
     }
   };
 
-  const signOut = async () => {
-    try {
-      await auth.signOut();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  if (state === "loading") {
+    return <h1>Collective</h1>;
+  }
+
+  if (state === "unauthenticated") {
+    return (
+      <div>
+        <button onClick={signIn}>Sign in</button>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <div>state: {state}</div>
-      {state === "unauthenticated" && <button onClick={signIn}>Sign in</button>}
-      {state === "authenticated" && <button onClick={signOut}>Sign out</button>}
+      <NavBar />
     </div>
   );
 };

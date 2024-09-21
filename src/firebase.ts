@@ -18,3 +18,5 @@ export const analytics = getAnalytics(app);
 export const firestore = initializeFirestore(app, {
   localCache: persistentLocalCache(),
 });
+
+export * from "firebase/auth";
