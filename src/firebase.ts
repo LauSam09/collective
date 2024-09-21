@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { initializeFirestore, persistentLocalCache } from "firebase/firestore";
+import {
+  doc,
+  getDocFromCache,
+  initializeFirestore,
+  persistentLocalCache,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -18,5 +23,16 @@ export const analytics = getAnalytics(app);
 export const firestore = initializeFirestore(app, {
   localCache: persistentLocalCache(),
 });
+
+export const getFirestoreUser = async (uid: string) => {
+  const ref = doc(firestore, "users", uid);
+  const snapshot = await getDocFromCache(ref);
+
+  if (!snapshot.exists()) {
+    return;
+  }
+
+  return { ...snapshot.data(), id: snapshot.id };
+};
 
 export * from "firebase/auth";

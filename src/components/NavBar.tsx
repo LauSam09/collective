@@ -34,7 +34,7 @@ import { version } from "../../package.json";
 import { useAuth } from "@/contexts";
 
 export function NavBar() {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -81,6 +81,9 @@ export function NavBar() {
                   <Link as={NavLink} to="/recipes">
                     Recipes
                   </Link>
+                  <Link as={NavLink} to="/settings">
+                    Settings
+                  </Link>
                 </Show>
                 <Menu>
                   <MenuButton
@@ -90,15 +93,12 @@ export function NavBar() {
                     cursor="pointer"
                     minW={0}
                   >
-                    <Avatar
-                      size={"sm"}
-                      //  src={user?.photoURL ?? undefined}
-                    />
+                    <Avatar size={"sm"} src={user?.photoUrl} />
                   </MenuButton>
                   <MenuList alignItems={"center"}>
                     <Flex px={3} direction="column">
-                      {/* <p>{user?.displayName}</p> */}
-                      {/* <small>{user?.email}</small> */}
+                      <p>{user?.displayName}</p>
+                      <small>{user?.email}</small>
                     </Flex>
                     <MenuDivider />
                     <MenuItem onClick={signOut}>Logout</MenuItem>
