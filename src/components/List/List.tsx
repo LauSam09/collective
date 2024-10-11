@@ -8,8 +8,11 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { collection, query } from "firebase/firestore";
+
 import { useUser } from "@/contexts";
-import { getCategories } from "@/firebase";
+import { firestore, getCategories } from "@/firebase";
+import { createQuery } from "@/react-query";
 
 export const List = () => {
   const { groupId, defaultListId } = useUser();
@@ -17,14 +20,17 @@ export const List = () => {
     queryKey: ["categories", groupId, defaultListId],
     queryFn: () => getCategories(groupId, defaultListId),
   });
+  const itemsQuery = useItems(groupId, defaultListId);
 
-  if (categoryQuery.isPending) {
+  if (categoryQuery.isPending || itemsQuery.isPending) {
     return <CategorySkeleton />;
   }
 
-  if (categoryQuery.isError) {
+  if (categoryQuery.isError || itemsQuery.isError) {
     return <CategoryError />;
   }
+
+  console.log(itemsQuery.data);
 
   return (
     <Stack>
@@ -58,3 +64,13 @@ const CategorySkeleton = () => (
 );
 
 const CategoryError = () => <div>Error loading categories</div>;
+
+export function useItems(groupId: string, listId: string) {
+  return useQuery({
+    queryKey: ["active-items", groupId, listId],
+    queryFn: createQuery(() =>
+      query(collection(firestore, "groups", groupId, "lists", listId, "items")),
+    ),
+    enabled: !!groupId && !!listId,
+  });
+}
