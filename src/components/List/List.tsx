@@ -5,6 +5,8 @@ import {
   CardHeader,
   Checkbox,
   Flex,
+  Grid,
+  GridItem,
   Heading,
   HStack,
   IconButton,
@@ -29,50 +31,63 @@ export const List = () => {
   }
 
   return (
-    // TODO: Grid layout falling back to stack?
-    <Stack>
+    <Grid
+      templateColumns={{
+        base: "1fr",
+        md: "repeat(2, 1fr)",
+        xl: "repeat(3, 1fr)",
+        "2xl": "repeat(4, 1fr)",
+      }}
+      mx="auto"
+      gap={4}
+    >
       {data.map((category) => (
-        <Card key={category.name}>
-          <CardHeader backgroundColor={`${category.colour}75`}>
-            <Heading size="xs">{category.name.toLocaleUpperCase()}</Heading>
-          </CardHeader>
-          {category.items.length > 0 && (
-            <CardBody backgroundColor={`${category.colour}50`}>
-              <Stack gap={2}>
-                {category.items.map((item) => (
-                  <Flex key={item.name} justifyContent="space-between">
-                    <Checkbox
-                      // onChange={handleCheckboxChange}
-                      isChecked={item.completed}
-                      size="lg"
-                      whiteSpace="nowrap"
-                      overflow="hidden"
-                      textOverflow="ellipsis"
-                      className="list-checkbox"
-                      flex={1}
-                    >
-                      <Box color={item.completed ? "gray.500" : "default"}>
-                        <Text as={item.completed ? "s" : "p"} display="inline">
-                          {item.name}
-                        </Text>
-                        {item.notes && (
-                          <Text fontSize="xs" ml="1" display="inline">
-                            - {item.notes}
+        <GridItem key={category.name}>
+          <Card>
+            <CardHeader backgroundColor={`${category.colour}75`}>
+              <Heading size="xs">{category.name.toLocaleUpperCase()}</Heading>
+            </CardHeader>
+            {category.items.length > 0 && (
+              <CardBody backgroundColor={`${category.colour}50`}>
+                <Stack gap={2}>
+                  {category.items.map((item) => (
+                    <Flex key={item.name} justifyContent="space-between">
+                      <Checkbox
+                        // onChange={handleCheckboxChange}
+                        isChecked={item.completed}
+                        size="lg"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        className="list-checkbox"
+                        flex={1}
+                      >
+                        <Box color={item.completed ? "gray.500" : "default"}>
+                          <Text
+                            as={item.completed ? "s" : "p"}
+                            display="inline"
+                          >
+                            {item.name}
                           </Text>
-                        )}
-                      </Box>
-                    </Checkbox>
-                    <IconButton aria-label="Open item details">
-                      <HamburgerIcon />
-                    </IconButton>
-                  </Flex>
-                ))}
-              </Stack>
-            </CardBody>
-          )}
-        </Card>
+                          {item.notes && (
+                            <Text fontSize="xs" ml="1" display="inline">
+                              - {item.notes}
+                            </Text>
+                          )}
+                        </Box>
+                      </Checkbox>
+                      <IconButton aria-label="Open item details">
+                        <HamburgerIcon />
+                      </IconButton>
+                    </Flex>
+                  ))}
+                </Stack>
+              </CardBody>
+            )}
+          </Card>
+        </GridItem>
       ))}
-    </Stack>
+    </Grid>
   );
 };
 
