@@ -7,6 +7,9 @@ export interface User {
   displayName: string;
   email: string;
   photoUrl: string | undefined;
+  groupName: string;
+  groupId: string;
+  defaultListId: string;
 }
 
 export interface AuthContextType {
@@ -16,9 +19,18 @@ export interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  user: { id: "", displayName: "", email: "", photoUrl: undefined },
+  user: {
+    id: "",
+    displayName: "",
+    email: "",
+    photoUrl: undefined,
+    groupId: "",
+    groupName: "",
+    defaultListId: "",
+  },
   signIn: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
 });
 
 export const useAuth = () => useContext(AuthContext);
+export const useUser = () => useAuth().user;

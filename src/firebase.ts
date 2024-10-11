@@ -1,8 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {
+  collection,
   doc,
-  getDocFromCache,
+  getDoc,
+  getDocs,
   initializeFirestore,
   persistentLocalCache,
 } from "firebase/firestore";
@@ -24,15 +26,54 @@ export const firestore = initializeFirestore(app, {
   localCache: persistentLocalCache(),
 });
 
+interface FirestoreUser {
+  group: {
+    id: string;
+    name: string;
+    defaultList: string;
+  };
+}
+
 export const getFirestoreUser = async (uid: string) => {
   const ref = doc(firestore, "users", uid);
-  const snapshot = await getDocFromCache(ref);
+  const snapshot = await getDoc(ref);
 
   if (!snapshot.exists()) {
     return;
   }
 
-  return { ...snapshot.data(), id: snapshot.id };
+  return { ...(snapshot.data() as FirestoreUser), id: snapshot.id };
 };
+
+export interface Category {
+  id: string;
+  colour: string;
+  name: string;
+  order: number;
+}
+
+export const getCategories = async (groupId: string, listId: string) => {
+  const snapshot = await getDocs(
+    collection(firestore, "groups", groupId, "lists", listId, "categories"),
+  );
+
+  const categories: Array<Category> = [];
+
+  snapshot.forEach((doc) => {
+    categories.push({ ...(doc.data() as Category), id: doc.id });
+  });
+
+  return categories;
+};
+
+export interface Item {
+  added: boolean;
+  category: string;
+  completed: boolean;
+  count: number;
+  name: string;
+  lowerName: string;
+  notes: string;
+}
 
 export * from "firebase/auth";

@@ -24,12 +24,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     if (!firestoreUser) {
       setState("unregistered");
-      setUser({
-        id: firebaseUser.uid,
-        email: firebaseUser.email!,
-        displayName: firebaseUser.displayName!,
-        photoUrl: firebaseUser.photoURL ?? undefined,
-      });
       return;
     }
 
@@ -39,6 +33,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       email: firebaseUser.email!,
       displayName: firebaseUser.displayName!,
       photoUrl: firebaseUser.photoURL ?? undefined,
+      groupName: firestoreUser.group.name,
+      groupId: firestoreUser.group.id,
+      defaultListId: firestoreUser.group.defaultList,
     });
   };
 
