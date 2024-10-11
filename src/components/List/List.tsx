@@ -1,44 +1,75 @@
 import {
+  Box,
   Card,
+  CardBody,
   CardHeader,
+  Checkbox,
+  Flex,
   Heading,
   HStack,
+  IconButton,
   Skeleton,
   SkeletonCircle,
   Stack,
+  Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { collection, query } from "firebase/firestore";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
-import { useUser } from "@/contexts";
-import { firestore, getCategories } from "@/firebase";
-import { createQuery } from "@/react-query";
+import { useListItems } from "@/hooks";
 
 export const List = () => {
-  const { groupId, defaultListId } = useUser();
-  const categoryQuery = useQuery({
-    queryKey: ["categories", groupId, defaultListId],
-    queryFn: () => getCategories(groupId, defaultListId),
-  });
-  const itemsQuery = useItems(groupId, defaultListId);
+  const { isPending, isError, data } = useListItems();
 
-  if (categoryQuery.isPending || itemsQuery.isPending) {
+  if (isPending) {
     return <CategorySkeleton />;
   }
 
-  if (categoryQuery.isError || itemsQuery.isError) {
+  if (isError) {
     return <CategoryError />;
   }
 
-  console.log(itemsQuery.data);
-
   return (
+    // TODO: Grid layout falling back to stack?
     <Stack>
-      {categoryQuery.data.map((category) => (
+      {data.map((category) => (
         <Card key={category.name}>
           <CardHeader backgroundColor={`${category.colour}75`}>
             <Heading size="xs">{category.name.toLocaleUpperCase()}</Heading>
           </CardHeader>
+          {category.items.length > 0 && (
+            <CardBody backgroundColor={`${category.colour}50`}>
+              <Stack gap={2}>
+                {category.items.map((item) => (
+                  <Flex key={item.name} justifyContent="space-between">
+                    <Checkbox
+                      // onChange={handleCheckboxChange}
+                      isChecked={item.completed}
+                      size="lg"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      className="list-checkbox"
+                      flex={1}
+                    >
+                      <Box color={item.completed ? "gray.500" : "default"}>
+                        <Text as={item.completed ? "s" : "p"} display="inline">
+                          {item.name}
+                        </Text>
+                        {item.notes && (
+                          <Text fontSize="xs" ml="1" display="inline">
+                            - {item.notes}
+                          </Text>
+                        )}
+                      </Box>
+                    </Checkbox>
+                    <IconButton aria-label="Open item details">
+                      <HamburgerIcon />
+                    </IconButton>
+                  </Flex>
+                ))}
+              </Stack>
+            </CardBody>
+          )}
         </Card>
       ))}
     </Stack>
@@ -64,13 +95,3 @@ const CategorySkeleton = () => (
 );
 
 const CategoryError = () => <div>Error loading categories</div>;
-
-export function useItems(groupId: string, listId: string) {
-  return useQuery({
-    queryKey: ["active-items", groupId, listId],
-    queryFn: createQuery(() =>
-      query(collection(firestore, "groups", groupId, "lists", listId, "items")),
-    ),
-    enabled: !!groupId && !!listId,
-  });
-}
