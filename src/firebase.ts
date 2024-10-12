@@ -7,6 +7,7 @@ import {
   getDocs,
   initializeFirestore,
   persistentLocalCache,
+  updateDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -66,7 +67,29 @@ export const getCategories = async (groupId: string, listId: string) => {
   return categories;
 };
 
+export const updateItemCompleted = async (
+  groupId: string,
+  listId: string,
+  itemId: string,
+  completed: boolean,
+) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  await updateDoc(docRef, {
+    completed,
+  });
+};
+
 export interface Item {
+  id: string;
   added: boolean;
   category: string;
   completed: boolean;

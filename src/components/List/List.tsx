@@ -18,9 +18,25 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 
 import { useListItems } from "@/hooks";
+import { updateItemCompleted } from "@/firebase";
+import { useUser } from "@/contexts";
 
 export const List = () => {
   const { isPending, isError, data } = useListItems();
+  const { groupId, defaultListId } = useUser();
+
+  const handleItemChecked = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    itemId: string,
+  ) => {
+    const completed = e.target.checked;
+
+    if (typeof completed !== "boolean") {
+      return;
+    }
+
+    await updateItemCompleted(groupId, defaultListId, itemId, completed);
+  };
 
   if (isPending) {
     return <CategorySkeleton />;
@@ -53,7 +69,7 @@ export const List = () => {
                   {category.items.map((item) => (
                     <Flex key={item.name} justifyContent="space-between">
                       <Checkbox
-                        // onChange={handleCheckboxChange}
+                        onChange={(e) => handleItemChecked(e, item.id)}
                         isChecked={item.completed}
                         size="lg"
                         whiteSpace="nowrap"

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { collection, query, where } from "firebase/firestore";
 
-import { firestore, Item } from "@/firebase";
+import { firestore } from "@/firebase";
 import { createQuery } from "@/react-query";
 
 export function useAddedItems(groupId: string, listId: string) {
