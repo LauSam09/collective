@@ -14,6 +14,7 @@ export const useListItems = () => {
     groupId,
     defaultListId,
   ) as UseQueryResult<ReadonlyArray<Item>, Error>;
+
   let data = (categoryQuery?.data ?? [])
     .sort((a, b) => a.order - b.order)
     .map((cat) => ({ ...cat, items: [] as ReadonlyArray<Item> }));
@@ -21,7 +22,9 @@ export const useListItems = () => {
   if (!addedItemsQuery.isPending) {
     for (const category of data) {
       category.items =
-        addedItemsQuery.data?.filter((i) => i.category === category.id) ?? [];
+        addedItemsQuery.data
+          ?.filter((i) => i.category === category.id)
+          ?.sort((a, b) => a.lowerName.localeCompare(b.lowerName)) ?? [];
     }
 
     data = data.sort((a, b) => {
