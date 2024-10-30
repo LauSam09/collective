@@ -2,6 +2,7 @@ import { useEffect, useState, ReactNode } from "react";
 import { AuthContext, AuthState, User } from "@/contexts";
 import { getAuth, getFirestoreUser, User as FirebaseUser } from "@/firebase";
 import { SignIn } from "./SignIn";
+import { CircularProgress, HStack, Stack } from "@chakra-ui/react";
 
 const auth = getAuth();
 
@@ -49,7 +50,13 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   if (state === "loading") {
-    return <h1>Collective</h1>;
+    return (
+      <HStack minW="100vw" justifyContent="center">
+        <Stack minH="100vh" justifyContent="center">
+          <CircularProgress isIndeterminate />
+        </Stack>
+      </HStack>
+    );
   }
 
   if (state === "unauthenticated") {
