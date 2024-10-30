@@ -14,7 +14,6 @@ export interface User {
 
 export interface AuthContextType {
   user: User;
-  signIn: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -28,7 +27,6 @@ export const AuthContext = createContext<AuthContextType>({
     groupName: "",
     defaultListId: "",
   },
-  signIn: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
 });
 

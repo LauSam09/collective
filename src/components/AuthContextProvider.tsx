@@ -1,12 +1,7 @@
 import { useEffect, useState, ReactNode } from "react";
 import { AuthContext, AuthState, User } from "@/contexts";
-import {
-  getAuth,
-  getFirestoreUser,
-  GoogleAuthProvider,
-  signInWithPopup,
-  User as FirebaseUser,
-} from "@/firebase";
+import { getAuth, getFirestoreUser, User as FirebaseUser } from "@/firebase";
+import { SignIn } from "./SignIn";
 
 const auth = getAuth();
 
@@ -45,16 +40,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return unsubscribe;
   }, []);
 
-  const signIn = async () => {
-    const provider = new GoogleAuthProvider();
-
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const signOut = async () => {
     try {
       await auth.signOut();
@@ -68,11 +53,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   }
 
   if (state === "unauthenticated") {
-    return (
-      <div>
-        <button onClick={signIn}>Sign in</button>
-      </div>
-    );
+    return <SignIn />;
   }
 
   if (state === "unregistered") {
@@ -92,7 +73,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
-        signIn,
         signOut,
       }}
     >
