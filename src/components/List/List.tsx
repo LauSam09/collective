@@ -8,35 +8,20 @@ import {
   Grid,
   GridItem,
   Heading,
-  HStack,
   IconButton,
   Skeleton,
-  SkeletonCircle,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import React from "react";
 
 import { useListItems } from "@/hooks";
-import { updateItemCompleted } from "@/firebase";
+import { Category, Item, updateItemCompleted } from "@/firebase";
 import { useUser } from "@/contexts";
 
 export const List = () => {
   const { isPending, isError, data } = useListItems();
-  const { groupId, defaultListId } = useUser();
-
-  const handleItemChecked = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    itemId: string,
-  ) => {
-    const completed = e.target.checked;
-
-    if (typeof completed !== "boolean") {
-      return;
-    }
-
-    await updateItemCompleted(groupId, defaultListId, itemId, completed);
-  };
 
   if (isPending) {
     return <CategorySkeleton />;
@@ -59,48 +44,11 @@ export const List = () => {
     >
       {data.map((category) => (
         <GridItem key={category.name}>
-          <Card>
-            <CardHeader backgroundColor={`${category.colour}75`}>
-              <Heading size="xs">{category.name.toLocaleUpperCase()}</Heading>
-            </CardHeader>
-            {category.items.length > 0 && (
-              <CardBody backgroundColor={`${category.colour}50`}>
-                <Stack gap={2}>
-                  {category.items.map((item) => (
-                    <Flex key={item.name} justifyContent="space-between">
-                      <Checkbox
-                        onChange={(e) => handleItemChecked(e, item.id)}
-                        isChecked={item.completed}
-                        size="lg"
-                        whiteSpace="nowrap"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        className="list-checkbox"
-                        flex={1}
-                      >
-                        <Box color={item.completed ? "gray.500" : "default"}>
-                          <Text
-                            as={item.completed ? "s" : "p"}
-                            display="inline"
-                          >
-                            {item.name}
-                          </Text>
-                          {item.notes && (
-                            <Text fontSize="xs" ml="1" display="inline">
-                              - {item.notes}
-                            </Text>
-                          )}
-                        </Box>
-                      </Checkbox>
-                      <IconButton aria-label="Open item details">
-                        <HamburgerIcon />
-                      </IconButton>
-                    </Flex>
-                  ))}
-                </Stack>
-              </CardBody>
-            )}
-          </Card>
+          <ListCategory category={category}>
+            {category.items.map((item) => (
+              <ListItem key={item.id} item={item} />
+            ))}
+          </ListCategory>
         </GridItem>
       ))}
     </Grid>
@@ -109,12 +57,12 @@ export const List = () => {
 
 const CategorySkeleton = () => (
   <Stack>
-    <HStack justifyContent="space-between">
+    {/* <HStack justifyContent="space-between">
       <SkeletonCircle size="3rem" />
       <SkeletonCircle size="3rem" />
       <SkeletonCircle size="3rem" />
       <SkeletonCircle size="3rem" />
-    </HStack>
+    </HStack> */}
     <Stack>
       <Skeleton height="120px" />
       <Skeleton height="60px" />
@@ -126,3 +74,65 @@ const CategorySkeleton = () => (
 );
 
 const CategoryError = () => <div>Error loading categories</div>;
+
+const ListCategory = ({
+  category,
+  children,
+}: {
+  category: Category;
+  children: React.ReactNode;
+}) => (
+  <Card>
+    <CardHeader backgroundColor={`${category.colour}75`}>
+      <Heading size="xs">{category.name.toLocaleUpperCase()}</Heading>
+    </CardHeader>
+    {React.Children.count(children) > 0 && (
+      <CardBody backgroundColor={`${category.colour}50`}>
+        <Stack gap={2}>{children}</Stack>
+      </CardBody>
+    )}
+  </Card>
+);
+
+const ListItem = ({ item }: { item: Item }) => {
+  const { groupId, defaultListId } = useUser();
+
+  const handleItemChecked = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const completed = e.target.checked;
+
+    if (typeof completed !== "boolean") {
+      return;
+    }
+
+    await updateItemCompleted(groupId, defaultListId, item.id, completed);
+  };
+
+  return (
+    <Flex key={item.name} justifyContent="space-between">
+      <Checkbox
+        onChange={(e) => handleItemChecked(e)}
+        isChecked={item.completed}
+        size="lg"
+        whiteSpace="nowrap"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        className="list-checkbox"
+        flex={1}
+      >
+        <Box color={item.completed ? "gray.500" : "default"}>
+          <Text as={item.completed ? "s" : "p"} display="inline">
+            {item.name}
+          </Text>
+          {item.notes && (
+            <Text fontSize="xs" ml="1" display="inline">
+              - {item.notes}
+            </Text>
+          )}
+        </Box>
+      </Checkbox>
+      <IconButton aria-label="Open item details">
+        <HamburgerIcon />
+      </IconButton>
+    </Flex>
+  );
+};
