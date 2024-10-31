@@ -7,7 +7,9 @@ import {
   getDocs,
   initializeFirestore,
   persistentLocalCache,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -65,6 +67,34 @@ export const getCategories = async (groupId: string, listId: string) => {
   });
 
   return categories;
+};
+
+export interface Recipe {
+  id: string;
+  name: string;
+  notes: string | undefined;
+  recipeUrl: string | undefined;
+  tags: Array<string>;
+  ingredients: Array<string>;
+  days?: Array<number>;
+}
+
+export const getAddedRecipes = async (groupId: string) => {
+  const snapshot = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "recipes"),
+      // TODO: Check if 0 or 1 indexed.
+      where("days", "array-contains-any", [0, 1, 2, 3, 4, 5, 6, 7]),
+    ),
+  );
+
+  const recipes: Array<Recipe> = [];
+
+  snapshot.forEach((doc) => {
+    recipes.push({ ...(doc.data() as Recipe), id: doc.id });
+  });
+
+  return recipes;
 };
 
 export const updateItemCompleted = async (
