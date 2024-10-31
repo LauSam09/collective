@@ -12,16 +12,25 @@ import {
   Skeleton,
   Stack,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 
 import { useListItems } from "@/hooks";
 import { Category, Item, updateItemCompleted } from "@/firebase";
 import { useUser } from "@/contexts";
+import { ItemDetailsModal } from "./ItemDetailsModal";
 
 export const List = () => {
   const { isPending, isError, data } = useListItems();
+  const detailsDisclosure = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState<Item>();
+
+  const handleClickDetails = (item: Item) => {
+    setSelectedItem(item);
+    detailsDisclosure.onOpen();
+  };
 
   if (isPending) {
     return <CategorySkeleton />;
@@ -32,29 +41,37 @@ export const List = () => {
   }
 
   return (
-    <Grid
-      templateColumns={{
-        base: "1fr",
-        md: "repeat(2, 1fr)",
-        xl: "repeat(3, 1fr)",
-        "2xl": "repeat(4, 1fr)",
-      }}
-      mx="auto"
-      gap={4}
-    >
-      {data.map((category) => (
-        <GridItem key={category.name}>
-          <ListCategory category={category}>
-            {category.items.map((item) => (
-              <ListItem key={item.id} item={item} />
-            ))}
-          </ListCategory>
-        </GridItem>
-      ))}
-    </Grid>
+    <>
+      <Grid
+        templateColumns={{
+          base: "1fr",
+          md: "repeat(2, 1fr)",
+          xl: "repeat(3, 1fr)",
+          "2xl": "repeat(4, 1fr)",
+        }}
+        mx="auto"
+        gap={4}
+      >
+        {data.map((category) => (
+          <GridItem key={category.name}>
+            <ListCategory category={category}>
+              {category.items.map((item) => (
+                <ListItem
+                  key={item.id}
+                  item={item}
+                  onOpenDetails={() => handleClickDetails(item)}
+                />
+              ))}
+            </ListCategory>
+          </GridItem>
+        ))}
+      </Grid>
+      <ItemDetailsModal {...detailsDisclosure} item={selectedItem} />
+    </>
   );
 };
 
+// TODO: Update for large resolutions
 const CategorySkeleton = () => (
   <Stack>
     {/* <HStack justifyContent="space-between">
@@ -94,7 +111,13 @@ const ListCategory = ({
   </Card>
 );
 
-const ListItem = ({ item }: { item: Item }) => {
+const ListItem = ({
+  item,
+  onOpenDetails,
+}: {
+  item: Item;
+  onOpenDetails: () => void;
+}) => {
   const { groupId, defaultListId } = useUser();
 
   const handleItemChecked = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,7 +153,7 @@ const ListItem = ({ item }: { item: Item }) => {
           )}
         </Box>
       </Checkbox>
-      <IconButton aria-label="Open item details">
+      <IconButton onClick={onOpenDetails} aria-label="Open item details">
         <HamburgerIcon />
       </IconButton>
     </Flex>
