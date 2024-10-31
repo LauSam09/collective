@@ -1,15 +1,12 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { UseQueryResult } from "@tanstack/react-query";
 
 import { useUser } from "@/contexts";
-import { getCategories, Item } from "@/firebase";
-import { useAddedItems } from "@/hooks";
+import { Item } from "@/firebase";
+import { useAddedItems, useCategories } from "@/hooks";
 
 export const useListItems = () => {
   const { groupId, defaultListId } = useUser();
-  const categoryQuery = useQuery({
-    queryKey: ["categories", groupId, defaultListId],
-    queryFn: () => getCategories(groupId, defaultListId),
-  });
+  const categoryQuery = useCategories();
   const addedItemsQuery = useAddedItems(
     groupId,
     defaultListId,

@@ -14,10 +14,11 @@ import {
   Box,
   UnorderedList,
   ListItem,
+  Tag,
 } from "@chakra-ui/react";
 
 import { Item } from "@/firebase";
-import { useAddedRecipes } from "@/hooks";
+import { useAddedRecipes, useCategories } from "@/hooks";
 import { normalizeName } from "@/utilities";
 
 type ItemDetailsModalProps = UseDisclosureReturn & {
@@ -29,9 +30,14 @@ export const ItemDetailsModal = ({
   onClose,
   item,
 }: ItemDetailsModalProps) => {
-  const { data } = useAddedRecipes();
+  const addedRecipesQuery = useAddedRecipes();
+  const categoriesQuery = useCategories();
 
-  const matchingRecipes = (data ?? []).filter((recipe) =>
+  const category = (categoriesQuery.data ?? []).find(
+    (c) => item?.category === c.id,
+  );
+
+  const matchingRecipes = (addedRecipesQuery.data ?? []).filter((recipe) =>
     recipe.ingredients.map(normalizeName).includes(item?.lowerName ?? ""),
   );
 
@@ -39,7 +45,12 @@ export const ItemDetailsModal = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{item?.name}</ModalHeader>
+        <ModalHeader>
+          <Heading size="lg">{item?.name} </Heading>
+          <Tag size="sm" bgColor={`${category?.colour}50`} mt={1}>
+            {category?.name}
+          </Tag>
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Stack gap={3}>
