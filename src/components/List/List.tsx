@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -17,7 +18,7 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 
-import { useListItems } from "@/hooks";
+import { useListItems, useMatchingRecipes } from "@/hooks";
 import { Category, Item, updateItemCompleted } from "@/firebase";
 import { useUser } from "@/contexts";
 import { ItemDetailsModal } from "./ItemDetailsModal";
@@ -119,6 +120,7 @@ const ListItem = ({
   onOpenDetails: () => void;
 }) => {
   const { groupId, defaultListId } = useUser();
+  const matchingRecipesQuery = useMatchingRecipes(item.lowerName);
 
   const handleItemChecked = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const completed = e.target.checked;
@@ -153,9 +155,15 @@ const ListItem = ({
           )}
         </Box>
       </Checkbox>
-      <IconButton onClick={onOpenDetails} aria-label="Open item details">
-        <HamburgerIcon />
-      </IconButton>
+      {matchingRecipesQuery.data?.length > 0 ? (
+        <Button onClick={onOpenDetails}>
+          {matchingRecipesQuery.data?.length}
+        </Button>
+      ) : (
+        <IconButton onClick={onOpenDetails} aria-label="Open item details">
+          <HamburgerIcon />
+        </IconButton>
+      )}
     </Flex>
   );
 };

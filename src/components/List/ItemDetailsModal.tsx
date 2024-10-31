@@ -18,8 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Item } from "@/firebase";
-import { useAddedRecipes, useCategories } from "@/hooks";
-import { normalizeName } from "@/utilities";
+import { useCategories, useMatchingRecipes } from "@/hooks";
 
 type ItemDetailsModalProps = UseDisclosureReturn & {
   item: Item | undefined;
@@ -30,15 +29,11 @@ export const ItemDetailsModal = ({
   onClose,
   item,
 }: ItemDetailsModalProps) => {
-  const addedRecipesQuery = useAddedRecipes();
+  const matchingRecipesQuery = useMatchingRecipes(item?.lowerName ?? "");
   const categoriesQuery = useCategories();
 
   const category = (categoriesQuery.data ?? []).find(
     (c) => item?.category === c.id,
-  );
-
-  const matchingRecipes = (addedRecipesQuery.data ?? []).filter((recipe) =>
-    recipe.ingredients.map(normalizeName).includes(item?.lowerName ?? ""),
   );
 
   return (
@@ -61,9 +56,9 @@ export const ItemDetailsModal = ({
 
             <Box>
               <Heading size="sm">Selected recipes</Heading>
-              {matchingRecipes.length > 0 ? (
+              {matchingRecipesQuery.data?.length > 0 ? (
                 <UnorderedList>
-                  {matchingRecipes.map((recipe) => (
+                  {matchingRecipesQuery.data.map((recipe) => (
                     <ListItem key={recipe.id}>{recipe.name}</ListItem>
                   ))}
                 </UnorderedList>
