@@ -8,6 +8,8 @@ import { App } from "./App";
 import { AuthContextProvider } from "@/components";
 import { queryClient } from "./react-query";
 
+import "./index.css";
+
 const theme = extendTheme({
   config: {
     initialColorMode: "system",
