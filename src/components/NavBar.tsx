@@ -1,7 +1,5 @@
 import {
-  Avatar,
   Box,
-  Button,
   Drawer,
   DrawerContent,
   DrawerOverlay,
@@ -9,14 +7,8 @@ import {
   Heading,
   IconButton,
   Link,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
   Show,
   Stack,
-  Text,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -32,6 +24,15 @@ import { useRef } from "react";
 
 import { version } from "../../package.json";
 import { useAuth } from "@/contexts";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function NavBar() {
   const { user, signOut } = useAuth();
@@ -45,7 +46,7 @@ export function NavBar() {
         px={4}
         position="sticky"
         top={0}
-        zIndex={100}
+        zIndex={49}
       >
         <Flex h={16} alignItems="center" justifyContent="space-between">
           <Box>
@@ -68,49 +69,51 @@ export function NavBar() {
             </Heading>
           </Box>
 
-          {
-            <Flex alignItems="center">
-              <Stack direction="row" spacing={4} alignItems="center">
-                <Show above="sm">
-                  <Link as={NavLink} to="/">
-                    List
-                  </Link>
-                  <Link as={NavLink} to="/planning">
-                    Planning
-                  </Link>
-                  <Link as={NavLink} to="/recipes">
-                    Recipes
-                  </Link>
-                  <Link as={NavLink} to="/settings">
-                    Settings
-                  </Link>
-                </Show>
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    rounded="full"
-                    variant="link"
-                    cursor="pointer"
-                    minW={0}
+          <Flex alignItems="center">
+            <Stack direction="row" spacing={4} alignItems="center">
+              <Show above="sm">
+                <Link as={NavLink} to="/">
+                  List
+                </Link>
+                <Link as={NavLink} to="/planning">
+                  Planning
+                </Link>
+                <Link as={NavLink} to="/recipes">
+                  Recipes
+                </Link>
+                <Link as={NavLink} to="/settings">
+                  Settings
+                </Link>
+              </Show>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar>
+                    <AvatarImage src={user?.photoUrl} />
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="z-50">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col gap-0">
+                      <span>{user.displayName}</span>
+                      <span className="font-normal">{user.email}</span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="cursor-pointer"
                   >
-                    <Avatar size={"sm"} src={user?.photoUrl} />
-                  </MenuButton>
-                  <MenuList alignItems={"center"}>
-                    <Flex px={3} direction="column">
-                      <p>{user?.displayName}</p>
-                      <small>{user?.email}</small>
-                    </Flex>
-                    <MenuDivider />
-                    <MenuItem onClick={signOut}>Logout</MenuItem>
-                    <MenuDivider />
-                    <Flex px={2} justifyContent="end">
-                      <Text fontSize="xs">Version {version}</Text>
-                    </Flex>
-                  </MenuList>
-                </Menu>
-              </Stack>
-            </Flex>
-          }
+                    Log out
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="flex justify-end">
+                    <span className="text-xs">Version {version}</span>
+                  </DropdownMenuLabel>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Stack>
+          </Flex>
         </Flex>
       </Box>
       <Drawer
