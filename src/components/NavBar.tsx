@@ -33,6 +33,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { AvatarFallback } from "@radix-ui/react-avatar";
 
 export function NavBar() {
   const { user, signOut } = useAuth();
@@ -89,7 +90,11 @@ export function NavBar() {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
-                    <AvatarImage src={user?.photoUrl} />
+                    <AvatarImage
+                      src={user.photoUrl}
+                      referrerPolicy="no-referrer"
+                    />
+                    <AvatarFallback>User</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="z-50">
