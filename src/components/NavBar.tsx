@@ -1,15 +1,11 @@
 import {
-  Box,
   Drawer,
   DrawerContent,
   DrawerOverlay,
-  Flex,
   Heading,
   IconButton,
   Link,
-  Show,
   Stack,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { Link as RouterLink, NavLink } from "react-router-dom";
@@ -21,6 +17,7 @@ import {
   SettingsIcon,
 } from "@chakra-ui/icons";
 import { useRef } from "react";
+import { AvatarFallback } from "@radix-ui/react-avatar";
 
 import { version } from "../../package.json";
 import { useAuth } from "@/contexts";
@@ -33,7 +30,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AvatarFallback } from "@radix-ui/react-avatar";
 
 export function NavBar() {
   const { user, signOut } = useAuth();
@@ -42,17 +38,11 @@ export function NavBar() {
 
   return (
     <>
-      <Box
-        bg={useColorModeValue("gray.100", "gray.900")}
-        px={4}
-        position="sticky"
-        top={0}
-        zIndex={49}
-      >
-        <Flex h={16} alignItems="center" justifyContent="space-between">
-          <Box>
-            <Heading>
-              <Show below="sm">
+      <div className="px-4 sticky z-[49] top-0 bg-gray-100 dark:bg-gray-900">
+        <div className="h-16 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">
+              <div className="sm:hidden inline-block">
                 <IconButton
                   variant="ghost"
                   onClick={onOpen}
@@ -60,32 +50,23 @@ export function NavBar() {
                   aria-label="Expand nav menu"
                   ml={-2}
                   mr={2}
+                  className="sm:hidden"
                 >
                   <HamburgerIcon boxSize={6} />
                 </IconButton>
-              </Show>
-              <Link as={RouterLink} to="/">
-                Collective
-              </Link>
-            </Heading>
-          </Box>
+              </div>
+              <RouterLink to="/">Collective</RouterLink>
+            </h1>
+          </div>
 
-          <Flex alignItems="center">
-            <Stack direction="row" spacing={4} alignItems="center">
-              <Show above="sm">
-                <Link as={NavLink} to="/">
-                  List
-                </Link>
-                <Link as={NavLink} to="/planning">
-                  Planning
-                </Link>
-                <Link as={NavLink} to="/recipes">
-                  Recipes
-                </Link>
-                <Link as={NavLink} to="/settings">
-                  Settings
-                </Link>
-              </Show>
+          <div className="flex items-center">
+            <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-2">
+                <NavLink to="/">List</NavLink>
+                <NavLink to="/planning">Planning</NavLink>
+                <NavLink to="/recipes">Recipes</NavLink>
+                <NavLink to="/settings">Settings</NavLink>
+              </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger>
@@ -117,10 +98,10 @@ export function NavBar() {
                   </DropdownMenuLabel>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </Stack>
-          </Flex>
-        </Flex>
-      </Box>
+            </div>
+          </div>
+        </div>
+      </div>
       <Drawer
         isOpen={isOpen}
         placement="left"
