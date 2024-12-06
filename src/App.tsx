@@ -7,7 +7,7 @@ export const App = () => (
   <div>
     <SidebarProvider>
       <AppSidebar />
-      <div className="w-full">
+      <div className="w-full dark:bg-neutral-800">
         <NavBar />
         <div className="p-4">
           <Routes>

@@ -18,10 +18,12 @@ export function NavBar() {
 
   return (
     <>
-      <div className="px-4 sticky z-[49] top-0 bg-sidebar">
+      <div className="px-4 sticky z-[49] top-0 bg-sidebar dark:text-white">
         <div className="h-16 flex items-center justify-between">
-          <SidebarTrigger />
-          {/* TODO: Readd app title for mobile-only? */}
+          <div className="flex items-center h-12">
+            <SidebarTrigger className="pt-1" />
+            <h1 className="sm:hidden text-2xl font-bold">Collective</h1>
+          </div>
 
           {/* TODO: Factor out user menu */}
           <DropdownMenu>
