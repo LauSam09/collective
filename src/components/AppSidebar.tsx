@@ -42,7 +42,7 @@ const items = [
 ];
 
 export const AppSidebar = () => (
-  <Sidebar>
+  <Sidebar className="dark:border-black">
     <SidebarContent>
       <SidebarHeader>
         <h1 className="text-2xl font-bold px-2">Collective</h1>

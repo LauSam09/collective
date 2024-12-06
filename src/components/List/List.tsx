@@ -1,4 +1,3 @@
-import { useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { EllipsisVertical } from "lucide-react";
@@ -14,12 +13,12 @@ import { Skeleton } from "../ui/skeleton";
 
 export const List = () => {
   const { isPending, isError, data } = useListItems();
-  const detailsDisclosure = useDisclosure();
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item>();
 
   const handleClickDetails = (item: Item) => {
     setSelectedItem(item);
-    detailsDisclosure.onOpen();
+    setIsDetailsOpen(true);
   };
 
   if (isPending) {
@@ -47,7 +46,11 @@ export const List = () => {
           </div>
         ))}
       </div>
-      <ItemDetailsModal {...detailsDisclosure} item={selectedItem} />
+      <ItemDetailsModal
+        item={selectedItem!}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+      />
     </>
   );
 };
@@ -79,21 +82,30 @@ const ListCategory = ({
 }: {
   category: Category;
   children: React.ReactNode;
-}) => (
-  <Card className="" style={{ backgroundColor: `${category.colour}75` }}>
-    <CardHeader>
-      <h2 className="text-sm font-bold">{category.name.toLocaleUpperCase()}</h2>
-    </CardHeader>
-    {React.Children.count(children) > 0 && (
-      <CardContent
-        className="pt-6 rounded-b-xl"
-        style={{ backgroundColor: `${category.colour}50` }}
+}) => {
+  const hasChildren = React.Children.count(children) > 0;
+
+  return (
+    <Card className="border-none">
+      <CardHeader
+        className={hasChildren ? "rounded-t-xl" : "rounded-xl"}
+        style={{ backgroundColor: `${category.colour}75` }}
       >
-        <div className="flex flex-col gap-2">{children}</div>
-      </CardContent>
-    )}
-  </Card>
-);
+        <h2 className="text-sm font-bold">
+          {category.name.toLocaleUpperCase()}
+        </h2>
+      </CardHeader>
+      {hasChildren && (
+        <CardContent
+          className="pt-6 rounded-b-xl"
+          style={{ backgroundColor: `${category.colour}50` }}
+        >
+          <div className="flex flex-col gap-2">{children}</div>
+        </CardContent>
+      )}
+    </Card>
+  );
+};
 
 const ListItem = ({
   item,
