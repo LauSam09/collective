@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { EllipsisVertical } from "lucide-react";
+import { Menu } from "lucide-react";
 
 import { useListItems, useMatchingRecipes } from "@/hooks";
 import { Category, Item, updateItemCompleted } from "@/firebase";
@@ -165,10 +165,10 @@ const ListItem = ({
         ) : (
           <Button
             onClick={onOpenDetails}
-            variant="outline"
+            variant="secondary"
             className="h-full w-full"
           >
-            <EllipsisVertical />
+            <Menu />
           </Button>
         )}
       </div>
