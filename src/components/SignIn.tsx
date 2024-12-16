@@ -1,14 +1,6 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "@/firebase";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const auth = getAuth();
 
@@ -24,23 +16,21 @@ export const SignIn = () => {
   };
 
   return (
-    <Stack minHeight="90vh" justifyContent="center">
-      <Flex justifyContent="center" flexDir="row" width="100%" p={4}>
-        <Card size="sm">
+    <div className="min-h-[90vh] flex flex-col justify-center">
+      <div className="p-4 flex justify-center w-full">
+        <Card>
           <CardHeader>
-            <Heading>Collective</Heading>
+            <CardTitle>Collective</CardTitle>
           </CardHeader>
-          <CardBody>
-            <Stack spacing="4">
-              <Text>
-                Welcome to Collective - the recipe planning application.
-              </Text>
-              <Text>Sign in to get started.</Text>
+          <CardContent>
+            <div className="flex flex-col gap-4">
+              <p>Welcome to Collective - the recipe planning application.</p>
+              <p>Sign in to get started.</p>
               <Button onClick={signIn}>Sign in with Google</Button>
-            </Stack>
-          </CardBody>
+            </div>
+          </CardContent>
         </Card>
-      </Flex>
-    </Stack>
+      </div>
+    </div>
   );
 };
