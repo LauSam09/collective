@@ -4,7 +4,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -48,7 +47,6 @@ export const AppSidebar = () => (
         <h1 className="text-2xl font-bold px-2">Collective</h1>
       </SidebarHeader>
       <SidebarGroup>
-        <SidebarGroupLabel>Application</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             {items.map((item) => (

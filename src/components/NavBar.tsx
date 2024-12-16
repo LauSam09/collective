@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { version } from "../../package.json";
 
 export function NavBar() {
   const { user, signOut } = useAuth();
+  const { isMobile, open } = useSidebar();
 
   return (
     <>
@@ -22,7 +23,9 @@ export function NavBar() {
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center h-12">
             <SidebarTrigger className="pt-1" />
-            <h1 className="sm:hidden text-2xl font-bold">Collective</h1>
+            {(isMobile || !open) && (
+              <h1 className="text-2xl font-bold">Collective</h1>
+            )}
           </div>
 
           {/* TODO: Factor out user menu */}
