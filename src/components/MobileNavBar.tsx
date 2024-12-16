@@ -1,55 +1,34 @@
-import {
-  AddIcon,
-  CalendarIcon,
-  CheckIcon,
-  SearchIcon,
-  SettingsIcon,
-} from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  HStack,
-  Link,
-  Show,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { CalendarDays, ListCheck, Plus, Search, Settings } from "lucide-react";
 import { NavLink, NavLinkProps } from "react-router-dom";
+import { Button } from "./ui/button";
 
 export const MobileNavBar = () => {
-  const backgroundColor = useColorModeValue("gray.100", "gray.700");
-
   return (
-    <Show below="sm">
+    <div className="sm:hidden">
       {/* Prevent mobile nav bar from overlapping content at bottom of screen */}
-      <Box py={7} />
-      <Box
-        position="fixed"
-        bottom={0}
-        p={1}
-        width="100%"
-        backgroundColor={backgroundColor}
-      >
-        <HStack alignItems="stretch" gap={1}>
+      <div className="py-7" />
+      <div className="fixed bottom-0 p-1 w-full bg-sidebar">
+        <div className="flex items-stretch gap-1">
           <MobileNavLink to="/">
-            <CheckIcon />
+            <ListCheck />
           </MobileNavLink>
 
           <MobileNavLink to="/planning">
-            <CalendarIcon />
+            <CalendarDays />
           </MobileNavLink>
 
           <QuickAddButton />
 
           <MobileNavLink to="/recipes">
-            <SearchIcon />
+            <Search />
           </MobileNavLink>
 
           <MobileNavLink to="/settings">
-            <SettingsIcon />
+            <Settings />
           </MobileNavLink>
-        </HStack>
-      </Box>
-    </Show>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -58,59 +37,21 @@ type MobileNavLinkProps = Pick<NavLinkProps, "to"> & {
 };
 
 const MobileNavLink = ({ to, children }: MobileNavLinkProps) => (
-  <Link
-    as={NavLink}
+  <NavLink
     to={to}
-    p={2}
-    borderRadius="md"
-    flex={1}
-    display="flex"
-    flexDir="column"
-    alignItems="center"
-    justifyContent="center"
-    _hover={{
-      textDecor: "none",
-      backgroundColor: "var(--chakra-colors-gray-200)",
-    }}
-    _dark={{
-      _hover: {
-        backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
-      },
-      _activeLink: {
-        backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
-      },
-    }}
-    _activeLink={{
-      backgroundColor: "var(--chakra-colors-gray-200)",
-    }}
+    className={() => "flex flex-1 flex-col items-center justify-center py-0.5"}
   >
-    {children}
-  </Link>
+    <Button variant="secondary" className="w-full h-full">
+      {children}
+    </Button>
+  </NavLink>
 );
 
 const QuickAddButton = () => (
   <Button
-    colorScheme="blue"
-    variant="solid"
-    display="flex"
-    flexDir="column"
-    alignItems="center"
-    justifyContent="center"
-    flex={1}
-    paddingY={4}
-    aria-label="Add item"
-    height="100%"
-    fontWeight="normal"
+    className="flex flex-1 flex-col items-center justify-center py-0.5 min-h-12"
     onClick={() => {}}
-    _hover={{
-      backgroundColor: "var(--chakra-colors-gray-200)",
-    }}
-    _dark={{
-      _hover: {
-        backgroundColor: "var(--chakra-colors-whiteAlpha-200)",
-      },
-    }}
   >
-    <AddIcon />
+    <Plus />
   </Button>
 );
