@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Square } from "lucide-react";
 
-import { Item } from "@/firebase";
+import { Item, updateItem } from "@/firebase";
 import { useCategories, useMatchingRecipes } from "@/hooks";
 import {
   Dialog,
@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useUser } from "@/contexts";
 
 type ItemDetailsModalProps = {
   item: Item | undefined;
@@ -122,17 +123,23 @@ const EditDetailsModal = ({
   onOpenChange,
 }: ItemDetailsModalProps) => {
   const categoriesQuery = useCategories();
+  const { groupId, defaultListId } = useUser();
 
   const category = (categoriesQuery.data ?? []).find(
     (c) => item?.category === c.id,
   );
 
   const form = useForm<DetailsForm>({
-    defaultValues: { notes: item?.notes, category: item?.category },
+    defaultValues: { notes: item?.notes ?? "", category: item?.category },
   });
 
-  const onSubmit = (values: DetailsForm) => {
-    console.log(values);
+  const onSubmit = async (values: DetailsForm) => {
+    if (!item) {
+      return;
+    }
+
+    await updateItem(groupId, defaultListId, item.id, { ...values });
+    onOpenChange(false);
   };
 
   return (
@@ -173,7 +180,7 @@ const EditDetailsModal = ({
                     <SelectContent>
                       {categoriesQuery.data?.map((c) => (
                         <SelectItem key={c.id} value={c.id} className="mb-1">
-                          <div className="flex justify-between w-full gap-1">
+                          <div className="flex w-full gap-1 items-center">
                             <Square
                               color={`${c.colour}`}
                               fill={`${c.colour}`}

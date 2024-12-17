@@ -49,8 +49,8 @@ const MobileNavLink = ({ to, children }: MobileNavLinkProps) => (
 
 const QuickAddButton = () => (
   <Button
-    className="flex flex-1 flex-col items-center justify-center py-0.5 min-h-12"
     onClick={() => {}}
+    className="flex flex-1 flex-col items-center justify-center py-0.5 min-h-12"
   >
     <Plus />
   </Button>

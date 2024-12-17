@@ -157,7 +157,7 @@ const ListItem = ({
         {matchingRecipesQuery.data?.length > 0 ? (
           <Button
             onClick={onOpenDetails}
-            variant="outline"
+            variant="secondary"
             className="h-full w-full font-bold"
           >
             {matchingRecipesQuery.data?.length}

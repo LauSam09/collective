@@ -118,6 +118,27 @@ export const updateItemCompleted = async (
   });
 };
 
+export const updateItem = async (
+  groupId: string,
+  listId: string,
+  itemId: string,
+  item: Partial<Item>,
+) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  await updateDoc(docRef, {
+    ...item,
+  });
+};
+
 export interface Item {
   id: string;
   added: boolean;
