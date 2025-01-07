@@ -118,6 +118,27 @@ export const updateItemCompleted = async (
   });
 };
 
+export const addItem = async (
+  groupId: string,
+  listId: string,
+  itemId: string,
+) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  await updateDoc(docRef, {
+    added: true,
+    notes: "",
+  });
+};
+
 export const updateItem = async (
   groupId: string,
   listId: string,
@@ -149,5 +170,21 @@ export interface Item {
   lowerName: string;
   notes: string;
 }
+
+export const fetchItems = async (groupId: string, listId: string) => {
+  const snapshot = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "lists", listId),
+      // TODO: Check if 0 or 1 indexed.
+      where("days", "array-contains-any", [0, 1, 2, 3, 4, 5, 6, 7]),
+    ),
+  );
+
+  const recipes: Array<Recipe> = [];
+
+  snapshot.forEach((doc) => {
+    recipes.push({ ...(doc.data() as Recipe), id: doc.id });
+  });
+};
 
 export * from "firebase/auth";

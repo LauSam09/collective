@@ -1,18 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { collection, query, where } from "firebase/firestore";
+import { useItems } from "./useItems";
 
-import { firestore } from "@/firebase";
-import { createQuery } from "@/react-query";
+export function useAddedItems() {
+  const itemsQuery = useItems();
 
-export function useAddedItems(groupId: string, listId: string) {
-  return useQuery({
-    queryKey: ["active-items", groupId, listId],
-    queryFn: createQuery(() =>
-      query(
-        collection(firestore, "groups", groupId, "lists", listId, "items"),
-        where("added", "==", true),
-      ),
-    ),
-    enabled: !!groupId && !!listId,
-  });
+  // @ts-expect-error test
+  return { ...itemsQuery, data: itemsQuery.data?.filter((i) => i.added) };
 }

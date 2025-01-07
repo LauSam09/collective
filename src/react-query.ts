@@ -15,6 +15,7 @@ export const createQuery = (getRef: any) => async (context) => {
       // For subsequent runs it manually updates the React Query cache
       (response: any) => {
         const data = format(response);
+
         if (firstRun) {
           resolve(data);
           firstRun = false;
