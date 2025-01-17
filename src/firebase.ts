@@ -118,7 +118,25 @@ export const updateItemCompleted = async (
   });
 };
 
-export const addItem = async (
+export const addItem = (groupId: string, listId: string, itemId: string) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  updateDoc(docRef, {
+    added: true,
+    // TODO: Increment count
+    notes: "",
+  });
+};
+
+export const removeItem = async (
   groupId: string,
   listId: string,
   itemId: string,
@@ -134,7 +152,9 @@ export const addItem = async (
   );
 
   await updateDoc(docRef, {
-    added: true,
+    added: false,
+    completed: false,
+    // TODO: Decrement count
     notes: "",
   });
 };

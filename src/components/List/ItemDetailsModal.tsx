@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Square } from "lucide-react";
 
-import { Item, updateItem } from "@/firebase";
+import { Item, removeItem, updateItem } from "@/firebase";
 import { useCategories, useMatchingRecipes } from "@/hooks";
 import {
   Dialog,
@@ -62,10 +62,16 @@ const ReadonlyDetailsModal = ({
 }: ItemDetailsModalProps & { onEdit: () => void }) => {
   const matchingRecipesQuery = useMatchingRecipes(item?.lowerName ?? "");
   const categoriesQuery = useCategories();
+  const { groupId, defaultListId } = useUser();
 
   const category = (categoriesQuery.data ?? []).find(
     (c) => item?.category === c.id,
   );
+
+  const handleRemove = async () => {
+    removeItem(groupId, defaultListId, item!.id);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -104,6 +110,9 @@ const ReadonlyDetailsModal = ({
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="secondary" onClick={onEdit}>
             Edit
+          </Button>
+          <Button variant="secondary" onClick={handleRemove}>
+            Remove
           </Button>
           <Button onClick={() => onOpenChange(false)}>Close</Button>
         </DialogFooter>
