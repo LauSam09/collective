@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import {
@@ -37,7 +36,7 @@ export function ComboBoxResponsive({
   selectedItem,
   setSelectedItem,
 }: ComboBoxResponsiveProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
@@ -71,13 +70,12 @@ export function ComboBoxResponsive({
   );
 }
 
-function ItemList({
-  setOpen,
-  setSelectedItem: setSelectedStatus,
-}: {
+export interface ItemListProps {
   setOpen: (open: boolean) => void;
   setSelectedItem: (item: Item | undefined) => void;
-}) {
+}
+
+function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const filteredItems = useFilteredItems(debouncedSearchQuery);
@@ -93,6 +91,7 @@ function ItemList({
         value={searchQuery}
         onValueChange={setSearchQuery}
         placeholder="Filter items..."
+        // TODO: Autofocus isn't working here for some reason.
       />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
@@ -101,8 +100,9 @@ function ItemList({
             <CommandItem
               key={status.value}
               value={status.value}
+              // TODO: This is not firing on desktop for some reason
               onSelect={(value) => {
-                setSelectedStatus(
+                setSelectedItem(
                   filteredItems.find((item) => item.lowerName === value),
                 );
                 setOpen(false);
@@ -141,6 +141,10 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
     await addItem(groupId, defaultListId, selectedItem.id);
   };
 
+  const handleSelectItem = (item: Item | undefined) => {
+    setSelectedItem(item);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -150,7 +154,7 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
 
         <ComboBoxResponsive
           selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
+          setSelectedItem={handleSelectItem}
         />
 
         <DialogFooter className="gap-2 sm:gap-0">
