@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Square } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ import {
 import { useFilteredItems } from "@/hooks/useFilteredItems";
 import { addItem, Item } from "@/firebase";
 import { useUser } from "@/contexts";
+import { useCategories } from "@/hooks";
 
 export interface ComboBoxResponsiveProps {
   selectedItem: Item | undefined;
@@ -83,10 +84,12 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const filteredItems = useFilteredItems(debouncedSearchQuery);
+  const categoriesQuery = useCategories();
 
   const filteredItemCommandItems = filteredItems.map((i) => ({
     value: i.lowerName,
     label: i.name,
+    category: categoriesQuery.data?.find((c) => c.id == i.category)?.colour,
   }));
 
   return (
@@ -100,10 +103,10 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
-          {filteredItemCommandItems.map((status) => (
+          {filteredItemCommandItems.map((item) => (
             <CommandItem
-              key={status.value}
-              value={status.value}
+              key={item.value}
+              value={item.value}
               // TODO: This is not firing on desktop for some reason
               onSelect={(value) => {
                 setSelectedItem(
@@ -112,7 +115,10 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
                 setOpen(false);
               }}
             >
-              {status.label}
+              <div className="flex w-full gap-1 items-center">
+                <Square color={`${item.category}`} fill={`${item.category}`} />
+                {item.label}
+              </div>
             </CommandItem>
           ))}
         </CommandGroup>
