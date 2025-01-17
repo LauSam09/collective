@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import {
   Dialog,
@@ -23,7 +24,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
 import { useFilteredItems } from "@/hooks/useFilteredItems";
 import { addItem, Item } from "@/firebase";
 import { useUser } from "@/contexts";
@@ -125,6 +125,13 @@ type AddItemModalProps = {
 export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
   const { groupId, defaultListId } = useUser();
   const [selectedItem, setSelectedItem] = useState<Item>();
+
+  // TODO: Add ESLint exhaustive dependencies rule
+  useEffect(() => {
+    if (!open) {
+      setSelectedItem(undefined);
+    }
+  }, [open]);
 
   const handleClickAdd = async () => {
     if (!selectedItem) {
