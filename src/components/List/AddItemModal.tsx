@@ -29,6 +29,8 @@ import { addItem, Item } from "@/firebase";
 import { useUser } from "@/contexts";
 import { useCategories } from "@/hooks";
 
+// TODO: Handle uncategorised items
+
 export interface ComboBoxResponsiveProps {
   selectedItem: Item | undefined;
   open: boolean;
