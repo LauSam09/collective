@@ -89,6 +89,7 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
   const filteredItemCommandItems = filteredItems.map((i) => ({
     value: i.lowerName,
     label: i.name,
+    added: i.added,
     category: categoriesQuery.data?.find((c) => c.id == i.category)?.colour,
   }));
 
@@ -118,6 +119,7 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
               <div className="flex w-full gap-1 items-center">
                 <Square color={`${item.category}`} fill={`${item.category}`} />
                 {item.label}
+                {item.added && <CircleCheck className="text-green-600" />}
               </div>
             </CommandItem>
           ))}
