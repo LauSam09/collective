@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { CircleCheck } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -134,11 +135,12 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
   }, [open]);
 
   const handleClickAdd = async () => {
-    if (!selectedItem) {
+    if (!selectedItem || selectedItem.added) {
       return;
     }
 
-    await addItem(groupId, defaultListId, selectedItem.id);
+    addItem(groupId, defaultListId, selectedItem.id);
+    setSelectedItem(undefined);
   };
 
   const handleSelectItem = (item: Item | undefined) => {
@@ -152,10 +154,18 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
           <DialogTitle>Add item</DialogTitle>
         </DialogHeader>
 
-        <ComboBoxResponsive
-          selectedItem={selectedItem}
-          setSelectedItem={handleSelectItem}
-        />
+        <div className="flex items-center gap-2">
+          <ComboBoxResponsive
+            selectedItem={selectedItem}
+            setSelectedItem={handleSelectItem}
+          />
+          {selectedItem?.added && (
+            <div className="text-green-600 flex gap-1">
+              <CircleCheck />
+              <p>Added</p>
+            </div>
+          )}
+        </div>
 
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="secondary" onClick={() => onOpenChange(false)}>

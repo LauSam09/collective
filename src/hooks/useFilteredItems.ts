@@ -12,6 +12,6 @@ export function useFilteredItems(searchTerm: string) {
   const normalizedSearchTerm = normalizeName(searchTerm);
 
   return (itemsQuery.data as ReadonlyArray<Item>)
-    .filter((i) => !i.added && i.lowerName.includes(normalizedSearchTerm))
+    .filter((i) => i.lowerName.includes(normalizedSearchTerm))
     .slice(0, 10);
 }
