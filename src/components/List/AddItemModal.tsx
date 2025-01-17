@@ -139,12 +139,26 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [comboBoxOpen, setComboBoxOpen] = useState(true);
 
-  // TODO: Add ESLint exhaustive dependencies rule
+  useEffect(() => {
+    if (open) {
+      setComboBoxOpen(true);
+    }
+  }, [open]);
+
+  // Clear selected item when modal is closed
   useEffect(() => {
     if (!open) {
       setSelectedItem(undefined);
     }
+    // TODO: Add ESLint exhaustive dependencies rule
   }, [open]);
+
+  // Clear selected item when combobox is re-opened
+  useEffect(() => {
+    if (comboBoxOpen) {
+      setSelectedItem(undefined);
+    }
+  }, [comboBoxOpen]);
 
   const handleClickAdd = async () => {
     if (!selectedItem || selectedItem.added) {
