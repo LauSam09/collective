@@ -43,13 +43,25 @@ export function ComboBoxResponsive({
   onToggle,
 }: ComboBoxResponsiveProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const categoriesQuery = useCategories();
+
+  const itemCategory = categoriesQuery.data?.find(
+    (c) => c.id == selectedItem?.category,
+  )?.colour;
 
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={onToggle}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-[150px] justify-start">
-            {selectedItem ? <>{selectedItem.name}</> : <>+ Add item</>}
+            {selectedItem ? (
+              <div className="flex w-full gap-1 items-center">
+                <Square color={`${itemCategory}`} fill={`${itemCategory}`} />
+                {selectedItem.name}
+              </div>
+            ) : (
+              <>+ Add item</>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
@@ -63,7 +75,14 @@ export function ComboBoxResponsive({
     <Drawer open={open} onOpenChange={onToggle}>
       <DrawerTrigger asChild>
         <Button variant="outline" className="w-[150px] justify-start">
-          {selectedItem ? <>{selectedItem.name}</> : <>+ Add item</>}
+          {selectedItem ? (
+            <div className="flex w-full gap-1 items-center">
+              <Square color={`${itemCategory}`} fill={`${itemCategory}`} />
+              {selectedItem.name}
+            </div>
+          ) : (
+            <>+ Add item</>
+          )}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -99,6 +118,7 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
         value={searchQuery}
         onValueChange={setSearchQuery}
         placeholder="Filter items..."
+        autoFocus
         // TODO: Autofocus isn't working here for some reason.
       />
       <CommandList>
