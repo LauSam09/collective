@@ -30,33 +30,36 @@ import { useUser } from "@/contexts";
 
 export interface ComboBoxResponsiveProps {
   selectedItem: Item | undefined;
-  setSelectedItem: (item: Item | undefined) => void;
+  open: boolean;
+  onSelectItem: (item: Item | undefined) => void;
+  onToggle: (open: boolean) => void;
 }
 
 export function ComboBoxResponsive({
   selectedItem,
-  setSelectedItem,
+  open,
+  onSelectItem,
+  onToggle,
 }: ComboBoxResponsiveProps) {
-  const [open, setOpen] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={onToggle}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-[150px] justify-start">
             {selectedItem ? <>{selectedItem.name}</> : <>+ Add item</>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
-          <ItemList setOpen={setOpen} setSelectedItem={setSelectedItem} />
+          <ItemList setOpen={onToggle} setSelectedItem={onSelectItem} />
         </PopoverContent>
       </Popover>
     );
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={onToggle}>
       <DrawerTrigger asChild>
         <Button variant="outline" className="w-[150px] justify-start">
           {selectedItem ? <>{selectedItem.name}</> : <>+ Add item</>}
@@ -64,7 +67,7 @@ export function ComboBoxResponsive({
       </DrawerTrigger>
       <DrawerContent>
         <div className="mt-4 border-t">
-          <ItemList setOpen={setOpen} setSelectedItem={setSelectedItem} />
+          <ItemList setOpen={onToggle} setSelectedItem={onSelectItem} />
         </div>
       </DrawerContent>
     </Drawer>
@@ -126,6 +129,7 @@ type AddItemModalProps = {
 export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
   const { groupId, defaultListId } = useUser();
   const [selectedItem, setSelectedItem] = useState<Item>();
+  const [comboBoxOpen, setComboBoxOpen] = useState(true);
 
   // TODO: Add ESLint exhaustive dependencies rule
   useEffect(() => {
@@ -141,11 +145,12 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
 
     addItem(groupId, defaultListId, selectedItem.id);
     setSelectedItem(undefined);
+    setComboBoxOpen(true);
   };
 
-  const handleSelectItem = (item: Item | undefined) => {
-    setSelectedItem(item);
-  };
+  const handleSelectItem = (item: Item | undefined) => setSelectedItem(item);
+
+  const handleToggleComboBox = (open: boolean) => setComboBoxOpen(open);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -156,8 +161,10 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
 
         <div className="flex items-center gap-2">
           <ComboBoxResponsive
+            open={comboBoxOpen}
             selectedItem={selectedItem}
-            setSelectedItem={handleSelectItem}
+            onToggle={handleToggleComboBox}
+            onSelectItem={handleSelectItem}
           />
           {selectedItem?.added && (
             <div className="text-green-600 flex gap-1">
