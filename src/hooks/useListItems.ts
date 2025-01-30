@@ -1,16 +1,14 @@
 import { UseQueryResult } from "@tanstack/react-query";
 
-import { useUser } from "@/contexts";
 import { Item } from "@/firebase";
 import { useAddedItems, useCategories } from "@/hooks";
 
 export const useListItems = () => {
-  const { groupId, defaultListId } = useUser();
   const categoryQuery = useCategories();
-  const addedItemsQuery = useAddedItems(
-    groupId,
-    defaultListId,
-  ) as UseQueryResult<ReadonlyArray<Item>, Error>;
+  const addedItemsQuery = useAddedItems() as UseQueryResult<
+    ReadonlyArray<Item>,
+    Error
+  >;
 
   let data = (categoryQuery?.data ?? [])
     .sort((a, b) => a.order - b.order)

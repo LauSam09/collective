@@ -4,6 +4,7 @@ import { DocumentSnapshot, onSnapshot } from "firebase/firestore";
 export const queryClient = new QueryClient();
 
 /** Based on implementation found here https://github.com/TanStack/query/discussions/2621 */
+// @ts-expect-error
 export const createQuery = (getRef: any) => async (context) => {
   let firstRun = true;
   let unsubscribe;
