@@ -119,14 +119,14 @@ const ListItem = ({
   const { groupId, defaultListId } = useUser();
   const matchingRecipesQuery = useMatchingRecipes(item.lowerName);
 
-  const handleItemChecked = async (e: CheckedState) => {
+  const handleItemChecked = (e: CheckedState) => {
     const completed = e;
 
     if (typeof completed !== "boolean") {
       return;
     }
 
-    await updateItemCompleted(groupId, defaultListId, item.id, completed);
+    updateItemCompleted(groupId, defaultListId, item.id, completed);
   };
 
   // TODO: Fix overflowing items

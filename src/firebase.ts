@@ -98,7 +98,7 @@ export const getAddedRecipes = async (groupId: string) => {
   return recipes;
 };
 
-export const updateItemCompleted = async (
+export const updateItemCompleted = (
   groupId: string,
   listId: string,
   itemId: string,
@@ -114,7 +114,7 @@ export const updateItemCompleted = async (
     itemId,
   );
 
-  await updateDoc(docRef, {
+  updateDoc(docRef, {
     completed,
   });
 };
@@ -152,11 +152,7 @@ export const readdItem = (groupId: string, listId: string, itemId: string) => {
   });
 };
 
-export const removeItem = async (
-  groupId: string,
-  listId: string,
-  itemId: string,
-) => {
+export const removeItem = (groupId: string, listId: string, itemId: string) => {
   const docRef = doc(
     firestore,
     "groups",
@@ -167,7 +163,7 @@ export const removeItem = async (
     itemId,
   );
 
-  await updateDoc(docRef, {
+  updateDoc(docRef, {
     added: false,
     completed: false,
     // TODO: Decrement count
@@ -175,7 +171,7 @@ export const removeItem = async (
   });
 };
 
-export const updateItem = async (
+export const updateItem = (
   groupId: string,
   listId: string,
   itemId: string,
