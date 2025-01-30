@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -118,7 +119,22 @@ export const updateItemCompleted = async (
   });
 };
 
-export const addItem = (groupId: string, listId: string, itemId: string) => {
+export const addItem = (
+  groupId: string,
+  listId: string,
+  item: Partial<Item>,
+) => {
+  delete item.id;
+
+  addDoc(collection(firestore, "groups", groupId, "lists", listId, "items"), {
+    ...item,
+    added: true,
+    completed: false,
+    notes: "",
+  });
+};
+
+export const readdItem = (groupId: string, listId: string, itemId: string) => {
   const docRef = doc(
     firestore,
     "groups",
@@ -175,7 +191,7 @@ export const updateItem = async (
     itemId,
   );
 
-  await updateDoc(docRef, {
+  updateDoc(docRef, {
     ...item,
   });
 };

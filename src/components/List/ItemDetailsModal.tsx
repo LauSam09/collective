@@ -147,7 +147,7 @@ const EditDetailsModal = ({
       return;
     }
 
-    await updateItem(groupId, defaultListId, item.id, { ...values });
+    updateItem(groupId, defaultListId, item.id, { ...values });
     onOpenChange(false);
   };
 

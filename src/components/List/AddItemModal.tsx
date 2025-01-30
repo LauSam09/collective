@@ -25,9 +25,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useFilteredItems } from "@/hooks/useFilteredItems";
-import { addItem, Item } from "@/firebase";
+import { readdItem, Item, addItem } from "@/firebase";
 import { useUser } from "@/contexts";
 import { useCategories } from "@/hooks";
+import { normalizeName } from "@/utilities";
 
 // TODO: Handle uncategorised items
 
@@ -114,6 +115,20 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
     category: categoriesQuery.data?.find((c) => c.id == i.category)?.colour,
   }));
 
+  const handleClickNew = () => {
+    setSelectedItem({
+      lowerName: normalizeName(searchQuery.trim()),
+      name: searchQuery.trim(),
+      id: "",
+      added: false,
+      completed: false,
+      category: categoriesQuery.data?.[0].id!, // TODO: For now just use the first category
+      count: 1,
+      notes: "",
+    });
+    setOpen(false);
+  };
+
   return (
     <Command shouldFilter={false}>
       <CommandInput
@@ -124,7 +139,13 @@ function ItemList({ setOpen, setSelectedItem }: ItemListProps) {
         // TODO: Autofocus isn't working here for some reason.
       />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>
+          {searchQuery.length > 0 && searchQuery == debouncedSearchQuery ? (
+            <Button onClick={handleClickNew}>Add new</Button>
+          ) : (
+            "No results found."
+          )}
+        </CommandEmpty>
         <CommandGroup>
           {filteredItemCommandItems.map((item) => (
             <CommandItem
@@ -187,7 +208,12 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
       return;
     }
 
-    addItem(groupId, defaultListId, selectedItem.id);
+    if (selectedItem.id) {
+      readdItem(groupId, defaultListId, selectedItem.id);
+    } else {
+      addItem(groupId, defaultListId, selectedItem);
+    }
+
     setSelectedItem(undefined);
     setComboBoxOpen(true);
   };
