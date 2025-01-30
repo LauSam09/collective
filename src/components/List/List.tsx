@@ -138,7 +138,7 @@ const ListItem = ({
     >
       <Checkbox
         id={item.id}
-        onCheckedChange={(e) => handleItemChecked(e)}
+        onCheckedChange={handleItemChecked}
         checked={item.completed}
         className="scale-150 mr-3"
       />
