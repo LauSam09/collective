@@ -1,4 +1,5 @@
-import { CalendarDays, Search, Settings, ListCheck } from "lucide-react";
+import { CalendarDays, Search, Settings, ListCheck, Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
-import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const items = [
   // TODO: Add a home page?
@@ -40,7 +41,11 @@ const items = [
   },
 ];
 
-export const AppSidebar = () => (
+export interface AppSidebarProps {
+  onOpenAddItem: () => void;
+}
+
+export const AppSidebar = ({ onOpenAddItem }: AppSidebarProps) => (
   <Sidebar className="dark:border-black">
     <SidebarContent>
       <SidebarHeader>
@@ -49,6 +54,13 @@ export const AppSidebar = () => (
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Button onClick={onOpenAddItem}>
+                  <Plus /> Add item
+                </Button>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>

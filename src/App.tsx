@@ -11,7 +11,7 @@ export const App = () => {
   return (
     <div>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar onOpenAddItem={() => setAddItemModalOpen(true)} />
         <div className="w-full dark:bg-neutral-800">
           <NavBar />
           <div className="p-4">
