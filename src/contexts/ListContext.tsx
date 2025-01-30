@@ -4,7 +4,6 @@ import {
   collection,
   doc,
   getDocs,
-  getDocsFromCache,
   increment,
   onSnapshot,
   query,
@@ -62,7 +61,7 @@ interface ListContextProviderProps {
 
 export const ListContextProvider = ({ children }: ListContextProviderProps) => {
   const { analytics, firestore } = useFirebase();
-  const { appUser } = useAuthentication();
+  const { appUser, state } = useAuthentication();
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [items, setItems] = useState<Array<Item>>([]);
   const [isLoading, setLoading] = useState(true);
@@ -242,7 +241,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
       }}
     >
       {children}
-      <AddItem {...addItemModalDisclosure} />
+      {state === "Authenticated" && <AddItem {...addItemModalDisclosure} />}
     </ListContext.Provider>
   );
 };
