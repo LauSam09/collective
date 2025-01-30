@@ -10,7 +10,8 @@
     "format": "prettier --write src/**/*.ts[x]",
     "lint": "eslint 'src/**'",
     "typecheck": "tsc --noEmit",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy",
+    "deploy:beta": "firebase hosting:channel:deploy beta"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
