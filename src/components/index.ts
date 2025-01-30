@@ -4,3 +4,4 @@ export * from "./MobileNavBar";
 export * from "./NavBar";
 export * from "./SignIn";
 export * from "./ThemeProvider";
+export * from "./Recipes";
