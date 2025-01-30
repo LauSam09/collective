@@ -36,7 +36,7 @@ export const Item = (props: ItemProps) => {
       "items",
       id,
     );
-    await updateDoc(itemRef, {
+    updateDoc(itemRef, {
       completed,
     });
 

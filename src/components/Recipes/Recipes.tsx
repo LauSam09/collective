@@ -67,7 +67,7 @@ export const Recipes = () => {
     editDisclosure.onClose();
     detailsDisclosure.onClose();
 
-    await deleteDoc(
+    deleteDoc(
       doc(
         firestore,
         "groups",
@@ -84,7 +84,7 @@ export const Recipes = () => {
 
   const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
     const docRef = doc(firestore, "groups", appUser!.group!.id, "recipes", id);
-    await updateDoc(docRef, {
+    updateDoc(docRef, {
       days,
     });
     setSelectedRecipe((r) => ({ ...r!, days }));

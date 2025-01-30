@@ -45,12 +45,12 @@ export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
     }
   });
 
-  const handleRemoveClick = async () => {
+  const handleRemoveClick = () => {
     if (!item) {
       return;
     }
 
-    await removeItem(item.id);
+    removeItem(item.id);
 
     onClose();
   };

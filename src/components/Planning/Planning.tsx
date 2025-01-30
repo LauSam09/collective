@@ -99,7 +99,7 @@ export const Planning = () => {
       });
     });
 
-    await batch.commit();
+    batch.commit();
 
     logEvent(analytics, "clear_week");
   };
@@ -133,7 +133,7 @@ export const Planning = () => {
     editDisclosure.onClose();
     detailsDisclosure.onClose();
 
-    await deleteDoc(
+    deleteDoc(
       doc(
         firestore,
         "groups",
@@ -150,7 +150,7 @@ export const Planning = () => {
 
   const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
     const docRef = doc(firestore, "groups", appUser!.group!.id, "recipes", id);
-    await updateDoc(docRef, {
+    updateDoc(docRef, {
       days,
     });
     setSelectedRecipe((r) => ({ ...r!, days }));

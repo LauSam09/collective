@@ -86,16 +86,13 @@ export const AddRecipeModal = (props: AddRecipeModalProps) => {
       return;
     }
 
-    await addDoc(
-      collection(firestore, "groups", appUser!.group.id, "recipes"),
-      {
-        name,
-        recipeUrl,
-        notes,
-        ingredients: ingredients?.map((i) => i.name.trim()) ?? [],
-        tags: tags?.map((t) => t.id) ?? [],
-      },
-    );
+    addDoc(collection(firestore, "groups", appUser!.group.id, "recipes"), {
+      name,
+      recipeUrl,
+      notes,
+      ingredients: ingredients?.map((i) => i.name.trim()) ?? [],
+      tags: tags?.map((t) => t.id) ?? [],
+    });
 
     logEvent(analytics, "add_recipe");
 

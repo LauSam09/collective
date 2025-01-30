@@ -143,7 +143,7 @@ export const AddItem = (props: AddItemProps) => {
 
     const itemCategory = category ?? categories[0].id;
 
-    await upsertItem({ ...selectedItem, category: itemCategory });
+    upsertItem({ ...selectedItem, category: itemCategory });
 
     inputRef.current?.clearValue();
     inputRef.current?.focus();

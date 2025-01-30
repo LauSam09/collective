@@ -53,7 +53,8 @@ export const EditItemModal = (props: EditItemModalProps) => {
       "items",
       props.item!.id,
     );
-    await updateDoc(itemRef, {
+
+    updateDoc(itemRef, {
       category: item.category,
       notes: item.notes,
     });

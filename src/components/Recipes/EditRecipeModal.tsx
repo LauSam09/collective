@@ -106,7 +106,7 @@ export const EditRecipeModal = (props: EditRecipeModalProps) => {
       recipe!.id,
     );
 
-    await updateDoc(docRef, {
+    updateDoc(docRef, {
       name,
       recipeUrl,
       notes,

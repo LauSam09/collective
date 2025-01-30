@@ -37,10 +37,10 @@ interface List {
   unaddedItems: Array<Item>;
   items: Array<Item>;
   openAddItemModal: () => void;
-  quickAddItem: (id: string) => Promise<void>;
-  upsertItem: (item: CreateItem | ReaddItem) => Promise<void>;
-  upsertItemByName: (name: string) => Promise<void>;
-  removeItem: (id: string) => Promise<void>;
+  quickAddItem: (id: string) => void;
+  upsertItem: (item: CreateItem | ReaddItem) => void;
+  upsertItemByName: (name: string) => void;
+  removeItem: (id: string) => void;
 }
 
 export const ListContext = createContext<List>({
@@ -135,10 +135,10 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
       name,
     };
 
-    await upsertItem({ ...existingItem, name });
+    upsertItem({ ...existingItem, name });
   };
 
-  const upsertItem = async (item: CreateItem | ReaddItem) => {
+  const upsertItem = (item: CreateItem | ReaddItem) => {
     const itemEntity = {
       added: true,
       completed: false,
@@ -156,11 +156,13 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
         "items",
         item.id,
       );
+
       updateDoc(itemRef, {
         ...itemEntity,
         category: item.category,
         count: increment(1),
       });
+
       logEvent(analytics, "add_item");
     } else {
       addDoc(
@@ -179,6 +181,7 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
           count: 1,
         },
       );
+
       logEvent(analytics, "create_item");
     }
   };
@@ -198,10 +201,11 @@ export const ListContextProvider = ({ children }: ListContextProviderProps) => {
       count: increment(1),
       added: true,
     });
+
     logEvent(analytics, "quick_add_item");
   };
 
-  const removeItem = async (id: string) => {
+  const removeItem = (id: string) => {
     const itemRef = doc(
       firestore,
       "groups",
