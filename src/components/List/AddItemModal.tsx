@@ -53,8 +53,15 @@ function HeadlessUiComboBox({
       return;
     }
 
+    const trimmedSearchQuery = searchQuery.trim();
+
     if (item.id) {
-      onSelectItem({ ...item, name: searchQuery.trim() });
+      const name =
+        normalizeName(trimmedSearchQuery) === item.lowerName
+          ? trimmedSearchQuery
+          : item.name;
+
+      onSelectItem({ ...item, name });
       return;
     }
 
@@ -82,7 +89,7 @@ function HeadlessUiComboBox({
         displayValue={(selectedItem: Item) => selectedItem?.name}
         onChange={(event) => setSearchQuery(event.target.value)}
         placeholder="Search"
-        className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+        className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
       />
       <ComboboxOptions
         anchor="bottom"
