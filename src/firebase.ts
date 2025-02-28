@@ -149,7 +149,12 @@ export const addItem = (
   });
 };
 
-export const readdItem = (groupId: string, listId: string, itemId: string) => {
+export const readdItem = (
+  groupId: string,
+  listId: string,
+  itemId: string,
+  name: string,
+) => {
   const docRef = doc(
     firestore,
     "groups",
@@ -161,6 +166,7 @@ export const readdItem = (groupId: string, listId: string, itemId: string) => {
   );
 
   updateDoc(docRef, {
+    name,
     added: true,
     // TODO: Increment count
     notes: "",
