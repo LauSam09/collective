@@ -22,6 +22,24 @@ export const useListItems = () => {
           ?.sort((a, b) => a.lowerName.localeCompare(b.lowerName)) ?? [];
     }
 
+    const uncategorisedItems =
+      addedItemsQuery.data
+        ?.filter((i) => !i.category)
+        ?.sort((a, b) => a.lowerName.localeCompare(b.lowerName)) ?? [];
+
+    if (uncategorisedItems.length > 0) {
+      data = [
+        {
+          id: "uncategorised",
+          name: "Uncategorised",
+          order: -1,
+          items: uncategorisedItems,
+          colour: "#ffffff",
+        },
+        ...data,
+      ];
+    }
+
     data = data.sort((a, b) => {
       if (a.items.length > 0 && b.items.length > 0) {
         return 0;

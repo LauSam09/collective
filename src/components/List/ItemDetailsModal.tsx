@@ -79,12 +79,15 @@ const ReadonlyDetailsModal = ({
         <DialogHeader>
           <DialogTitle>
             {item?.name}
-            <Badge
-              className="text-xs p-1 ml-2 text-black dark:text-white"
-              style={{ backgroundColor: `${category?.colour}50` }}
-            >
-              {category?.name}
-            </Badge>
+
+            {category && (
+              <Badge
+                className="text-xs p-1 ml-2 text-black dark:text-white"
+                style={{ backgroundColor: `${category.colour}50` }}
+              >
+                {category.name}
+              </Badge>
+            )}
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-3">
@@ -157,12 +160,15 @@ const EditDetailsModal = ({
         <DialogHeader>
           <DialogTitle>
             {item?.name}
-            <Badge
-              className="text-xs p-1 ml-2 text-black dark:text-white"
-              style={{ backgroundColor: `${category?.colour}50` }}
-            >
-              {category?.name}
-            </Badge>
+
+            {category && (
+              <Badge
+                className="text-xs p-1 ml-2 text-black dark:text-white"
+                style={{ backgroundColor: `${category.colour}50` }}
+              >
+                {category.name}
+              </Badge>
+            )}
           </DialogTitle>
         </DialogHeader>
 
