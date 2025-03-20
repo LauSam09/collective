@@ -59,7 +59,10 @@ const RecipeList = () => {
       <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-1">
         {paginatedRecipes.map((recipe) => (
           <li key={recipe.name}>
-            <Card onClick={() => handleClickRecipe(recipe)}>
+            <Card
+              onClick={() => handleClickRecipe(recipe)}
+              className="cursor-pointer"
+            >
               <CardHeader>
                 <CardTitle className="flex gap-1">
                   {recipe.name}
