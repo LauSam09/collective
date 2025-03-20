@@ -11,61 +11,18 @@ import {
 } from "../ui/pagination";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/contexts";
-import { getRecipes } from "@/firebase";
-
-const recipes = [
-  {
-    name: "Artichoke and mushroom pie",
-    recipeUrl:
-      "https://www.bbcgoodfood.com/recipes/artichoke-wild-mushroom-pie",
-    tags: [],
-    notes: "",
-    ingredients: [
-      "artichoke",
-      "mushroom",
-      "shortcrust pastry",
-      "onion",
-      "garlic",
-      "mushrooms",
-    ],
-  },
-  {
-    name: "Artichoke pizza",
-    recipeUrl: undefined,
-    tags: [],
-    notes: "",
-    ingredients: [],
-  },
-  {
-    name: "Avocado chickpea smash",
-    recipeUrl: undefined,
-    tags: [],
-    notes: "",
-    ingredients: [],
-  },
-  {
-    name: "Bangers and mash",
-    recipeUrl: undefined,
-    tags: [],
-    notes: "",
-    ingredients: [],
-  },
-  {
-    name: "Blue cheese risotto",
-    recipeUrl: undefined,
-    tags: [],
-    notes: "",
-    ingredients: ["blue cheese", "risotto rice"],
-  },
-];
+import { getRecipes, Recipe } from "@/firebase";
+import { RecipeDetailsModal } from "./RecipeDetailsModal";
 
 const RecipeList = () => {
   const pageSize = 40;
   const [page, setPage] = useState(0);
   const { groupId } = useUser();
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedRecipe, setSelectedItem] = useState<Recipe>();
 
   const recipesQuery = useQuery({
-    queryKey: ["recipes"],
+    queryKey: ["recipes", groupId],
     queryFn: () => getRecipes(groupId),
   });
 
@@ -92,12 +49,17 @@ const RecipeList = () => {
     }
   };
 
+  const handleClickRecipe = (recipe: Recipe) => {
+    setSelectedItem(recipe);
+    setIsDetailsOpen(true);
+  };
+
   return (
     <>
       <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-1">
         {paginatedRecipes.map((recipe) => (
           <li key={recipe.name}>
-            <Card>
+            <Card onClick={() => handleClickRecipe(recipe)}>
               <CardHeader>
                 <CardTitle className="flex gap-1">
                   {recipe.name}
@@ -144,6 +106,11 @@ const RecipeList = () => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
+      <RecipeDetailsModal
+        open={isDetailsOpen}
+        recipe={selectedRecipe}
+        onOpenChange={setIsDetailsOpen}
+      />
     </>
   );
 };
