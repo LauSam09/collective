@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { collection, orderBy, query } from "firebase/firestore";
 
-import { firestore } from "@/firebase";
+import { firestore, Item } from "@/firebase";
 import { createQuery } from "@/react-query";
 import { useUser } from "@/contexts";
 
-export function useItems() {
+export function useItems(): UseQueryResult<ReadonlyArray<Item>, Error> {
   const { groupId, defaultListId } = useUser();
 
   return useQuery({

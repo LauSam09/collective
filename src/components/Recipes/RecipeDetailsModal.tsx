@@ -1,4 +1,4 @@
-import { Recipe } from "@/firebase";
+import { addItem, readdItem, Recipe, removeItem } from "@/firebase";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -8,8 +8,12 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Minus, Plus } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { useAddedItems } from "@/hooks";
+import { normalizeName } from "@/utilities";
+import { useUser } from "@/contexts";
+import { useItems } from "@/hooks/useItems";
 
 type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
@@ -36,12 +40,55 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
   }
 };
 
+type DisplayIngredient = {
+  name: string;
+  added: boolean;
+  id: string | undefined;
+};
+
 const ReadonlyDetailsModal = ({
   open,
   recipe,
   onEdit,
   onOpenChange,
 }: RecipeDetailsModalProps & { onEdit: () => void }) => {
+  const { groupId, defaultListId } = useUser();
+  const addedItemsQuery = useAddedItems();
+  const allItemsQuery = useItems();
+
+  const displayIngredients = recipe?.ingredients
+    .map((ingredient) => {
+      const normalisedIngredient = normalizeName(ingredient);
+
+      const item = addedItemsQuery.data?.find(
+        (item) => item.lowerName === normalisedIngredient,
+      );
+
+      return { name: ingredient, added: item !== undefined, id: item?.id };
+    })
+    .sort((a) => (a.added ? 1 : -1));
+
+  const handleClickIngredient = (ingredient: DisplayIngredient) => {
+    if (ingredient.added) {
+      removeItem(groupId, defaultListId, ingredient.id!);
+    } else {
+      const normalisedName = normalizeName(ingredient.name);
+
+      const item = allItemsQuery.data?.find(
+        (item) => item.lowerName === normalisedName,
+      );
+
+      if (item) {
+        readdItem(groupId, defaultListId, item.id, item.name);
+      } else {
+        addItem(groupId, defaultListId, {
+          name: ingredient.name,
+          lowerName: normalisedName,
+        });
+      }
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -68,11 +115,24 @@ const ReadonlyDetailsModal = ({
 
           <div>
             <h2 className="font-bold">Ingredients</h2>
-            {recipe?.ingredients && recipe.ingredients.length > 0 ? (
+            {displayIngredients && displayIngredients.length > 0 ? (
               <ul className="flex flex-row flex-wrap gap-1">
-                {recipe.ingredients.map((ingredient) => (
-                  <li key={ingredient} className="inline">
-                    <Badge>{ingredient}</Badge>
+                {displayIngredients.map((ingredient) => (
+                  <li key={ingredient.name} className="inline">
+                    <Badge
+                      variant={ingredient.added ? "secondary" : "default"}
+                      className="cursor-pointer"
+                      onClick={() => handleClickIngredient(ingredient)}
+                    >
+                      <div className="flex items-center gap-2">
+                        {ingredient.name}
+                        {ingredient.added ? (
+                          <Minus size="12" />
+                        ) : (
+                          <Plus size="12" />
+                        )}
+                      </div>
+                    </Badge>
                   </li>
                 ))}
               </ul>
@@ -92,7 +152,7 @@ const ReadonlyDetailsModal = ({
               <ul className="flex flex-row flex-wrap gap-1">
                 {recipe.tags.map((tag) => (
                   <li key={tag} className="inline">
-                    <Badge>{tag}</Badge>
+                    <Badge variant="secondary">{tag}</Badge>
                   </li>
                 ))}
               </ul>
