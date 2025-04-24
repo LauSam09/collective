@@ -14,6 +14,24 @@ import { useAddedItems } from "@/hooks";
 import { normalizeName } from "@/utilities";
 import { useUser } from "@/contexts";
 import { useItems } from "@/hooks/useItems";
+import { useFieldArray, useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxOptions,
+  ComboboxOption,
+} from "@headlessui/react";
+import { tags } from "@/models/tags";
 
 type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
@@ -172,16 +190,172 @@ const ReadonlyDetailsModal = ({
   );
 };
 
-const EditDetailsModal = ({ open, onOpenChange }: RecipeDetailsModalProps) => {
+interface DetailsForm {
+  name: string;
+  externalLink?: string;
+  notes?: string;
+  tags: Array<{ name: string }>;
+}
+
+const EditDetailsModal = ({
+  open,
+  recipe,
+  onOpenChange,
+}: RecipeDetailsModalProps) => {
+  const form = useForm<DetailsForm>({
+    defaultValues: {
+      name: recipe?.name,
+      externalLink: recipe?.recipeUrl,
+      notes: recipe?.notes,
+      tags: recipe?.tags.map((tag) => ({ name: tag })) || [],
+    },
+  });
+  const tagFieldArray = useFieldArray({ control: form.control, name: "tags" });
+
+  const [query, setQuery] = useState("");
+  const allTags = tags
+    .filter(
+      (tag) => !tagFieldArray.fields.some((field) => field.name === tag.id),
+    )
+    .map((tag) => ({ id: tag.id, name: tag.name }));
+  const [selectedTag, setSelectedTag] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const filteredTags =
+    query === ""
+      ? allTags
+      : allTags.filter((tag) =>
+          tag.name.toLowerCase().includes(query.toLowerCase()),
+        );
+
+  useEffect(() => {
+    if (selectedTag) {
+      tagFieldArray.append({ name: selectedTag.id });
+    }
+  }, [selectedTag]);
+
+  const handleClickAddTag = (tag: { id: string } | null) => {
+    if (!tag) {
+      return;
+    }
+
+    tagFieldArray.append({ name: tag.id });
+  };
+
+  const handleClickRemoveTag = (index: number) => {
+    tagFieldArray.remove(index);
+    setSelectedTag(null);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit</DialogTitle>
+          <DialogTitle>{recipe?.name}</DialogTitle>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button onClick={() => onOpenChange(false)}>Close</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormItem>
+            <FormLabel>Tags</FormLabel>
+            {tagFieldArray.fields && tagFieldArray.fields.length > 0 ? (
+              <ul className="flex flex-row flex-wrap gap-1">
+                {tagFieldArray.fields.map((tag, index) => (
+                  <li key={tag.id} className="inline">
+                    {/* TODO: Consider factoring out a plus/minus button component */}
+                    <Badge
+                      variant="secondary"
+                      onClick={() => handleClickRemoveTag(index)}
+                      className="cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        {tag.name}
+                        <Minus size="12" />
+                      </div>
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              "n/a"
+            )}
+            <Combobox
+              immediate
+              value={selectedTag}
+              onChange={handleClickAddTag}
+              onClose={() => setQuery("")}
+            >
+              <ComboboxInput
+                displayValue={(tag: { name: string }) => tag?.name}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Add tag..."
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+              />
+              <ComboboxOptions
+                anchor="bottom"
+                className="border empty:invisible z-[60] bg-background w-[var(--input-width)]"
+              >
+                {filteredTags.map((tag) => (
+                  <ComboboxOption
+                    key={tag.id}
+                    value={tag}
+                    className="data-[focus]:bg-accent p-1"
+                  >
+                    {tag.name}
+                  </ComboboxOption>
+                ))}
+              </ComboboxOptions>
+            </Combobox>
+          </FormItem>
+
+          <FormField
+            control={form.control}
+            name="externalLink"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>External link</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notes</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="secondary" onClick={() => onOpenChange(false)}>
+              Close
+            </Button>
+            <Button>Save</Button>
+          </DialogFooter>
+        </Form>
       </DialogContent>
     </Dialog>
   );

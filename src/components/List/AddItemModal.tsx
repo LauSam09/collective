@@ -23,15 +23,12 @@ import { normalizeName } from "@/utilities";
 
 // TODO: Handle uncategorised items
 
-interface HeadlessUiComboBoxProps {
+interface ItemComboBoxProps {
   selectedItem: Item | null;
   onSelectItem: (item: Item | null) => void;
 }
 
-function HeadlessUiComboBox({
-  selectedItem,
-  onSelectItem,
-}: HeadlessUiComboBoxProps) {
+function ItemComboBox({ selectedItem, onSelectItem }: ItemComboBoxProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const filteredItems = useFilteredItems(debouncedSearchQuery);
@@ -182,7 +179,7 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
         </DialogHeader>
 
         <div className="flex items-center gap-2">
-          <HeadlessUiComboBox
+          <ItemComboBox
             selectedItem={selectedItem}
             onSelectItem={handleSelectItem}
           />
