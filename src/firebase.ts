@@ -113,6 +113,14 @@ export const getRecipes = async (groupId: string) => {
   return recipes;
 };
 
+export const updateRecipe = (groupId: string, recipe: Recipe) => {
+  const docRef = doc(firestore, "groups", groupId, "recipes", recipe.id);
+
+  updateDoc(docRef, {
+    ...recipe,
+  });
+};
+
 export const updateItemCompleted = (
   groupId: string,
   listId: string,

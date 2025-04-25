@@ -1,4 +1,10 @@
-import { addItem, readdItem, Recipe, removeItem } from "@/firebase";
+import {
+  addItem,
+  readdItem,
+  Recipe,
+  removeItem,
+  updateRecipe,
+} from "@/firebase";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -8,7 +14,7 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { ExternalLink, Minus, Plus } from "lucide-react";
+import { ExternalLink, Plus, X } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useAddedItems } from "@/hooks";
 import { normalizeName } from "@/utilities";
@@ -31,7 +37,8 @@ import {
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
-import { tags } from "@/models/tags";
+import { tagDictionary, tags } from "@/models/tags";
+import { queryClient } from "@/react-query";
 
 type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
@@ -54,7 +61,9 @@ export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
     case "readonly":
       return <ReadonlyDetailsModal {...props} onEdit={() => setMode("edit")} />;
     case "edit":
-      return <EditDetailsModal {...props} />;
+      return (
+        <EditDetailsModal {...props} onCancel={() => setMode("readonly")} />
+      );
   }
 };
 
@@ -145,7 +154,7 @@ const ReadonlyDetailsModal = ({
                       <div className="flex items-center gap-2">
                         {ingredient.name}
                         {ingredient.added ? (
-                          <Minus size="12" />
+                          <X size="12" />
                         ) : (
                           <Plus size="12" />
                         )}
@@ -170,7 +179,9 @@ const ReadonlyDetailsModal = ({
               <ul className="flex flex-row flex-wrap gap-1">
                 {recipe.tags.map((tag) => (
                   <li key={tag} className="inline">
-                    <Badge variant="secondary">{tag}</Badge>
+                    <Badge variant="secondary">
+                      {tagDictionary[tag]?.name || tag}
+                    </Badge>
                   </li>
                 ))}
               </ul>
@@ -201,7 +212,9 @@ const EditDetailsModal = ({
   open,
   recipe,
   onOpenChange,
-}: RecipeDetailsModalProps) => {
+  onCancel,
+}: RecipeDetailsModalProps & { onCancel: () => void }) => {
+  const { groupId } = useUser();
   const form = useForm<DetailsForm>({
     defaultValues: {
       name: recipe?.name,
@@ -235,6 +248,23 @@ const EditDetailsModal = ({
     }
   }, [selectedTag]);
 
+  const handleSubmit = (data: DetailsForm) => {
+    const updatedRecipe: Recipe = {
+      id: recipe?.id || "",
+      name: data.name,
+      notes: data.notes,
+      recipeUrl: data.externalLink,
+      tags: data.tags.map((tag) => tag.name),
+      ingredients: recipe?.ingredients || [],
+    };
+
+    updateRecipe(groupId, updatedRecipe);
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
+      oldData.map((r) => (r.id === updatedRecipe.id ? updatedRecipe : r)),
+    );
+    onCancel();
+  };
+
   const handleClickAddTag = (tag: { id: string } | null) => {
     if (!tag) {
       return;
@@ -255,106 +285,107 @@ const EditDetailsModal = ({
           <DialogTitle>{recipe?.name}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormItem>
-            <FormLabel>Tags</FormLabel>
-            {tagFieldArray.fields && tagFieldArray.fields.length > 0 ? (
-              <ul className="flex flex-row flex-wrap gap-1">
-                {tagFieldArray.fields.map((tag, index) => (
-                  <li key={tag.id} className="inline">
-                    {/* TODO: Consider factoring out a plus/minus button component */}
-                    <Badge
-                      variant="secondary"
-                      onClick={() => handleClickRemoveTag(index)}
-                      className="cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2">
-                        {tag.name}
-                        <Minus size="12" />
-                      </div>
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              "n/a"
-            )}
-            <Combobox
-              immediate
-              value={selectedTag}
-              onChange={handleClickAddTag}
-              onClose={() => setQuery("")}
-            >
-              <ComboboxInput
-                displayValue={(tag: { name: string }) => tag?.name}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Add tag..."
-                className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
-              />
-              <ComboboxOptions
-                anchor="bottom"
-                className="border empty:invisible z-[60] bg-background w-[var(--input-width)]"
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col gap-2"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="externalLink"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>External link</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormItem>
+              <FormLabel>Tags</FormLabel>
+              {tagFieldArray.fields && tagFieldArray.fields.length > 0 ? (
+                <ul className="flex flex-row flex-wrap gap-1">
+                  {tagFieldArray.fields.map((tag, index) => (
+                    <li key={tag.id} className="inline">
+                      {/* TODO: Consider factoring out a plus/minus button component */}
+                      <Badge
+                        variant="secondary"
+                        onClick={() => handleClickRemoveTag(index)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {tagDictionary[tag.name]?.name || tag.name}
+                          <X size="12" />
+                        </div>
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                "n/a"
+              )}
+              <Combobox
+                immediate
+                value={selectedTag}
+                onChange={handleClickAddTag}
+                onClose={() => setQuery("")}
               >
-                {filteredTags.map((tag) => (
-                  <ComboboxOption
-                    key={tag.id}
-                    value={tag}
-                    className="data-[focus]:bg-accent p-1"
-                  >
-                    {tag.name}
-                  </ComboboxOption>
-                ))}
-              </ComboboxOptions>
-            </Combobox>
-          </FormItem>
-
-          <FormField
-            control={form.control}
-            name="externalLink"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>External link</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="notes"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Notes</FormLabel>
-                <FormControl>
-                  <Textarea {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="secondary" onClick={() => onOpenChange(false)}>
-              Close
-            </Button>
-            <Button>Save</Button>
-          </DialogFooter>
+                <ComboboxInput
+                  displayValue={(tag: { name: string }) => tag?.name}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Add tag..."
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+                />
+                <ComboboxOptions
+                  anchor="bottom"
+                  className="border empty:invisible z-[60] bg-background w-[var(--input-width)]"
+                >
+                  {filteredTags.map((tag) => (
+                    <ComboboxOption
+                      key={tag.id}
+                      value={tag}
+                      className="data-[focus]:bg-accent p-1"
+                    >
+                      {tag.name}
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              </Combobox>
+            </FormItem>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button variant="secondary" onClick={onCancel}>
+                Cancel
+              </Button>
+              <Button>Save</Button>
+            </DialogFooter>
+          </form>
         </Form>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import {
@@ -25,6 +25,17 @@ const RecipeList = () => {
     queryKey: ["recipes", groupId],
     queryFn: () => getRecipes(groupId),
   });
+
+  // When recipes are changed we need to update the selected item.
+  useEffect(() => {
+    setSelectedItem((old) => {
+      if (!old) {
+        return undefined;
+      }
+
+      return recipesQuery.data?.find((r) => r.id === old.id);
+    });
+  }, [recipesQuery.data]);
 
   if (recipesQuery.isFetching) {
     return <span>Loading...</span>;
