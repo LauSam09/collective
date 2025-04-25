@@ -327,6 +327,7 @@ const EditDetailsModal = ({
             <FormField
               control={form.control}
               name="name"
+              rules={{ required: "Name is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -359,6 +360,8 @@ const EditDetailsModal = ({
                 </ul>
               )}
               <ItemComboBox
+                placeholder="Add ingredient"
+                showAddedIcon={false}
                 selectedItem={selectedIngredient}
                 onSelectItem={handleSelectItem}
               />

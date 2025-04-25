@@ -24,12 +24,16 @@ import { normalizeName } from "@/utilities";
 // TODO: Handle uncategorised items
 
 export interface ItemComboBoxProps {
+  placeholder?: string;
   selectedItem: Item | null;
+  showAddedIcon?: boolean;
   onSelectItem: (item: Item | null) => void;
 }
 
 export function ItemComboBox({
+  placeholder = "Search",
   selectedItem,
+  showAddedIcon = true,
   onSelectItem,
 }: ItemComboBoxProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -88,7 +92,7 @@ export function ItemComboBox({
       <ComboboxInput
         displayValue={(selectedItem: Item) => selectedItem?.name}
         onChange={(event) => setSearchQuery(event.target.value)}
-        placeholder="Search"
+        placeholder={placeholder}
         className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
       />
       <ComboboxOptions
@@ -115,7 +119,9 @@ export function ItemComboBox({
             <div className="flex w-full gap-1 items-center">
               <Square color={`${item.category}`} fill={`${item.category}`} />
               {item.name}
-              {item.added && <CircleCheck className="text-green-600" />}
+              {showAddedIcon && item.added && (
+                <CircleCheck className="text-green-600" />
+              )}
             </div>
           </ComboboxOption>
         ))}
