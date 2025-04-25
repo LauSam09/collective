@@ -23,12 +23,15 @@ import { normalizeName } from "@/utilities";
 
 // TODO: Handle uncategorised items
 
-interface ItemComboBoxProps {
+export interface ItemComboBoxProps {
   selectedItem: Item | null;
   onSelectItem: (item: Item | null) => void;
 }
 
-function ItemComboBox({ selectedItem, onSelectItem }: ItemComboBoxProps) {
+export function ItemComboBox({
+  selectedItem,
+  onSelectItem,
+}: ItemComboBoxProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const filteredItems = useFilteredItems(debouncedSearchQuery);

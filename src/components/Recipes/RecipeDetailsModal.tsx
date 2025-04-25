@@ -1,5 +1,6 @@
 import {
   addItem,
+  Item,
   readdItem,
   Recipe,
   removeItem,
@@ -39,6 +40,7 @@ import {
 } from "@headlessui/react";
 import { tagDictionary, tags } from "@/models/tags";
 import { queryClient } from "@/react-query";
+import { ItemComboBox } from "../List/AddItemModal";
 
 type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
@@ -203,6 +205,7 @@ const ReadonlyDetailsModal = ({
 
 interface DetailsForm {
   name: string;
+  ingredients: Array<{ name: string }>;
   externalLink?: string;
   notes?: string;
   tags: Array<{ name: string }>;
@@ -218,13 +221,25 @@ const EditDetailsModal = ({
   const form = useForm<DetailsForm>({
     defaultValues: {
       name: recipe?.name,
+      ingredients:
+        recipe?.ingredients.map((ingredient) => ({ name: ingredient })) || [],
+
       externalLink: recipe?.recipeUrl,
       notes: recipe?.notes,
-      tags: recipe?.tags.map((tag) => ({ name: tag })) || [],
+      tags: recipe?.tags?.map((tag) => ({ name: tag })) || [],
     },
   });
-  const tagFieldArray = useFieldArray({ control: form.control, name: "tags" });
 
+  const ingredientsFieldArrray = useFieldArray({
+    control: form.control,
+    name: "ingredients",
+  });
+
+  const [selectedIngredient, setSelectedIngredient] = useState<Item | null>(
+    null,
+  );
+
+  const tagFieldArray = useFieldArray({ control: form.control, name: "tags" });
   const [query, setQuery] = useState("");
   const allTags = tags
     .filter(
@@ -252,10 +267,10 @@ const EditDetailsModal = ({
     const updatedRecipe: Recipe = {
       id: recipe?.id || "",
       name: data.name,
+      ingredients: data.ingredients.map((ingredient) => ingredient.name),
       notes: data.notes,
       recipeUrl: data.externalLink,
       tags: data.tags.map((tag) => tag.name),
-      ingredients: recipe?.ingredients || [],
     };
 
     updateRecipe(groupId, updatedRecipe);
@@ -273,9 +288,29 @@ const EditDetailsModal = ({
     tagFieldArray.append({ name: tag.id });
   };
 
+  const handleSelectItem = (item: Item | null) => {
+    if (!item) {
+      return;
+    }
+
+    if (
+      ingredientsFieldArrray.fields.some((field) => field.name === item.name)
+    ) {
+      setSelectedIngredient(null);
+      return;
+    }
+
+    ingredientsFieldArrray.append({ name: item.name });
+    setSelectedIngredient(null);
+  };
+
   const handleClickRemoveTag = (index: number) => {
     tagFieldArray.remove(index);
     setSelectedTag(null);
+  };
+
+  const handleClickRemoveIngredient = (index: number) => {
+    ingredientsFieldArrray.remove(index);
   };
 
   return (
@@ -302,6 +337,33 @@ const EditDetailsModal = ({
                 </FormItem>
               )}
             />
+
+            <FormItem>
+              <FormLabel>Ingredients</FormLabel>
+              {ingredientsFieldArrray.fields.length > 0 && (
+                <ul className="flex flex-row flex-wrap gap-1">
+                  {ingredientsFieldArrray.fields.map((field, index) => (
+                    <li key={field.id} className="inline">
+                      <Badge
+                        variant="secondary"
+                        onClick={() => handleClickRemoveIngredient(index)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {field.name}
+                          <X size="12" />
+                        </div>
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <ItemComboBox
+                selectedItem={selectedIngredient}
+                onSelectItem={handleSelectItem}
+              />
+            </FormItem>
+
             <FormField
               control={form.control}
               name="externalLink"
@@ -315,6 +377,7 @@ const EditDetailsModal = ({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="notes"
@@ -330,7 +393,7 @@ const EditDetailsModal = ({
             />
             <FormItem>
               <FormLabel>Tags</FormLabel>
-              {tagFieldArray.fields && tagFieldArray.fields.length > 0 ? (
+              {tagFieldArray.fields.length > 0 && (
                 <ul className="flex flex-row flex-wrap gap-1">
                   {tagFieldArray.fields.map((tag, index) => (
                     <li key={tag.id} className="inline">
@@ -348,8 +411,6 @@ const EditDetailsModal = ({
                     </li>
                   ))}
                 </ul>
-              ) : (
-                "n/a"
               )}
               <Combobox
                 immediate
@@ -360,7 +421,7 @@ const EditDetailsModal = ({
                 <ComboboxInput
                   displayValue={(tag: { name: string }) => tag?.name}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Add tag..."
+                  placeholder="Add tag"
                   className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
                 />
                 <ComboboxOptions
