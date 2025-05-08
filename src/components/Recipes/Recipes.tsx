@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
+import { useDebounce } from "use-debounce";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import {
   Pagination,
@@ -9,10 +11,10 @@ import {
   PaginationLink,
   PaginationNext,
 } from "../ui/pagination";
-import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@/contexts";
 import { getRecipes, Recipe } from "@/firebase";
 import { RecipeDetailsModal } from "./RecipeDetailsModal";
+import { Input } from "../ui/input";
 
 const RecipeList = () => {
   const pageSize = 40;
@@ -20,6 +22,9 @@ const RecipeList = () => {
   const { groupId } = useUser();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedRecipe, setSelectedItem] = useState<Recipe>();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+  const normalisedFilterValue = debouncedSearchQuery.trim().toLowerCase();
 
   const recipesQuery = useQuery({
     queryKey: ["recipes", groupId],
@@ -37,13 +42,23 @@ const RecipeList = () => {
     });
   }, [recipesQuery.data]);
 
+  const filteredRecipes = normalisedFilterValue
+    ? recipesQuery.data?.filter(
+        (r) =>
+          r.name.toLowerCase().includes(normalisedFilterValue) ||
+          r.ingredients?.some((i) =>
+            i.toLowerCase().includes(normalisedFilterValue),
+          ),
+      )
+    : recipesQuery.data;
+
   if (recipesQuery.isFetching) {
     return <span>Loading...</span>;
   }
 
-  const totalPages = Math.ceil(recipesQuery.data!.length / pageSize);
+  const totalPages = Math.ceil(filteredRecipes!.length / pageSize);
 
-  const paginatedRecipes = recipesQuery.data!.slice(
+  const paginatedRecipes = filteredRecipes!.slice(
     page * pageSize,
     (page + 1) * pageSize,
   );
@@ -67,6 +82,15 @@ const RecipeList = () => {
 
   return (
     <>
+      <div className="flex justify-end">
+        <form className="mb-2">
+          <Input
+            placeholder="Search recipes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </form>
+      </div>
       <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-1">
         {paginatedRecipes.map((recipe) => (
           <li key={recipe.name}>
@@ -98,28 +122,33 @@ const RecipeList = () => {
           </li>
         ))}
       </ul>
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" onClick={handleClickPrevious} />
-          </PaginationItem>
-
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                href="#"
-                onClick={() => setPage(index)}
-                isActive={index === page}
-              >
-                {index + 1}
-              </PaginationLink>
+      {paginatedRecipes.length > 0 ? (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" onClick={handleClickPrevious} />
             </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext href="#" onClick={handleClickNext} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  href="#"
+                  onClick={() => setPage(index)}
+                  isActive={index === page}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext href="#" onClick={handleClickNext} />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      ) : (
+        <div className="text-center">No recipes found</div>
+      )}
+
       <RecipeDetailsModal
         open={isDetailsOpen}
         recipe={selectedRecipe}

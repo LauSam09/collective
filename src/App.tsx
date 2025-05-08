@@ -12,7 +12,7 @@ export const App = () => {
     <div>
       <SidebarProvider>
         <AppSidebar onOpenAddItem={() => setAddItemModalOpen(true)} />
-        <div className="w-full dark:bg-neutral-800">
+        <div className="w-full dark:bg-neutral-900">
           <NavBar />
           <div className="p-4">
             <Routes>
