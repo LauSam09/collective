@@ -42,6 +42,17 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { tagDictionary, tags } from "@/models/tags";
 import { ItemComboBox } from "../List/AddItemModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
@@ -458,14 +469,30 @@ const EditDetailsModal = ({
               </Combobox>
             </FormItem>
             <FormItem>
-              <Button
-                variant="destructive"
-                type="button"
-                onClick={handleClickDelete}
-              >
-                <Trash2 />
-                Delete
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" type="button">
+                    <Trash2 />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This recipe will be permanently deleted.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClickDelete}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </FormItem>
 
             <DialogFooter className="gap-2 sm:gap-0">
