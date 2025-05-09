@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Plus } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -15,12 +15,15 @@ import { useUser } from "@/contexts";
 import { getRecipes, Recipe } from "@/firebase";
 import { RecipeDetailsModal } from "./RecipeDetailsModal";
 import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { AddRecipeModal } from "./AddRecipeModal";
 
 const RecipeList = () => {
   const pageSize = 40;
   const [page, setPage] = useState(0);
   const { groupId } = useUser();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isAddRecipeOpen, setIsAddRecipeOpen] = useState(false);
   const [selectedRecipe, setSelectedItem] = useState<Recipe>();
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -82,7 +85,10 @@ const RecipeList = () => {
 
   return (
     <>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <Button size="icon" onClick={() => setIsAddRecipeOpen(true)}>
+          <Plus />
+        </Button>
         <form className="mb-2">
           <Input
             placeholder="Search recipes..."
@@ -153,6 +159,11 @@ const RecipeList = () => {
         open={isDetailsOpen}
         recipe={selectedRecipe}
         onOpenChange={setIsDetailsOpen}
+      />
+
+      <AddRecipeModal
+        open={isAddRecipeOpen}
+        onClose={() => setIsAddRecipeOpen(false)}
       />
     </>
   );

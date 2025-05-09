@@ -1,11 +1,4 @@
-import {
-  addItem,
-  Item,
-  readdItem,
-  Recipe,
-  removeItem,
-  updateRecipe,
-} from "@/firebase";
+import { addRecipe, Item, Recipe } from "@/firebase";
 import { queryClient } from "@/react-query";
 import { useEffect, useState } from "react";
 import {
@@ -14,7 +7,7 @@ import {
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
-import { ExternalLink, Plus, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
   Dialog,
@@ -25,10 +18,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { useAddedItems } from "@/hooks";
-import { normalizeName } from "@/utilities";
 import { useUser } from "@/contexts";
-import { useItems } from "@/hooks/useItems";
 import {
   Form,
   FormControl,
@@ -43,164 +33,9 @@ import { tagDictionary, tags } from "@/models/tags";
 import { ItemComboBox } from "../List/AddItemModal";
 
 type RecipeDetailsModalProps = {
-  recipe: Recipe | undefined;
   open: boolean;
 
-  onOpenChange: (open: boolean) => void;
-};
-
-// TODO: Consider factoring out common modal elements.
-export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
-  const [mode, setMode] = useState<"readonly" | "edit">("readonly");
-
-  useEffect(() => {
-    if (!props.open) {
-      setMode("readonly");
-    }
-  }, [props.open]);
-
-  switch (mode) {
-    case "readonly":
-      return <ReadonlyDetailsModal {...props} onEdit={() => setMode("edit")} />;
-    case "edit":
-      return (
-        <EditDetailsModal {...props} onCancel={() => setMode("readonly")} />
-      );
-  }
-};
-
-type DisplayIngredient = {
-  name: string;
-  added: boolean;
-  id: string | undefined;
-};
-
-const ReadonlyDetailsModal = ({
-  open,
-  recipe,
-  onEdit,
-  onOpenChange,
-}: RecipeDetailsModalProps & { onEdit: () => void }) => {
-  const { groupId, defaultListId } = useUser();
-  const addedItemsQuery = useAddedItems();
-  const allItemsQuery = useItems();
-
-  const displayIngredients = recipe?.ingredients
-    .map((ingredient) => {
-      const normalisedIngredient = normalizeName(ingredient);
-
-      const item = addedItemsQuery.data?.find(
-        (item) => item.lowerName === normalisedIngredient,
-      );
-
-      return { name: ingredient, added: item !== undefined, id: item?.id };
-    })
-    .sort((a) => (a.added ? 1 : -1));
-
-  const handleClickIngredient = (ingredient: DisplayIngredient) => {
-    if (ingredient.added) {
-      removeItem(groupId, defaultListId, ingredient.id!);
-    } else {
-      const normalisedName = normalizeName(ingredient.name);
-
-      const item = allItemsQuery.data?.find(
-        (item) => item.lowerName === normalisedName,
-      );
-
-      if (item) {
-        readdItem(groupId, defaultListId, item.id, item.name);
-      } else {
-        addItem(groupId, defaultListId, {
-          name: ingredient.name,
-          lowerName: normalisedName,
-        });
-      }
-    }
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{recipe?.name}</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-3">
-          <div>
-            <h2 className="font-bold">External link</h2>
-            {recipe?.recipeUrl ? (
-              <a
-                href={recipe.recipeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-sm text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                <span>{recipe?.recipeUrl}</span>
-                <ExternalLink size="16" className="inline ml-1" />
-              </a>
-            ) : (
-              "n/a"
-            )}
-          </div>
-
-          <div>
-            <h2 className="font-bold">Ingredients</h2>
-            {displayIngredients && displayIngredients.length > 0 ? (
-              <ul className="flex flex-row flex-wrap gap-1">
-                {displayIngredients.map((ingredient) => (
-                  <li key={ingredient.name} className="inline">
-                    <Badge
-                      variant={ingredient.added ? "secondary" : "default"}
-                      className="cursor-pointer"
-                      onClick={() => handleClickIngredient(ingredient)}
-                    >
-                      <div className="flex items-center gap-2">
-                        {ingredient.name}
-                        {ingredient.added ? (
-                          <X size="12" />
-                        ) : (
-                          <Plus size="12" />
-                        )}
-                      </div>
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              "n/a"
-            )}
-          </div>
-
-          <div>
-            <h2 className="font-bold">Notes</h2>
-            <p>{recipe?.notes || "n/a"}</p>
-          </div>
-
-          <div>
-            <h2 className="font-bold">Tags</h2>
-            {recipe?.tags && recipe.tags.length > 0 ? (
-              <ul className="flex flex-row flex-wrap gap-1">
-                {recipe.tags.map((tag) => (
-                  <li key={tag} className="inline">
-                    <Badge variant="secondary">
-                      {tagDictionary[tag]?.name || tag}
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              "n/a"
-            )}
-          </div>
-        </div>
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="secondary" onClick={onEdit}>
-            Edit
-          </Button>
-          <Button onClick={() => onOpenChange(false)}>Close</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+  onClose: () => void;
 };
 
 interface DetailsForm {
@@ -211,22 +46,15 @@ interface DetailsForm {
   tags: Array<{ name: string }>;
 }
 
-const EditDetailsModal = ({
-  open,
-  recipe,
-  onOpenChange,
-  onCancel,
-}: RecipeDetailsModalProps & { onCancel: () => void }) => {
+export const AddRecipeModal = ({ open, onClose }: RecipeDetailsModalProps) => {
   const { groupId } = useUser();
   const form = useForm<DetailsForm>({
     defaultValues: {
-      name: recipe?.name,
-      ingredients:
-        recipe?.ingredients.map((ingredient) => ({ name: ingredient })) || [],
-
-      externalLink: recipe?.recipeUrl,
-      notes: recipe?.notes,
-      tags: recipe?.tags?.map((tag) => ({ name: tag })) || [],
+      name: "",
+      ingredients: [],
+      externalLink: "",
+      notes: "",
+      tags: [],
     },
   });
 
@@ -264,20 +92,19 @@ const EditDetailsModal = ({
   }, [selectedTag]);
 
   const handleSubmit = (data: DetailsForm) => {
-    const updatedRecipe: Recipe = {
-      id: recipe?.id || "",
+    const addedRecipe: Partial<Recipe> = {
       name: data.name,
       ingredients: data.ingredients.map((ingredient) => ingredient.name),
-      notes: data.notes,
-      recipeUrl: data.externalLink,
+      notes: data.notes ?? "",
+      recipeUrl: data.externalLink ?? "",
       tags: data.tags.map((tag) => tag.name),
     };
 
-    updateRecipe(groupId, updatedRecipe);
-    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
-      oldData.map((r) => (r.id === updatedRecipe.id ? updatedRecipe : r)),
+    addRecipe(groupId, addedRecipe);
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[] = []) =>
+      [...oldData, addedRecipe].sort((a, b) => a.name!.localeCompare(b.name!)),
     );
-    onCancel();
+    onClose();
   };
 
   const handleClickAddTag = (tag: { id: string } | null) => {
@@ -313,11 +140,18 @@ const EditDetailsModal = ({
     ingredientsFieldArrray.remove(index);
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+      form.reset();
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
+    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{recipe?.name}</DialogTitle>
+          <DialogTitle>Add recipe</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -444,7 +278,10 @@ const EditDetailsModal = ({
               </Combobox>
             </FormItem>
             <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="secondary" onClick={onCancel}>
+              <Button
+                variant="secondary"
+                onClick={() => handleOpenChange(false)}
+              >
                 Cancel
               </Button>
               <Button>Save</Button>

@@ -123,6 +123,14 @@ export const updateRecipe = (groupId: string, recipe: Recipe) => {
   });
 };
 
+export const addRecipe = (groupId: string, recipe: Partial<Recipe>) => {
+  delete recipe.id;
+
+  addDoc(collection(firestore, "groups", groupId, "recipes"), {
+    ...recipe,
+  });
+};
+
 export const updateItemCompleted = (
   groupId: string,
   listId: string,
