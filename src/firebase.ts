@@ -3,6 +3,7 @@ import { getAnalytics } from "firebase/analytics";
 import {
   addDoc,
   collection,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -12,6 +13,7 @@ import {
   query,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -246,6 +248,33 @@ export const fetchItems = async (groupId: string, listId: string) => {
   snapshot.forEach((doc) => {
     recipes.push({ ...(doc.data() as Recipe), id: doc.id });
   });
+};
+
+export const batchRemoveItems = (
+  groupId: string,
+  listId: string,
+  ids: Array<string>,
+) => {
+  const batch = writeBatch(firestore);
+
+  ids.forEach((id) => {
+    const docRef = doc(
+      firestore,
+      "groups",
+      groupId,
+      "lists",
+      listId,
+      "items",
+      id,
+    );
+    batch.update(docRef, {
+      completed: false,
+      added: false,
+      notes: deleteField(),
+    });
+  });
+
+  batch.commit();
 };
 
 export * from "firebase/auth";

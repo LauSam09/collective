@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { Menu } from "lucide-react";
+import { Menu, Trash2 } from "lucide-react";
 
 import { useListItems, useLocalStorage, useMatchingRecipes } from "@/hooks";
-import { Category, Item, updateItemCompleted } from "@/firebase";
+import {
+  batchRemoveItems,
+  Category,
+  Item,
+  updateItemCompleted,
+} from "@/firebase";
 import { useUser } from "@/contexts";
 import { ItemDetailsModal } from "./ItemDetailsModal";
 import { Checkbox } from "../ui/checkbox";
@@ -14,6 +19,7 @@ import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 
 export const List = () => {
+  const { groupId, defaultListId } = useUser();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [showCompleted, setShowCompleted] = useLocalStorage(
@@ -27,6 +33,15 @@ export const List = () => {
     setIsDetailsOpen(true);
   };
 
+  const handleBatchRemove = () => {
+    const completedItems = data
+      .flatMap((c) => c.items)
+      .filter((item) => item.completed)
+      .map((item) => item.id);
+
+    batchRemoveItems(groupId, defaultListId, completedItems);
+  };
+
   if (isPending) {
     return <CategorySkeleton />;
   }
@@ -37,13 +52,20 @@ export const List = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end space-x-2 mb-2">
-        <Switch
-          id="toggle-completed"
-          checked={showCompleted}
-          onCheckedChange={setShowCompleted}
-        />
-        <Label htmlFor="toggle-completed">Show completed</Label>
+      <div className="flex items-center justify-between space-x-2 mb-2">
+        <div className="space-x-2">
+          <Switch
+            id="toggle-completed"
+            checked={showCompleted}
+            onCheckedChange={setShowCompleted}
+          />
+          <Label htmlFor="toggle-completed">Show completed</Label>
+        </div>
+        <div>
+          <Button variant="destructive" size="icon" onClick={handleBatchRemove}>
+            <Trash2 />
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-4">
         {data.map((category) => (
