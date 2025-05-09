@@ -3,6 +3,7 @@ import { getAnalytics } from "firebase/analytics";
 import {
   addDoc,
   collection,
+  deleteDoc,
   deleteField,
   doc,
   getDoc,
@@ -129,6 +130,12 @@ export const addRecipe = (groupId: string, recipe: Partial<Recipe>) => {
   addDoc(collection(firestore, "groups", groupId, "recipes"), {
     ...recipe,
   });
+};
+
+export const deleteRecipe = (groupId: string, recipeId: string) => {
+  const docRef = doc(firestore, "groups", groupId, "recipes", recipeId);
+
+  deleteDoc(docRef);
 };
 
 export const updateItemCompleted = (

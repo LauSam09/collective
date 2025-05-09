@@ -1,5 +1,6 @@
 import {
   addItem,
+  deleteRecipe,
   Item,
   readdItem,
   Recipe,
@@ -14,7 +15,7 @@ import {
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
-import { ExternalLink, Plus, X } from "lucide-react";
+import { ExternalLink, Plus, Trash2, X } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
   Dialog,
@@ -313,6 +314,19 @@ const EditDetailsModal = ({
     ingredientsFieldArrray.remove(index);
   };
 
+  const handleClickDelete = () => {
+    if (!recipe) {
+      return;
+    }
+
+    deleteRecipe(groupId, recipe.id);
+
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
+      oldData.filter((r) => r.id !== recipe.id),
+    );
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogContent className="sm:max-w-[425px]">
@@ -443,6 +457,17 @@ const EditDetailsModal = ({
                 </ComboboxOptions>
               </Combobox>
             </FormItem>
+            <FormItem>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={handleClickDelete}
+              >
+                <Trash2 />
+                Delete
+              </Button>
+            </FormItem>
+
             <DialogFooter className="gap-2 sm:gap-0">
               <Button variant="secondary" onClick={onCancel}>
                 Cancel
