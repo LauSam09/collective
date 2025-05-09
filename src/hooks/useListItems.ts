@@ -3,7 +3,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { Item } from "@/firebase";
 import { useAddedItems, useCategories } from "@/hooks";
 
-export const useListItems = () => {
+export const useListItems = (showCompleted: boolean) => {
   const categoryQuery = useCategories();
   const addedItemsQuery = useAddedItems() as UseQueryResult<
     ReadonlyArray<Item>,
@@ -18,13 +18,16 @@ export const useListItems = () => {
     for (const category of data) {
       category.items =
         addedItemsQuery.data
-          ?.filter((i) => i.category === category.id)
+          ?.filter(
+            (i) =>
+              i.category === category.id && (showCompleted || !i.completed),
+          )
           ?.sort((a, b) => a.lowerName.localeCompare(b.lowerName)) ?? [];
     }
 
     const uncategorisedItems =
       addedItemsQuery.data
-        ?.filter((i) => !i.category)
+        ?.filter((i) => !i.category && (showCompleted || !i.completed))
         ?.sort((a, b) => a.lowerName.localeCompare(b.lowerName)) ?? [];
 
     if (uncategorisedItems.length > 0) {

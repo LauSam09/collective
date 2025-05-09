@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Menu } from "lucide-react";
 
-import { useListItems, useMatchingRecipes } from "@/hooks";
+import { useListItems, useLocalStorage, useMatchingRecipes } from "@/hooks";
 import { Category, Item, updateItemCompleted } from "@/firebase";
 import { useUser } from "@/contexts";
 import { ItemDetailsModal } from "./ItemDetailsModal";
@@ -10,13 +10,17 @@ import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-
-// TODO: Handle uncategorised items
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
 
 export const List = () => {
-  const { isPending, isError, data } = useListItems();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item>();
+  const [showCompleted, setShowCompleted] = useLocalStorage(
+    "show-completed-items",
+    true,
+  );
+  const { isPending, isError, data } = useListItems(showCompleted);
 
   const handleClickDetails = (item: Item) => {
     setSelectedItem(item);
@@ -33,6 +37,14 @@ export const List = () => {
 
   return (
     <>
+      <div className="flex items-center justify-end space-x-2 mb-2">
+        <Switch
+          id="toggle-completed"
+          checked={showCompleted}
+          onCheckedChange={setShowCompleted}
+        />
+        <Label htmlFor="toggle-completed">Show completed</Label>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-4">
         {data.map((category) => (
           <div key={category.name}>
@@ -144,7 +156,7 @@ const ListItem = ({
       />
       <label
         htmlFor={item.id}
-        className="flex-1 cursor-pointer group-data-[completed=true]:text-gray-600 dark:group-data-[completed=true]:text-gray-700"
+        className="flex-1 cursor-pointer group-data-[completed=true]:text-gray-500 dark:group-data-[completed=true]:text-gray-400"
       >
         <div>
           <p className="inline group-data-[completed=true]:line-through">
