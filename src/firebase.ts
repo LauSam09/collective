@@ -8,6 +8,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   initializeFirestore,
   orderBy,
   persistentLocalCache,
@@ -168,6 +169,7 @@ export const addItem = (
 
   addDoc(collection(firestore, "groups", groupId, "lists", listId, "items"), {
     ...item,
+    count: 1,
     added: true,
     completed: false,
     notes: "",
@@ -193,7 +195,7 @@ export const readdItem = (
   updateDoc(docRef, {
     name,
     added: true,
-    // TODO: Increment count
+    count: increment(1),
     notes: "",
   });
 };
@@ -212,7 +214,7 @@ export const removeItem = (groupId: string, listId: string, itemId: string) => {
   updateDoc(docRef, {
     added: false,
     completed: false,
-    // TODO: Decrement count
+    count: increment(-1),
     notes: "",
   });
 };
