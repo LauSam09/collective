@@ -34,7 +34,6 @@ import { ItemComboBox } from "../List/AddItemModal";
 
 type RecipeDetailsModalProps = {
   open: boolean;
-
   onClose: () => void;
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { Menu, Trash2 } from "lucide-react";
+import { CalendarPlus, Menu, Trash2 } from "lucide-react";
 
 import { useListItems, useLocalStorage, useMatchingRecipes } from "@/hooks";
 import {
@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { QuickAddModal } from "./QuickAddModal";
 
 export const List = () => {
   const { groupId, defaultListId } = useUser();
@@ -38,6 +39,7 @@ export const List = () => {
     true,
   );
   const { isPending, isError, data } = useListItems(showCompleted);
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
 
   const handleClickDetails = (item: Item) => {
     setSelectedItem(item);
@@ -72,7 +74,15 @@ export const List = () => {
           />
           <Label htmlFor="toggle-completed">Show completed</Label>
         </div>
-        <div>
+        <div className="space-x-2">
+          <Button
+            size="icon"
+            variant="secondary"
+            onClick={() => setIsQuickAddOpen(true)}
+          >
+            <CalendarPlus />
+          </Button>
+          {/* TODO: Move into component */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="icon">
@@ -115,6 +125,10 @@ export const List = () => {
         item={selectedItem!}
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
+      />
+      <QuickAddModal
+        open={isQuickAddOpen}
+        onClose={() => setIsQuickAddOpen(false)}
       />
     </>
   );
