@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Accordion,
@@ -5,9 +6,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ChevronsDownUp, ChevronsUpDown, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
-import { getRecipes, Recipe } from "@/firebase";
+import { batchRemoveRecipeDays, getRecipes, Recipe } from "@/firebase";
 import { useUser } from "@/contexts";
+import { useLocalStorage } from "@/hooks";
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { RecipeDetailsModal } from "../Recipes/RecipeDetailsModal";
 
 const days: ReadonlyArray<{
   name: string;
@@ -25,6 +40,12 @@ const days: ReadonlyArray<{
 
 export const Planning = () => {
   const { groupId } = useUser();
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>();
+  const dayOfWeek = new Date().getDay();
+  const [expandedDays, setExpandedDays] = useLocalStorage<Array<string>>(
+    "expanded-planning-days",
+    [dayOfWeek.toString()],
+  );
 
   const recipesQuery = useQuery({
     queryKey: ["recipes", groupId],
@@ -40,33 +61,92 @@ export const Planning = () => {
     );
   }
 
+  const toggleAllExpanded = () => {
+    if (expandedDays.length === days.length) {
+      setExpandedDays([]);
+    } else {
+      setExpandedDays(["0", "1", "2", "3", "4", "5", "6"]);
+    }
+  };
+
+  const clearWeek = () => {
+    const recipeIds = days.flatMap((day) => day.recipes.map((r) => r.id));
+
+    batchRemoveRecipeDays(groupId, recipeIds);
+    recipesQuery.refetch();
+  };
+
   return (
     <div className="max-w-md mx-auto">
+      <div className="flex justify-end flex-row gap-2">
+        <Button size="icon" onClick={toggleAllExpanded}>
+          {expandedDays.length === days.length ? (
+            <ChevronsDownUp />
+          ) : (
+            <ChevronsUpDown />
+          )}
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" type="button" size="icon">
+              <Trash2 />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                All recipes for the week will be removed.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={clearWeek}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
       <Accordion
         type="multiple"
         className="w-full"
-        // TODO: Put into local storage
-        defaultValue={["0", "1", "2", "3", "4", "5", "6"]}
+        value={expandedDays}
+        onValueChange={setExpandedDays}
       >
         {days.map((day) => (
           <AccordionItem key={day.jsIndex} value={day.jsIndex.toString()}>
-            <AccordionTrigger>{day.name}</AccordionTrigger>
+            <AccordionTrigger
+              className={day.jsIndex === dayOfWeek ? "font-bold" : ""}
+            >
+              {day.name} ({day.recipes.length})
+            </AccordionTrigger>
             <AccordionContent>
               <div className="flex gap-2">
                 {day.recipes.length > 0 ? (
                   day.recipes.map((recipe) => (
-                    <Button key={recipe.id} size="sm" variant="outline">
+                    <Button
+                      key={recipe.id}
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedRecipe(recipe)}
+                    >
                       {recipe.name}
                     </Button>
                   ))
                 ) : (
-                  <span>No recipes planned</span>
+                  <span>No meals planned</span>
                 )}
               </div>
             </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
+      <RecipeDetailsModal
+        open={!!selectedRecipe}
+        onOpenChange={() => setSelectedRecipe(undefined)}
+        recipe={selectedRecipe}
+      />
     </div>
   );
 };

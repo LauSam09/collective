@@ -292,4 +292,20 @@ export const batchRemoveItems = (
   batch.commit();
 };
 
+export const batchRemoveRecipeDays = (
+  groupId: string,
+  recipeIds: Array<string>,
+) => {
+  const batch = writeBatch(firestore);
+
+  recipeIds.forEach((recipeId) => {
+    const docRef = doc(firestore, "groups", groupId, "recipes", recipeId);
+    batch.update(docRef, {
+      days: [],
+    });
+  });
+
+  batch.commit();
+};
+
 export * from "firebase/auth";
