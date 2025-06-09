@@ -5,3 +5,4 @@ export * from "./NavBar";
 export * from "./SignIn";
 export * from "./ThemeProvider";
 export * from "./Recipes";
+export * from "./Planning";

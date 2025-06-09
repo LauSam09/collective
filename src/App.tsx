@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { NavBar, MobileNavBar, List, Recipes } from "@/components";
+import { NavBar, MobileNavBar, List, Recipes, Planning } from "@/components";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { useState } from "react";
@@ -18,7 +18,7 @@ export const App = () => {
             <Routes>
               <Route path="/" element={<List />} />
               <Route path="/recipes" element={<Recipes />} />
-              <Route path="/planning" element={<>Planning</>} />
+              <Route path="/planning" element={<Planning />} />
               <Route path="/settings" element={<>Settings</>} />
             </Routes>
           </div>
