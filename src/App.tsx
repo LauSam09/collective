@@ -4,6 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { useState } from "react";
 import { AddItemModal } from "./components/List/AddItemModal";
+import { Toaster } from "./components/ui/sonner";
 
 export const App = () => {
   const [addItemModalOpen, setAddItemModalOpen] = useState(false);
@@ -29,6 +30,7 @@ export const App = () => {
         open={addItemModalOpen}
         onOpenChange={setAddItemModalOpen}
       />
+      <Toaster />
     </div>
   );
 };

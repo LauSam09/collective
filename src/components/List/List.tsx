@@ -29,6 +29,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { QuickAddModal } from "./QuickAddModal";
+import { toast } from "sonner";
 
 export const List = () => {
   const { groupId, defaultListId } = useUser();
@@ -204,6 +205,17 @@ const ListItem = ({
     }
 
     updateItemCompleted(groupId, defaultListId, item.id, completed);
+
+    if (completed) {
+      toast(`Item "${item.name}" marked as completed`, {
+        action: {
+          label: "Undo",
+          onClick: () => {
+            updateItemCompleted(groupId, defaultListId, item.id, false);
+          },
+        },
+      });
+    }
   };
 
   // TODO: Fix overflowing items
