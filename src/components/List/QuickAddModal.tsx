@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { useUser } from "@/contexts";
 import { readdItem } from "@/firebase";
-import { useCategories } from "@/hooks";
-import { useItems } from "@/hooks/useItems";
+import { useCategories, useItems } from "@/hooks";
 
 type QuickAddModalProps = {
   open: boolean;
@@ -29,7 +28,7 @@ export const QuickAddModal = ({ open, onClose }: QuickAddModalProps) => {
   const topItems = items
     .filter((i) => !i.added)
     .sort((a, b) => b.count - a.count)
-    .slice(0, 15);
+    .slice(0, 20);
 
   const handleClick = (id: string, name: string) => {
     readdItem(groupId, defaultListId, id, name);
@@ -50,11 +49,12 @@ export const QuickAddModal = ({ open, onClose }: QuickAddModalProps) => {
             Your frequently added items are listed here.
           </DialogDescription>
         </DialogHeader>
-        <ol className="space-y-2">
+        <ol className="grid grid-cols-2 gap-2">
           {topItems.map((item) => (
             <li key={item.id} className="flex">
               <Button
                 variant="secondary"
+                size="sm"
                 onClick={() => handleClick(item.id, item.name)}
               >
                 <Square
