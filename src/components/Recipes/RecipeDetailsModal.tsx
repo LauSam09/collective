@@ -130,6 +130,27 @@ const ReadonlyDetailsModal = ({
     }
   };
 
+  const handleClickDay = (index: number) => {
+    if (!recipe) {
+      return;
+    }
+
+    const updatedDays = recipe.days?.includes(index)
+      ? recipe.days.filter((day) => day !== index)
+      : [...(recipe.days || []), index];
+
+    const updatedRecipe: Recipe = {
+      ...recipe,
+      days: updatedDays,
+    };
+
+    updateRecipe(groupId, updatedRecipe);
+
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
+      oldData.map((r) => (r.id === updatedRecipe.id ? updatedRecipe : r)),
+    );
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogContent className="sm:max-w-[425px]">
@@ -138,20 +159,31 @@ const ReadonlyDetailsModal = ({
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div>
-            <h2 className="font-bold">External link</h2>
-            {recipe?.recipeUrl ? (
-              <a
-                href={recipe.recipeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-sm text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                <span>{recipe?.recipeUrl}</span>
-                <ExternalLink size="16" className="inline ml-1" />
-              </a>
-            ) : (
-              "n/a"
-            )}
+            <h2 className="font-bold">Days</h2>
+            <ul className="flex flex-row flex-wrap gap-1">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                (tag, index) => (
+                  <li key={tag} className="inline">
+                    <Badge
+                      variant={
+                        recipe?.days?.includes(index) ? "default" : "secondary"
+                      }
+                      onClick={() => handleClickDay(index)}
+                      className="cursor-pointer"
+                    >
+                      <div className="flex items-center gap-1">
+                        {tagDictionary[tag]?.name || tag}
+                        {recipe?.days?.includes(index) ? (
+                          <X size="12" />
+                        ) : (
+                          <Plus size="12" />
+                        )}
+                      </div>
+                    </Badge>
+                  </li>
+                ),
+              )}
+            </ul>
           </div>
 
           <div>
@@ -165,7 +197,7 @@ const ReadonlyDetailsModal = ({
                       className="cursor-pointer"
                       onClick={() => handleClickIngredient(ingredient)}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         {ingredient.name}
                         {ingredient.added ? (
                           <X size="12" />
@@ -185,6 +217,23 @@ const ReadonlyDetailsModal = ({
           <div>
             <h2 className="font-bold">Notes</h2>
             <p>{recipe?.notes || "n/a"}</p>
+          </div>
+
+          <div>
+            <h2 className="font-bold">External link</h2>
+            {recipe?.recipeUrl ? (
+              <a
+                href={recipe.recipeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-sm text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                <span>{recipe?.recipeUrl}</span>
+                <ExternalLink size="16" className="inline ml-1" />
+              </a>
+            ) : (
+              "n/a"
+            )}
           </div>
 
           <div>
