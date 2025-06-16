@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ExternalLink, Plus } from "lucide-react";
+import { ExternalLink, Plus, X } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -102,16 +102,24 @@ const RecipeList = () => {
 
   return (
     <>
-      <div className="flex justify-end gap-3">
+      <div className="flex justify-between gap-3">
         <Button size="icon" onClick={() => setIsAddRecipeOpen(true)}>
           <Plus />
         </Button>
-        <form className="mb-2 flex-1 max-w-sm flex gap-1">
+        <form className="mb-2 flex-1 max-w-sm flex gap-1 ml-3">
           <Input
             placeholder="Search recipes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => setSearchQuery("")}
+          >
+            <X />
+          </Button>
           <SearchFiltersModal
             selectedCuisineTags={cuisineTags}
             setCuisineTags={setCuisineTags}
