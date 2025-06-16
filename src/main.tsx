@@ -8,6 +8,7 @@ import { AuthContextProvider, ThemeProvider } from "@/components";
 import { App } from "./App";
 
 import "./index.css";
+import { Toaster } from "./components/ui/sonner";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <AuthContextProvider>
             <App />
           </AuthContextProvider>
+          <Toaster />
         </QueryClientProvider>
       </BrowserRouter>
     </ThemeProvider>
