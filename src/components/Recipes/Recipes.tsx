@@ -17,6 +17,7 @@ import { RecipeDetailsModal } from "./RecipeDetailsModal";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AddRecipeModal } from "./AddRecipeModal";
+import { SearchFiltersModal } from "./SearchFiltersModal";
 
 const RecipeList = () => {
   const pageSize = 40;
@@ -25,9 +26,14 @@ const RecipeList = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isAddRecipeOpen, setIsAddRecipeOpen] = useState(false);
   const [selectedRecipe, setSelectedItem] = useState<Recipe>();
+  const [cuisineTags, setCuisineTags] = useState<string[]>([]);
+  const [typeTags, setTypeTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const normalisedFilterValue = debouncedSearchQuery.trim().toLowerCase();
+
+  const filteringApplied =
+    cuisineTags.length > 0 || typeTags.length > 0 || normalisedFilterValue;
 
   const recipesQuery = useQuery({
     queryKey: ["recipes", groupId],
@@ -45,14 +51,25 @@ const RecipeList = () => {
     });
   }, [recipesQuery.data]);
 
-  const filteredRecipes = normalisedFilterValue
-    ? recipesQuery.data?.filter(
-        (r) =>
-          r.name.toLowerCase().includes(normalisedFilterValue) ||
-          r.ingredients?.some((i) =>
-            i.toLowerCase().includes(normalisedFilterValue),
-          ),
-      )
+  const filteredRecipes = filteringApplied
+    ? recipesQuery.data
+        ?.filter(
+          (r) =>
+            cuisineTags.length === 0 ||
+            r.tags?.some((tag) => cuisineTags.includes(tag)),
+        )
+        ?.filter(
+          (r) =>
+            typeTags.length === 0 ||
+            r.tags?.some((tag) => typeTags.includes(tag)),
+        )
+        .filter(
+          (r) =>
+            r.name.toLowerCase().includes(normalisedFilterValue) ||
+            r.ingredients?.some((i) =>
+              i.toLowerCase().includes(normalisedFilterValue),
+            ),
+        )
     : recipesQuery.data;
 
   if (recipesQuery.isFetching) {
@@ -85,15 +102,21 @@ const RecipeList = () => {
 
   return (
     <>
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-3">
         <Button size="icon" onClick={() => setIsAddRecipeOpen(true)}>
           <Plus />
         </Button>
-        <form className="mb-2">
+        <form className="mb-2 flex-1 max-w-sm flex gap-1">
           <Input
             placeholder="Search recipes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <SearchFiltersModal
+            selectedCuisineTags={cuisineTags}
+            setCuisineTags={setCuisineTags}
+            selectedTypeTags={typeTags}
+            setTypeTags={setTypeTags}
           />
         </form>
       </div>
@@ -169,8 +192,4 @@ const RecipeList = () => {
   );
 };
 
-export const Recipes = () => (
-  <>
-    <RecipeList />
-  </>
-);
+export const Recipes = () => <RecipeList />;
