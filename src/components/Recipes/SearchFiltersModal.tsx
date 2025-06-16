@@ -1,4 +1,4 @@
-import { Filter, FilterX } from "lucide-react";
+import { Filter } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -51,11 +51,6 @@ export const SearchFiltersModal = (props: SearchFiltersModalProps) => {
     setSelectedTypeTags(props.selectedTypeTags);
   }, [open, props.selectedCuisineTags]);
 
-  const handleClearFiltersClick = () => {
-    setSelectedCuisineTags([]);
-    setSelectedTypeTags([]);
-  };
-
   const handleCuisineTagClick = (tagId: string) => {
     if (selectedCuisineTags.includes(tagId)) {
       setSelectedCuisineTags(selectedCuisineTags.filter((id) => id !== tagId));
@@ -75,6 +70,12 @@ export const SearchFiltersModal = (props: SearchFiltersModalProps) => {
   const handleApplyFilters = () => {
     props.setCuisineTags(selectedCuisineTags);
     props.setTypeTags(selectedTypeTags);
+    setOpen(false);
+  };
+
+  const handleClearFiltersClick = () => {
+    props.setCuisineTags([]);
+    props.setTypeTags([]);
     setOpen(false);
   };
 
@@ -100,15 +101,6 @@ export const SearchFiltersModal = (props: SearchFiltersModalProps) => {
             recipes by tags you have applied to them.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-end">
-          <Button
-            variant="destructive"
-            size="icon"
-            onClick={handleClearFiltersClick}
-          >
-            <FilterX />
-          </Button>
-        </div>
         <div className="grid gap-4">
           <div>
             <h3 className="text-sm font-medium">Cuisine</h3>
@@ -117,7 +109,7 @@ export const SearchFiltersModal = (props: SearchFiltersModalProps) => {
                 selectedCuisineTags.includes(tag.id) ? (
                   <Button
                     key={tag.id}
-                    variant="secondary"
+                    variant="default"
                     size="sm"
                     onClick={() => handleCuisineTagClick(tag.id)}
                   >
@@ -143,7 +135,7 @@ export const SearchFiltersModal = (props: SearchFiltersModalProps) => {
                 selectedTypeTags.includes(tag.id) ? (
                   <Button
                     key={tag.id}
-                    variant="secondary"
+                    variant="default"
                     size="sm"
                     onClick={() => handleTypeTagClick(tag.id)}
                   >
@@ -167,6 +159,13 @@ export const SearchFiltersModal = (props: SearchFiltersModalProps) => {
           <DialogClose asChild>
             <Button variant="secondary">Cancel</Button>
           </DialogClose>
+          <Button
+            variant="destructive"
+            type="button"
+            onClick={handleClearFiltersClick}
+          >
+            Clear filters
+          </Button>
           <Button type="button" onClick={handleApplyFilters}>
             Apply filters
           </Button>
