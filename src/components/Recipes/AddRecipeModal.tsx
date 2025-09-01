@@ -147,7 +147,7 @@ export const AddRecipeModal = ({ open, onClose }: RecipeDetailsModalProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add recipe</DialogTitle>
