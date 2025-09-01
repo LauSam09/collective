@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { CircleCheck, Square } from "lucide-react";
 import {
+  DialogBackdrop,
+  Dialog as HeadlessDialog,
+  DialogPanel as HeadlessDialogPanel,
+  DialogTitle as HeadlessDialogTitle,
+} from "@headlessui/react";
+import {
   Combobox,
   ComboboxInput,
   ComboboxOption,
@@ -135,7 +141,10 @@ type AddItemModalProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
+export const LegacyAddItemModal = ({
+  open,
+  onOpenChange,
+}: AddItemModalProps) => {
   const { groupId, defaultListId } = useUser();
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [comboBoxOpen, setComboBoxOpen] = useState(true);
@@ -208,5 +217,84 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+};
+
+export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
+  const { groupId, defaultListId } = useUser();
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [comboBoxOpen, setComboBoxOpen] = useState(true);
+
+  useEffect(() => {
+    if (open) {
+      setComboBoxOpen(true);
+    }
+  }, [open]);
+
+  // Clear selected item when modal is closed
+  useEffect(() => {
+    if (!open) {
+      setSelectedItem(null);
+    }
+    // TODO: Add ESLint exhaustive dependencies rule
+  }, [open]);
+
+  // Clear selected item when combobox is re-opened
+  useEffect(() => {
+    if (comboBoxOpen) {
+      setSelectedItem(null);
+    }
+  }, [comboBoxOpen]);
+
+  const handleClickAdd = async () => {
+    if (!selectedItem || selectedItem.added) {
+      return;
+    }
+
+    if (selectedItem.id) {
+      readdItem(groupId, defaultListId, selectedItem.id, selectedItem.name);
+    } else {
+      addItem(groupId, defaultListId, selectedItem);
+    }
+
+    setSelectedItem(null);
+    setComboBoxOpen(true);
+  };
+
+  const handleSelectItem = (item: Item | null) => setSelectedItem(item);
+
+  return (
+    <HeadlessDialog
+      open={open}
+      onClose={() => onOpenChange(false)}
+      className="relative z-50"
+    >
+      <DialogBackdrop className="fixed inset-0 bg-black/80 duration-300 ease-out data-closed:opacity-0" />
+      <div className="fixed inset-0 flex w-screen items-start justify-center p-2 mt-8">
+        <HeadlessDialogPanel className="max-w-md border p-4 flex flex-col bg-background w-full">
+          <HeadlessDialogTitle>Add item</HeadlessDialogTitle>
+
+          <div className="flex items-center gap-2 mt-4">
+            <ItemComboBox
+              selectedItem={selectedItem}
+              onSelectItem={handleSelectItem}
+            />
+            {selectedItem?.added && (
+              <div className="text-green-600 flex gap-1">
+                <CircleCheck />
+                <p>Added</p>
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2 mt-8">
+            <Button variant="secondary" onClick={() => onOpenChange(false)}>
+              Close
+            </Button>
+            <Button onClick={handleClickAdd}>Add</Button>
+          </div>
+        </HeadlessDialogPanel>
+      </div>
+    </HeadlessDialog>
   );
 };

@@ -8,6 +8,7 @@ import { useUser } from "@/contexts";
 export function useItems(): UseQueryResult<ReadonlyArray<Item>, Error> {
   const { groupId, defaultListId } = useUser();
 
+  // @ts-expect-error todo
   return useQuery({
     queryKey: ["items", groupId, defaultListId],
     queryFn: createQuery(() =>
