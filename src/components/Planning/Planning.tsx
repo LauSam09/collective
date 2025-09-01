@@ -55,6 +55,8 @@ export const Planning = () => {
   const addedRecipes =
     recipesQuery.data?.filter((r) => r.days && r.days.length > 0) ?? [];
 
+  const daysWithRecipes = addedRecipes.flatMap((r) => r.days ?? []);
+
   for (const day of days) {
     day.recipes = addedRecipes.filter((recipe) =>
       recipe.days?.includes(day.jsIndex),
@@ -146,6 +148,7 @@ export const Planning = () => {
         open={!!selectedRecipe}
         onOpenChange={() => setSelectedRecipe(undefined)}
         recipe={selectedRecipe}
+        daysWithRecipes={daysWithRecipes}
       />
     </div>
   );

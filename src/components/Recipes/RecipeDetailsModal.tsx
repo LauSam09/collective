@@ -57,6 +57,7 @@ import {
 type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
   open: boolean;
+  daysWithRecipes: Array<number>;
 
   onOpenChange: (open: boolean) => void;
 };
@@ -90,6 +91,7 @@ type DisplayIngredient = {
 const ReadonlyDetailsModal = ({
   open,
   recipe,
+  daysWithRecipes,
   onEdit,
   onOpenChange,
 }: RecipeDetailsModalProps & { onEdit: () => void }) => {
@@ -166,7 +168,11 @@ const ReadonlyDetailsModal = ({
                   <li key={tag} className="inline">
                     <Badge
                       variant={
-                        recipe?.days?.includes(index) ? "default" : "secondary"
+                        recipe?.days?.includes(index)
+                          ? "default"
+                          : daysWithRecipes.includes(index)
+                            ? "secondary"
+                            : "outline"
                       }
                       onClick={() => handleClickDay(index)}
                       className="cursor-pointer"
@@ -193,7 +199,7 @@ const ReadonlyDetailsModal = ({
                 {displayIngredients.map((ingredient) => (
                   <li key={ingredient.name} className="inline">
                     <Badge
-                      variant={ingredient.added ? "secondary" : "default"}
+                      variant={ingredient.added ? "default" : "outline"}
                       className="cursor-pointer"
                       onClick={() => handleClickIngredient(ingredient)}
                     >

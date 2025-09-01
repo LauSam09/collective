@@ -272,7 +272,9 @@ export const AddItemModal = ({ open, onOpenChange }: AddItemModalProps) => {
       <DialogBackdrop className="fixed inset-0 bg-black/80 duration-300 ease-out data-closed:opacity-0" />
       <div className="fixed inset-0 flex w-screen items-start justify-center p-2 mt-8">
         <HeadlessDialogPanel className="max-w-md border p-4 flex flex-col bg-background w-full">
-          <HeadlessDialogTitle>Add item</HeadlessDialogTitle>
+          <HeadlessDialogTitle className="text-center">
+            Add item
+          </HeadlessDialogTitle>
 
           <div className="flex items-center gap-2 mt-4">
             <ItemComboBox

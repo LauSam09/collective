@@ -40,6 +40,11 @@ const RecipeList = () => {
     queryFn: () => getRecipes(groupId),
   });
 
+  const addedRecipes =
+    recipesQuery.data?.filter((r) => r.days && r.days.length > 0) ?? [];
+
+  const daysWithRecipes = addedRecipes.flatMap((r) => r.days ?? []);
+
   // When recipes are changed we need to update the selected item.
   useEffect(() => {
     setSelectedItem((old) => {
@@ -190,6 +195,7 @@ const RecipeList = () => {
         open={isDetailsOpen}
         recipe={selectedRecipe}
         onOpenChange={setIsDetailsOpen}
+        daysWithRecipes={daysWithRecipes}
       />
 
       <AddRecipeModal
