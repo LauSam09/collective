@@ -355,7 +355,7 @@ const EditDetailsModal = ({
     tagFieldArray.append({ name: tag.id });
   };
 
-  const handleSelectItem = (item: Item | null) => {
+  const handleSelectIngredient = (item: Item | null) => {
     if (!item) {
       return;
     }
@@ -394,7 +394,7 @@ const EditDetailsModal = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{recipe?.name}</DialogTitle>
@@ -443,7 +443,7 @@ const EditDetailsModal = ({
                 placeholder="Add ingredient"
                 showAddedIcon={false}
                 selectedItem={selectedIngredient}
-                onSelectItem={handleSelectItem}
+                onSelectItem={handleSelectIngredient}
               />
             </FormItem>
 
