@@ -1,6 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import { NavBar, MobileNavBar, List, Recipes, Planning } from "@/components";
+import {
+  NavBar,
+  MobileNavBar,
+  List,
+  Recipes,
+  Planning,
+  OfflineBanner,
+} from "@/components";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { AddItemModal } from "./components/List/AddItemModal";
@@ -15,6 +22,7 @@ export const App = () => {
         <AppSidebar onOpenAddItem={() => setAddItemModalOpen(true)} />
         <div className="w-full dark:bg-neutral-900">
           <NavBar />
+          <OfflineBanner />
           <div className="p-4">
             <Routes>
               <Route path="/" element={<List />} />
