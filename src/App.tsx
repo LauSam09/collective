@@ -1,60 +1,35 @@
 import { Route, Routes } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
-
-import MobileNav from "@/components/MobileNav";
-import Nav from "@/components/Nav";
-import { LoginPage } from "@/pages/Login";
-import { Protected } from "@/components/Protected";
-import { ListPage } from "@/pages/List";
-import { RecipesPage } from "@/pages/Recipes";
-import { PlanningPage } from "@/pages/Planning";
-import "./App.css";
+import { useState } from "react";
+import { NavBar, MobileNavBar, List, Recipes, Planning } from "@/components";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "./components/AppSidebar";
+import { AddItemModal } from "./components/List/AddItemModal";
 import { Settings } from "./components/Settings/Settings";
 
-function App() {
+export const App = () => {
+  const [addItemModalOpen, setAddItemModalOpen] = useState(false);
+
   return (
-    <div className="App">
-      <Nav />
-      <Box p={4} maxW="800px" mx="auto" pb={{ base: 20, sm: 0 }}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Protected>
-                <ListPage />
-              </Protected>
-            }
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/recipes"
-            element={
-              <Protected>
-                <RecipesPage />
-              </Protected>
-            }
-          />
-          <Route
-            path="/planning"
-            element={
-              <Protected>
-                <PlanningPage />
-              </Protected>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <Protected>
-                <Settings />
-              </Protected>
-            }
-          />
-        </Routes>
-      </Box>
-      <MobileNav />
+    <div>
+      <SidebarProvider>
+        <AppSidebar onOpenAddItem={() => setAddItemModalOpen(true)} />
+        <div className="w-full dark:bg-neutral-900">
+          <NavBar />
+          <div className="p-4">
+            <Routes>
+              <Route path="/" element={<List />} />
+              <Route path="/recipes" element={<Recipes />} />
+              <Route path="/planning" element={<Planning />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </div>
+          <MobileNavBar onOpenAddItem={() => setAddItemModalOpen(true)} />
+        </div>
+      </SidebarProvider>
+      <AddItemModal
+        open={addItemModalOpen}
+        onOpenChange={setAddItemModalOpen}
+      />
     </div>
   );
-}
-
-export default App;
+};

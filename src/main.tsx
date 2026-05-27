@@ -1,37 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./react-query";
 
-import App from "./App";
-import { AuthenticationProvider } from "./contexts/AuthenticationContext";
+import { AuthContextProvider, ThemeProvider } from "@/components";
+import { App } from "./App";
+
 import "./index.css";
-import FirebaseContextProvider from "./contexts/FirebaseContext";
-import { ListContextProvider } from "./contexts/ListContext";
-import { RecipeContextProvider } from "./contexts/RecipeContext";
-
-const theme = extendTheme({
-  config: {
-    initialColorMode: "system",
-    useSystemColorMode: true,
-    useLocalStorage: false,
-  },
-});
+import { Toaster } from "./components/ui/sonner";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <BrowserRouter>
-        <FirebaseContextProvider>
-          <AuthenticationProvider>
-            <ListContextProvider>
-              <RecipeContextProvider>
-                <App />
-              </RecipeContextProvider>
-            </ListContextProvider>
-          </AuthenticationProvider>
-        </FirebaseContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
+          <Toaster />
+        </QueryClientProvider>
       </BrowserRouter>
-    </ChakraProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 );

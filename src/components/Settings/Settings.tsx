@@ -1,47 +1,18 @@
-import { useAuthentication } from "@/hooks";
-import {
-  Box,
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  Stack,
-  StackDivider,
-  Text,
-} from "@chakra-ui/react";
+import { useUser } from "@/contexts";
 
 export const Settings = () => {
-  const { user } = useAuthentication();
+  const user = useUser();
 
   return (
-    <Box>
-      <Heading size="md" mt={2} mb={4}>
-        Settings
-      </Heading>
-
-      <Card>
-        <CardHeader>User details</CardHeader>
-        <CardBody>
-          <Stack divider={<StackDivider />} spacing="4">
-            <Box>
-              <Heading size="xs" textTransform="uppercase">
-                Display name
-              </Heading>
-              <Text pt="2" fontSize="sm">
-                {user?.displayName}
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs" textTransform="uppercase">
-                Email address
-              </Heading>
-              <Text pt="2" fontSize="sm">
-                {user?.email}
-              </Text>
-            </Box>
-          </Stack>
-        </CardBody>
-      </Card>
-    </Box>
+    <div className="flex flex-col gap-2">
+      <div>
+        <h2 className="font-bold">Email</h2>
+        <p>{user?.email}</p>
+      </div>
+      <div>
+        <h2 className="font-bold">Household</h2>
+        <p>{user?.groupName}</p>
+      </div>
+    </div>
   );
 };

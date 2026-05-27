@@ -1,98 +1,242 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Heading,
-  Text,
-  Flex,
-  ListItem,
-  UnorderedList,
-} from "@chakra-ui/react";
-import { EditIcon, MinusIcon } from "@chakra-ui/icons";
+import { useForm } from "react-hook-form";
+import { Square } from "lucide-react";
 
-import { Item } from "@/models/item";
-import { normalizeName } from "@/utilities/normalization";
-import { useRecipes, useList } from "@/hooks";
+import { Item, removeItem, updateItem } from "@/firebase";
+import { useCategories, useMatchingRecipes } from "@/hooks";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Textarea } from "../ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { useUser } from "@/contexts";
 
 type ItemDetailsModalProps = {
-  isOpen: boolean;
   item: Item | undefined;
-  onClose: () => void;
-  onEdit: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 export const ItemDetailsModal = (props: ItemDetailsModalProps) => {
-  const { isOpen, item, onClose, onEdit } = props;
-  const { recipes } = useRecipes();
-  const { removeItem } = useList();
+  const [mode, setMode] = useState<"readonly" | "edit">("readonly");
 
-  // TODO: Move to context
-  const addedRecipes = recipes.filter((r) => r.days && r.days.length > 0);
-
-  const matchingRecipes = addedRecipes.filter((r) => {
-    const normalizedRecipeIngredients =
-      r.ingredients?.map((i) => normalizeName(i)) ?? [];
-
-    if (
-      item?.lowerName &&
-      normalizedRecipeIngredients.includes(item?.lowerName)
-    ) {
-      return true;
+  useEffect(() => {
+    if (!props.open) {
+      setMode("readonly");
     }
+  }, [props.open]);
+
+  switch (mode) {
+    case "readonly":
+      return <ReadonlyDetailsModal {...props} onEdit={() => setMode("edit")} />;
+    case "edit":
+      return <EditDetailsModal {...props} />;
+  }
+};
+
+const ReadonlyDetailsModal = ({
+  open,
+  item,
+  onOpenChange,
+  onEdit,
+}: ItemDetailsModalProps & { onEdit: () => void }) => {
+  const matchingRecipesQuery = useMatchingRecipes(item?.lowerName ?? "");
+  const categoriesQuery = useCategories();
+  const { groupId, defaultListId } = useUser();
+
+  const category = (categoriesQuery.data ?? []).find(
+    (c) => item?.category === c.id,
+  );
+
+  const handleRemove = async () => {
+    removeItem(groupId, defaultListId, item!.id);
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            {item?.name}
+
+            {category && (
+              <Badge
+                className="text-xs p-1 ml-2 text-black dark:text-white"
+                style={{ backgroundColor: `${category.colour}50` }}
+              >
+                {category.name}
+              </Badge>
+            )}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="font-bold">Notes</h2>
+            <p>{item?.notes || "n/a"}</p>
+          </div>
+
+          <div>
+            <h2 className="font-bold">Selected Recipes</h2>
+            {/* TODO: Make these links? */}
+            {matchingRecipesQuery.data?.length > 0 ? (
+              <ul className="list-disc pl-4">
+                {matchingRecipesQuery.data.map((recipe) => (
+                  <li key={recipe.id}>{recipe.name}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>n/a</p>
+            )}
+          </div>
+        </div>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="secondary" onClick={onEdit}>
+            Edit
+          </Button>
+          <Button variant="secondary" onClick={handleRemove}>
+            Remove
+          </Button>
+          <Button onClick={() => onOpenChange(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface DetailsForm {
+  notes: string;
+  category: string;
+}
+
+const EditDetailsModal = ({
+  open,
+  item,
+  onOpenChange,
+}: ItemDetailsModalProps) => {
+  const categoriesQuery = useCategories();
+  const { groupId, defaultListId } = useUser();
+
+  const category = (categoriesQuery.data ?? []).find(
+    (c) => item?.category === c.id,
+  );
+
+  const form = useForm<DetailsForm>({
+    defaultValues: { notes: item?.notes ?? "", category: item?.category },
   });
 
-  const handleRemoveClick = () => {
+  const onSubmit = async (values: DetailsForm) => {
     if (!item) {
       return;
     }
 
-    removeItem(item.id);
-
-    onClose();
+    updateItem(groupId, defaultListId, item.id, { ...values });
+    onOpenChange(false);
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          <Flex justifyContent="space-between">
-            <Text>{item?.name}</Text>
-            <Flex gap={2}>
-              <Button onClick={onEdit}>
-                <EditIcon />
-              </Button>
-              <Button onClick={handleRemoveClick} aria-label="Remove">
-                <MinusIcon />
-              </Button>
-            </Flex>
-          </Flex>
-        </ModalHeader>
-        <ModalBody>
-          <Heading size="sm">Notes</Heading>
-          <Text mb="1rem">{item?.notes ? item.notes : "n/a"}</Text>
-          <Heading size="sm">Planned recipes</Heading>
-          {matchingRecipes.length > 0 ? (
-            <UnorderedList>
-              {matchingRecipes.map((r) => (
-                <ListItem key={r.id}>{r.name}</ListItem>
-              ))}
-            </UnorderedList>
-          ) : (
-            <Text>n/a</Text>
-          )}
-        </ModalBody>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            {item?.name}
 
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            {category && (
+              <Badge
+                className="text-xs p-1 ml-2 text-black dark:text-white"
+                style={{ backgroundColor: `${category.colour}50` }}
+              >
+                {category.name}
+              </Badge>
+            )}
+          </DialogTitle>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-2"
+          >
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categoriesQuery.data?.map((c) => (
+                        <SelectItem key={c.id} value={c.id} className="mb-1">
+                          <div className="flex w-full gap-1 items-center">
+                            <Square
+                              color={`${c.colour}`}
+                              fill={`${c.colour}`}
+                            />
+                            {c.name}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Add some extra detail..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className="mt-4 gap-2">
+              <Button variant="secondary" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
+              <Button>Save</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };

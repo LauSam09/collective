@@ -1,312 +1,155 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Accordion,
-  AccordionButton,
-  AccordionIcon,
+  AccordionContent,
   AccordionItem,
-  AccordionPanel,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ChevronsDownUp, ChevronsUpDown, Trash2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { batchRemoveRecipeDays, getRecipes, Recipe } from "@/firebase";
+import { useUser } from "@/contexts";
+import { useLocalStorage } from "@/hooks";
+import {
   AlertDialogHeader,
-  AlertDialogOverlay,
-  Box,
-  Button,
-  Card,
-  CardBody,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  Stack,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useState, MouseEvent, useRef } from "react";
-import { DeleteIcon, ExternalLinkIcon } from "@chakra-ui/icons";
-import { logEvent } from "firebase/analytics";
-import { deleteDoc, doc, updateDoc, writeBatch } from "firebase/firestore";
+  AlertDialogFooter,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { RecipeDetailsModal } from "../Recipes/RecipeDetailsModal";
 
-import { Recipe } from "@/models/recipe";
-import { RecipeDetailsModal } from "@/components/Recipes/RecipeDetailsModal";
-import { EditRecipeModal } from "@/components/Recipes/EditRecipeModal";
-import { useFirebase, useAuthentication, useRecipes } from "@/hooks";
-import { CompressIcon, ExpandIcon } from "@/components/icons";
+const days: ReadonlyArray<{
+  name: string;
+  recipes: Array<Recipe>;
+  jsIndex: number;
+}> = [
+  { name: "Monday", recipes: [], jsIndex: 1 },
+  { name: "Tuesday", recipes: [], jsIndex: 2 },
+  { name: "Wednesday", recipes: [], jsIndex: 3 },
+  { name: "Thursday", recipes: [], jsIndex: 4 },
+  { name: "Friday", recipes: [], jsIndex: 5 },
+  { name: "Saturday", recipes: [], jsIndex: 6 },
+  { name: "Sunday", recipes: [], jsIndex: 0 },
+];
 
 export const Planning = () => {
-  const { recipes } = useRecipes();
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
-  const editDisclosure = useDisclosure();
-  const detailsDisclosure = useDisclosure();
-  const confirmDeletionDisclosure = useDisclosure();
-  const confirmClearWeekDisclosure = useDisclosure();
-  const deleteCancelRef = useRef<HTMLButtonElement>(null);
-  const clearCancelRef = useRef<HTMLButtonElement>(null);
-  const { analytics, firestore } = useFirebase();
-  const { appUser } = useAuthentication();
-  const today = new Date();
+  const { groupId } = useUser();
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>();
+  const dayOfWeek = new Date().getDay();
+  const [expandedDays, setExpandedDays] = useLocalStorage<Array<string>>(
+    "expanded-planning-days",
+    [dayOfWeek.toString()],
+  );
 
-  const days: ReadonlyArray<{
-    name: string;
-    recipes: Array<Recipe>;
-    jsIndex: number;
-  }> = [
-    { name: "Monday", recipes: [], jsIndex: 1 },
-    { name: "Tuesday", recipes: [], jsIndex: 2 },
-    { name: "Wednesday", recipes: [], jsIndex: 3 },
-    { name: "Thursday", recipes: [], jsIndex: 4 },
-    { name: "Friday", recipes: [], jsIndex: 5 },
-    { name: "Saturday", recipes: [], jsIndex: 6 },
-    { name: "Sunday", recipes: [], jsIndex: 0 },
-  ];
+  const recipesQuery = useQuery({
+    queryKey: ["recipes", groupId],
+    queryFn: () => getRecipes(groupId),
+  });
 
-  const [expandedDays, setExpandedDays] = useState([
-    days.findIndex((d) => d.jsIndex === today.getDay()),
-  ]);
-  const allDaysExpanded = expandedDays.length === 7;
+  const addedRecipes =
+    recipesQuery.data?.filter((r) => r.days && r.days.length > 0) ?? [];
 
-  for (const recipe of recipes.filter((r) => r.days && r.days.length > 0)) {
-    recipe.days?.forEach((d) => days[d].recipes.push(recipe));
+  const daysWithRecipes = addedRecipes.flatMap((r) => r.days ?? []);
+
+  for (const day of days) {
+    day.recipes = addedRecipes.filter((recipe) =>
+      recipe.days?.includes(day.jsIndex),
+    );
   }
 
-  const handleClickDay = (day: number) => {
-    if (expandedDays.includes(day)) {
-      setExpandedDays((old) => old.filter((d) => d !== day));
-    } else {
-      setExpandedDays((old) => [...old, day]);
-    }
-  };
-
-  const handleClickClearWeek = () => confirmClearWeekDisclosure.onOpen();
-
-  const handleConfirmClearWeek = async () => {
-    confirmClearWeekDisclosure.onClose();
-
-    const batch = writeBatch(firestore);
-
-    days.forEach((d) => {
-      d.recipes.forEach((r) => {
-        const docRef = doc(
-          firestore,
-          "groups",
-          appUser!.group!.id,
-          "recipes",
-          r.id,
-        );
-        batch.update(docRef, {
-          days: [],
-        });
-      });
-    });
-
-    batch.commit();
-
-    logEvent(analytics, "clear_week");
-  };
-
-  const handleToggleExpandAllDays = () => {
-    if (allDaysExpanded) {
+  const toggleAllExpanded = () => {
+    if (expandedDays.length === days.length) {
       setExpandedDays([]);
     } else {
-      setExpandedDays([0, 1, 2, 3, 4, 5, 6]);
+      setExpandedDays(["0", "1", "2", "3", "4", "5", "6"]);
     }
   };
 
-  const handleClickDetails = (
-    event: MouseEvent<HTMLDivElement>,
-    recipe: Recipe,
-  ) => {
-    event.stopPropagation();
-    setSelectedRecipe(recipe);
-    detailsDisclosure.onOpen();
+  const clearWeek = () => {
+    const recipeIds = days.flatMap((day) => day.recipes.map((r) => r.id));
+
+    batchRemoveRecipeDays(groupId, recipeIds);
+    recipesQuery.refetch();
   };
-
-  const handleClickDetailsEdit = () => {
-    detailsDisclosure.onClose();
-    editDisclosure.onOpen();
-  };
-
-  const handleClickDelete = () => confirmDeletionDisclosure.onOpen();
-
-  const handleConfirmDelete = async () => {
-    confirmDeletionDisclosure.onClose();
-    editDisclosure.onClose();
-    detailsDisclosure.onClose();
-
-    deleteDoc(
-      doc(
-        firestore,
-        "groups",
-        appUser!.group!.id,
-        "recipes",
-        selectedRecipe!.id,
-      ),
-    );
-
-    logEvent(analytics, "delete_recipe", { from: "planning" });
-
-    setSelectedRecipe(undefined);
-  };
-
-  const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
-    const docRef = doc(firestore, "groups", appUser!.group!.id, "recipes", id);
-    updateDoc(docRef, {
-      days,
-    });
-    setSelectedRecipe((r) => ({ ...r!, days }));
-  };
-
-  const selectedDays = recipes
-    .filter((r) => r.days && r.days.length > 0)
-    .map((r) => r.days as number[])
-    .flat();
 
   return (
-    <Box>
-      <Flex justifyContent="space-between" alignItems="center" mb={4}>
-        <Heading size="md">Planning</Heading>
-        <Flex gap={2}>
-          {allDaysExpanded ? (
-            <IconButton
-              aria-label="Expand all"
-              size="lg"
-              onClick={handleToggleExpandAllDays}
-              icon={<ExpandIcon />}
-            />
+    <div className="max-w-md mx-auto">
+      <div className="flex justify-end flex-row gap-2">
+        <Button size="icon" onClick={toggleAllExpanded}>
+          {expandedDays.length === days.length ? (
+            <ChevronsDownUp />
           ) : (
-            <IconButton
-              aria-label="Collapse all"
-              size="lg"
-              onClick={handleToggleExpandAllDays}
-              icon={<CompressIcon />}
-            />
+            <ChevronsUpDown />
           )}
-          <IconButton
-            icon={<DeleteIcon />}
-            aria-label="Clear week"
-            size="lg"
-            colorScheme="red"
-            onClick={handleClickClearWeek}
-          />
-        </Flex>
-      </Flex>
-      <Accordion allowMultiple mb={4} index={expandedDays}>
-        {days.map((day, i) => (
-          <AccordionItem key={i} onClick={() => handleClickDay(i)}>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
-                <Heading as="h3" size="xs">
-                  {day.name} {today.getDay() === day.jsIndex && "*"}
-                </Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              <Stack>
-                {day.recipes.map((recipe) => (
-                  <Card
-                    key={recipe.id}
-                    cursor="pointer"
-                    variant="filled"
-                    onClick={(e) => handleClickDetails(e, recipe)}
-                    size="sm"
-                  >
-                    <CardBody>
-                      <Flex>
-                        <Flex flex={1}>
-                          <Text mr={2}>{recipe.name}</Text>
-                          {recipe.recipeUrl && (
-                            <Link
-                              href={recipe.recipeUrl}
-                              target="_blank"
-                              mr={2}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <ExternalLinkIcon />
-                            </Link>
-                          )}
-                        </Flex>
-                      </Flex>
-                      <Text fontSize="xs">
-                        {recipe.ingredients?.map((i) => i.trim()).join(", ")}
-                      </Text>
-                    </CardBody>
-                  </Card>
-                ))}
-              </Stack>
-            </AccordionPanel>
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" type="button" size="icon">
+              <Trash2 />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                All recipes for the week will be removed.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={clearWeek}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+      <Accordion
+        type="multiple"
+        className="w-full"
+        value={expandedDays}
+        onValueChange={setExpandedDays}
+      >
+        {days.map((day) => (
+          <AccordionItem key={day.jsIndex} value={day.jsIndex.toString()}>
+            <AccordionTrigger
+              className={day.jsIndex === dayOfWeek ? "font-bold" : ""}
+            >
+              {day.name} ({day.recipes.length})
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="flex gap-2">
+                {day.recipes.length > 0 ? (
+                  day.recipes.map((recipe) => (
+                    <Button
+                      key={recipe.id}
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedRecipe(recipe)}
+                    >
+                      {recipe.name}
+                    </Button>
+                  ))
+                ) : (
+                  <span>No meals planned</span>
+                )}
+              </div>
+            </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
       <RecipeDetailsModal
-        {...detailsDisclosure}
+        open={!!selectedRecipe}
+        onOpenChange={() => setSelectedRecipe(undefined)}
         recipe={selectedRecipe}
-        selectedDays={selectedDays}
-        onClickEdit={handleClickDetailsEdit}
-        onClickDelete={handleClickDelete}
-        onUpdateDays={(days: Array<number>) =>
-          handleUpdateRecipeDays(selectedRecipe!.id, days)
-        }
+        daysWithRecipes={daysWithRecipes}
       />
-      <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
-      <AlertDialog
-        isOpen={confirmDeletionDisclosure.isOpen}
-        leastDestructiveRef={deleteCancelRef}
-        onClose={confirmDeletionDisclosure.onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Recipe
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure? You can&apos;t undo this action afterwards.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={deleteCancelRef}
-                onClick={confirmDeletionDisclosure.onClose}
-              >
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-      <AlertDialog
-        isOpen={confirmClearWeekDisclosure.isOpen}
-        leastDestructiveRef={clearCancelRef}
-        onClose={confirmClearWeekDisclosure.onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Clear week
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure? You can&apos;t undo this action afterwards.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={clearCancelRef}
-                onClick={confirmClearWeekDisclosure.onClose}
-              >
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={handleConfirmClearWeek} ml={3}>
-                Clear
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </Box>
+    </div>
   );
 };

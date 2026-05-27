@@ -1,208 +1,293 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { addRecipe, Item, Recipe } from "@/firebase";
+import { queryClient } from "@/react-query";
+import { useEffect, useState } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Textarea,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
-  HStack,
-  TagCloseButton,
-  Tag,
-  TagLabel,
-  IconButton,
-  Select,
-} from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+  Combobox,
+  ComboboxInput,
+  ComboboxOptions,
+  ComboboxOption,
+} from "@headlessui/react";
+import { X } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { addDoc, collection } from "firebase/firestore";
-import { logEvent } from "firebase/analytics";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { useUser } from "@/contexts";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { tagDictionary, tags } from "@/models/tags";
+import { ItemComboBox } from "../List/AddItemModal";
 
-import { useAuthentication, useFirebase } from "@/hooks";
-import { tagDictionary, tags as allTags } from "@/models/recipeTags";
-
-interface Form {
-  name: string;
-  ingredients: ReadonlyArray<{ name: string }>;
-  notes: string;
-  recipeUrl?: string;
-  tags: ReadonlyArray<{ id: string }>;
-}
-
-export type AddRecipeModalProps = {
-  isOpen: boolean;
+type RecipeDetailsModalProps = {
+  open: boolean;
   onClose: () => void;
 };
 
-export const AddRecipeModal = (props: AddRecipeModalProps) => {
-  const { isOpen, onClose } = props;
-  const { appUser } = useAuthentication();
-  const { analytics, firestore } = useFirebase();
-  const { control, formState, register, handleSubmit, reset, watch } =
-    useForm<Form>();
-  const ingredientsFieldArray = useFieldArray({ control, name: "ingredients" });
-  const ingredientInputRef = useRef<HTMLInputElement>(null);
-  const tagsFieldArray = useFieldArray({ control, name: "tags" });
-  const [ingredient, setIngredient] = useState("");
-  const [tag, setTag] = useState("");
+interface DetailsForm {
+  name: string;
+  ingredients: Array<{ name: string }>;
+  externalLink?: string;
+  notes?: string;
+  tags: Array<{ name: string }>;
+}
+
+export const AddRecipeModal = ({ open, onClose }: RecipeDetailsModalProps) => {
+  const { groupId } = useUser();
+  const form = useForm<DetailsForm>({
+    defaultValues: {
+      name: "",
+      ingredients: [],
+      externalLink: "",
+      notes: "",
+      tags: [],
+    },
+  });
+
+  const ingredientsFieldArrray = useFieldArray({
+    control: form.control,
+    name: "ingredients",
+  });
+
+  const [selectedIngredient, setSelectedIngredient] = useState<Item | null>(
+    null,
+  );
+
+  const tagFieldArray = useFieldArray({ control: form.control, name: "tags" });
+  const [query, setQuery] = useState("");
+  const allTags = tags
+    .filter(
+      (tag) => !tagFieldArray.fields.some((field) => field.name === tag.id),
+    )
+    .map((tag) => ({ id: tag.id, name: tag.name }));
+  const [selectedTag, setSelectedTag] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const filteredTags =
+    query === ""
+      ? allTags
+      : allTags.filter((tag) =>
+          tag.name.toLowerCase().includes(query.toLowerCase()),
+        );
 
   useEffect(() => {
-    reset();
-    setIngredient("");
-    setTag("");
-  }, [isOpen]);
-
-  const handleAddIngredient = () => {
-    if (!ingredient) {
-      return;
+    if (selectedTag) {
+      tagFieldArray.append({ name: selectedTag.id });
     }
+  }, [selectedTag]);
 
-    ingredientsFieldArray.append({ name: ingredient });
-    setIngredient("");
-    ingredientInputRef.current?.focus();
-  };
+  const handleSubmit = (data: DetailsForm) => {
+    const addedRecipe: Partial<Recipe> = {
+      name: data.name,
+      ingredients: data.ingredients.map((ingredient) => ingredient.name),
+      notes: data.notes ?? "",
+      recipeUrl: data.externalLink ?? "",
+      tags: data.tags.map((tag) => tag.name),
+    };
 
-  const handleAddTag = (tag: string) => {
-    if (tag === "" || tagIds.includes(tag)) {
-      return;
-    }
-
-    tagsFieldArray.append({ id: tag });
-    setTag("");
-  };
-
-  const handleSave = async (form: Form) => {
-    const { name, recipeUrl, notes, ingredients } = form;
-
-    if (ingredient) {
-      handleAddIngredient();
-      return;
-    }
-
-    addDoc(collection(firestore, "groups", appUser!.group.id, "recipes"), {
-      name,
-      recipeUrl,
-      notes,
-      ingredients: ingredients?.map((i) => i.name.trim()) ?? [],
-      tags: tags?.map((t) => t.id) ?? [],
-    });
-
-    logEvent(analytics, "add_recipe");
-
+    addRecipe(groupId, addedRecipe);
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[] = []) =>
+      [...oldData, addedRecipe].sort((a, b) => a.name!.localeCompare(b.name!)),
+    );
     onClose();
   };
 
-  const ingredients = watch("ingredients");
-  const tags = watch("tags") ?? [];
-  const tagIds = tags.map((t) => t.id);
-  const unaddedTags = allTags.filter((at) => !tagIds.includes(at.id));
+  const handleClickAddTag = (tag: { id: string } | null) => {
+    if (!tag) {
+      return;
+    }
+
+    tagFieldArray.append({ name: tag.id });
+  };
+
+  const handleSelectItem = (item: Item | null) => {
+    if (!item) {
+      return;
+    }
+
+    if (
+      ingredientsFieldArrray.fields.some((field) => field.name === item.name)
+    ) {
+      setSelectedIngredient(null);
+      return;
+    }
+
+    ingredientsFieldArrray.append({ name: item.name });
+    setSelectedIngredient(null);
+  };
+
+  const handleClickRemoveTag = (index: number) => {
+    tagFieldArray.remove(index);
+    setSelectedTag(null);
+  };
+
+  const handleClickRemoveIngredient = (index: number) => {
+    ingredientsFieldArrray.remove(index);
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+      form.reset();
+    }
+  };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <form onSubmit={handleSubmit(handleSave)}>
-          <ModalHeader>New recipe</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack>
-              <FormControl isRequired>
-                <FormLabel>Name</FormLabel>
-                <Input {...register("name")} />
-              </FormControl>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add recipe</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col gap-2"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              rules={{ required: "Name is required" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormControl>
-                <FormLabel>Tags</FormLabel>
-                <HStack rowGap="2" wrap="wrap" mb={2}>
-                  {tags.map((t, i) => (
-                    <Tag key={i}>
-                      <TagLabel>{tagDictionary[t.id].name}</TagLabel>
-                      <TagCloseButton
-                        onClick={() => tagsFieldArray.remove(i)}
-                      />
-                    </Tag>
+            <FormItem>
+              <FormLabel>Ingredients</FormLabel>
+              {ingredientsFieldArrray.fields.length > 0 && (
+                <ul className="flex flex-row flex-wrap gap-1">
+                  {ingredientsFieldArrray.fields.map((field, index) => (
+                    <li key={field.id} className="inline">
+                      <Badge
+                        variant="secondary"
+                        onClick={() => handleClickRemoveIngredient(index)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {field.name}
+                          <X size="12" />
+                        </div>
+                      </Badge>
+                    </li>
                   ))}
-                </HStack>
-                <HStack gap={1}>
-                  <Select
-                    size="sm"
-                    value={tag}
-                    onChange={(e) => setTag(e.target.value)}
-                  >
-                    <option key="">-</option>
-                    {unaddedTags.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name}
-                      </option>
-                    ))}
-                  </Select>
-                  <IconButton
-                    type="button"
-                    icon={<AddIcon />}
-                    aria-label="Add tag"
-                    size="sm"
-                    onClick={() => handleAddTag(tag)}
-                  />
-                </HStack>
-              </FormControl>
+                </ul>
+              )}
+              <ItemComboBox
+                placeholder="Add ingredient"
+                showAddedIcon={false}
+                selectedItem={selectedIngredient}
+                onSelectItem={handleSelectItem}
+              />
+            </FormItem>
 
-              <FormControl>
-                <FormLabel>External link</FormLabel>
-                <Input {...register("recipeUrl")} />
-              </FormControl>
+            <FormField
+              control={form.control}
+              name="externalLink"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>External link</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormControl>
-                <FormLabel>Notes</FormLabel>
-                <Textarea {...register("notes")} />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Ingredients</FormLabel>
-                <HStack wrap="wrap" rowGap="2" mb={2}>
-                  {ingredients?.map((ingredient, i) => (
-                    <Tag key={i}>
-                      <TagLabel>{ingredient.name}</TagLabel>
-                      <TagCloseButton
-                        onClick={() => ingredientsFieldArray.remove(i)}
-                      />
-                    </Tag>
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormItem>
+              <FormLabel>Tags</FormLabel>
+              {tagFieldArray.fields.length > 0 && (
+                <ul className="flex flex-row flex-wrap gap-1">
+                  {tagFieldArray.fields.map((tag, index) => (
+                    <li key={tag.id} className="inline">
+                      {/* TODO: Consider factoring out a plus/minus button component */}
+                      <Badge
+                        variant="secondary"
+                        onClick={() => handleClickRemoveTag(index)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {tagDictionary[tag.name]?.name || tag.name}
+                          <X size="12" />
+                        </div>
+                      </Badge>
+                    </li>
                   ))}
-                </HStack>
-                <HStack>
-                  <Input
-                    ref={ingredientInputRef}
-                    value={ingredient}
-                    onChange={(e) => setIngredient(e.target.value)}
-                  />
-                  <Button type="button" onClick={handleAddIngredient}>
-                    <AddIcon />
-                  </Button>
-                </HStack>
-              </FormControl>
-            </VStack>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              type="submit"
-              isLoading={formState.isSubmitting}
-            >
-              Save
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
-    </Modal>
+                </ul>
+              )}
+              <Combobox
+                immediate
+                value={selectedTag}
+                onChange={handleClickAddTag}
+                onClose={() => setQuery("")}
+              >
+                <ComboboxInput
+                  displayValue={(tag: { name: string }) => tag?.name}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Add tag"
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+                />
+                <ComboboxOptions
+                  anchor="bottom"
+                  className="border empty:invisible z-[60] bg-background w-[var(--input-width)]"
+                >
+                  {filteredTags.map((tag) => (
+                    <ComboboxOption
+                      key={tag.id}
+                      value={tag}
+                      className="data-[focus]:bg-accent p-1"
+                    >
+                      {tag.name}
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              </Combobox>
+            </FormItem>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                variant="secondary"
+                onClick={() => handleOpenChange(false)}
+              >
+                Cancel
+              </Button>
+              <Button>Save</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };

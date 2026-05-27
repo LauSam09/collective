@@ -1,208 +1,209 @@
-import { AddIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Stack,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { logEvent } from "firebase/analytics";
-
-import { AddRecipeModal } from "@/components/Recipes/AddRecipeModal";
-import { EditRecipeModal } from "@/components/Recipes/EditRecipeModal";
-import { RecipeDetailsModal } from "@/components/Recipes/RecipeDetailsModal";
-import { Recipe } from "@/models/recipe";
+import { ExternalLink, Plus, X } from "lucide-react";
+import { useDebounce } from "use-debounce";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import {
-  useAuthentication,
-  useFirebase,
-  useRecipes,
-  useDebounce,
-} from "@/hooks";
-import { ConfirmDeleteRecipeAlert } from "./ConfirmDeleteRecipeAlert";
-import { RecipeCard } from "./RecipeCard";
-import { FilterRecipes } from "./FilterRecipes";
-import { tags } from "@/models/recipeTags";
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationLink,
+  PaginationNext,
+} from "../ui/pagination";
+import { useUser } from "@/contexts";
+import { getRecipes, Recipe } from "@/firebase";
+import { RecipeDetailsModal } from "./RecipeDetailsModal";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { AddRecipeModal } from "./AddRecipeModal";
+import { SearchFiltersModal } from "./SearchFiltersModal";
 
-const INCREMENT = 20;
+const RecipeList = () => {
+  const pageSize = 40;
+  const [page, setPage] = useState(0);
+  const { groupId } = useUser();
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isAddRecipeOpen, setIsAddRecipeOpen] = useState(false);
+  const [selectedRecipe, setSelectedItem] = useState<Recipe>();
+  const [cuisineTags, setCuisineTags] = useState<string[]>([]);
+  const [typeTags, setTypeTags] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+  const normalisedFilterValue = debouncedSearchQuery.trim().toLowerCase();
 
-export const Recipes = () => {
-  const { recipes } = useRecipes();
-  const addDisclosure = useDisclosure();
-  const editDisclosure = useDisclosure();
-  const detailsDisclosure = useDisclosure();
-  const confirmDeletionDisclosure = useDisclosure();
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>();
-  const [filteredRecipes, setFilteredRecipes] = useState<ReadonlyArray<Recipe>>(
-    [],
-  );
-  const [filterValue, setFilterValue] = useState("");
-  const [filterTags, setFilterTags] = useState<ReadonlyArray<string>>([]);
-  const [debouncedFilterValue, setDebouncedFilterValue] = useDebounce(
-    filterValue,
-    300,
-  );
-  const { analytics, firestore } = useFirebase();
-  const { appUser } = useAuthentication();
-  const [displayCount, setDisplayCount] = useState(INCREMENT);
+  const filteringApplied =
+    cuisineTags.length > 0 || typeTags.length > 0 || normalisedFilterValue;
 
-  const handleClickDetails = (recipe: Recipe) => {
-    setSelectedRecipe(recipe);
-    detailsDisclosure.onOpen();
-  };
+  const recipesQuery = useQuery({
+    queryKey: ["recipes", groupId],
+    queryFn: () => getRecipes(groupId),
+  });
 
-  const handleClickDetailsEdit = () => {
-    detailsDisclosure.onClose();
-    editDisclosure.onOpen();
-  };
+  const addedRecipes =
+    recipesQuery.data?.filter((r) => r.days && r.days.length > 0) ?? [];
 
-  const handleClickDelete = () => confirmDeletionDisclosure.onOpen();
+  const daysWithRecipes = addedRecipes.flatMap((r) => r.days ?? []);
 
-  const handleConfirmDelete = async () => {
-    confirmDeletionDisclosure.onClose();
-    editDisclosure.onClose();
-    detailsDisclosure.onClose();
-
-    deleteDoc(
-      doc(
-        firestore,
-        "groups",
-        appUser!.group!.id,
-        "recipes",
-        selectedRecipe!.id,
-      ),
-    );
-
-    logEvent(analytics, "delete_recipe", { from: "recipes" });
-
-    setSelectedRecipe(undefined);
-  };
-
-  const handleUpdateRecipeDays = async (id: string, days: Array<number>) => {
-    const docRef = doc(firestore, "groups", appUser!.group!.id, "recipes", id);
-    updateDoc(docRef, {
-      days,
-    });
-    setSelectedRecipe((r) => ({ ...r!, days }));
-  };
-
+  // When recipes are changed we need to update the selected item.
   useEffect(() => {
-    if (!debouncedFilterValue && filterTags.length === 0) {
-      setFilteredRecipes([]);
-    } else {
-      const normalisedFilterValue = debouncedFilterValue.trim().toLowerCase();
-
-      let workingRecipes = [...recipes];
-
-      if (filterTags.length > 0) {
-        const tagObjects = filterTags.map(
-          (ft) => tags.find((t) => t.id === ft)!,
-        );
-
-        const orTags = tagObjects
-          .filter((t) => t.type === "cuisine")
-          .map((t) => t.id);
-        const andTags = tagObjects
-          .filter((t) => t.type === "type")
-          .map((t) => t.id);
-
-        workingRecipes = workingRecipes
-          .filter(
-            (r) =>
-              orTags.length === 0 || orTags.some((t) => r.tags?.includes(t)),
-          )
-          .filter(
-            (r) =>
-              andTags.length === 0 || andTags.every((t) => r.tags?.includes(t)),
-          );
+    setSelectedItem((old) => {
+      if (!old) {
+        return undefined;
       }
 
-      const filtered = workingRecipes.filter(
-        (r) =>
-          r.name.toLowerCase().includes(normalisedFilterValue) ||
-          r.ingredients?.some((i) =>
-            i.toLowerCase().includes(normalisedFilterValue),
-          ),
-      );
+      return recipesQuery.data?.find((r) => r.id === old.id);
+    });
+  }, [recipesQuery.data]);
 
-      setFilteredRecipes(filtered);
-      setDisplayCount(INCREMENT);
+  const filteredRecipes = filteringApplied
+    ? recipesQuery.data
+        ?.filter(
+          (r) =>
+            cuisineTags.length === 0 ||
+            r.tags?.some((tag) => cuisineTags.includes(tag)),
+        )
+        ?.filter(
+          (r) =>
+            typeTags.length === 0 ||
+            r.tags?.some((tag) => typeTags.includes(tag)),
+        )
+        .filter(
+          (r) =>
+            r.name.toLowerCase().includes(normalisedFilterValue) ||
+            r.ingredients?.some((i) =>
+              i.toLowerCase().includes(normalisedFilterValue),
+            ),
+        )
+    : recipesQuery.data;
+
+  if (recipesQuery.isFetching) {
+    return <span>Loading...</span>;
+  }
+
+  const totalPages = Math.ceil(filteredRecipes!.length / pageSize);
+
+  const paginatedRecipes = filteredRecipes!.slice(
+    page * pageSize,
+    (page + 1) * pageSize,
+  );
+
+  const handleClickPrevious = () => {
+    if (page > 0) {
+      setPage((page) => page - 1);
     }
-  }, [debouncedFilterValue, filterTags, recipes]);
-
-  const handleClearSearch = () => {
-    setDebouncedFilterValue("");
-    setFilterValue("");
   };
 
-  const filteringActive = filterTags.length > 0 || filterValue;
+  const handleClickNext = () => {
+    if (page < totalPages - 1) {
+      setPage((page) => page + 1);
+    }
+  };
 
-  const totalDisplayRecipes = filteringActive ? filteredRecipes : recipes;
-
-  const displayRecipes = totalDisplayRecipes.slice(0, displayCount);
-
-  const selectedDays = recipes
-    .filter((r) => r.days && r.days.length > 0)
-    .map((r) => r.days as number[])
-    .flat();
+  const handleClickRecipe = (recipe: Recipe) => {
+    setSelectedItem(recipe);
+    setIsDetailsOpen(true);
+  };
 
   return (
     <>
-      <Box>
-        <Flex justifyContent="space-between" alignItems="center" mb={2}>
-          <Heading size="md">Recipes</Heading>
-          <IconButton onClick={addDisclosure.onOpen} aria-label="Add recipe">
-            <AddIcon />
-          </IconButton>
-        </Flex>
-        <Box mb={4}>
-          <FilterRecipes
-            filterValue={filterValue}
-            filterTags={filterTags}
-            onUpdateFilterValue={setFilterValue}
-            onUpdateFilterTags={setFilterTags}
-            onClearSearch={handleClearSearch}
+      <div className="flex justify-between gap-3">
+        <Button size="icon" onClick={() => setIsAddRecipeOpen(true)}>
+          <Plus />
+        </Button>
+        <form className="mb-2 flex-1 max-w-sm flex gap-1 ml-3">
+          <Input
+            placeholder="Search recipes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-        </Box>
-        <Box>
-          <Stack>
-            {displayRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                onClickDetails={() => handleClickDetails(recipe)}
-              />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => setSearchQuery("")}
+          >
+            <X />
+          </Button>
+          <SearchFiltersModal
+            selectedCuisineTags={cuisineTags}
+            setCuisineTags={setCuisineTags}
+            selectedTypeTags={typeTags}
+            setTypeTags={setTypeTags}
+          />
+        </form>
+      </div>
+      <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-1">
+        {paginatedRecipes.map((recipe) => (
+          <li key={recipe.name}>
+            <Card
+              onClick={() => handleClickRecipe(recipe)}
+              className="cursor-pointer"
+            >
+              <CardHeader>
+                <CardTitle className="flex gap-1">
+                  {recipe.name}
+                  {recipe.recipeUrl && (
+                    <a
+                      href={recipe.recipeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink size="16" />
+                    </a>
+                  )}
+                </CardTitle>
+                {recipe.ingredients && recipe.ingredients.length > 0 && (
+                  <CardDescription className="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    {/* TODO: Consider limiting number of ingredients */}
+                    {recipe.ingredients.join(", ")}
+                  </CardDescription>
+                )}
+              </CardHeader>
+            </Card>
+          </li>
+        ))}
+      </ul>
+      {paginatedRecipes.length > 0 ? (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" onClick={handleClickPrevious} />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  href="#"
+                  onClick={() => setPage(index)}
+                  isActive={index === page}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
             ))}
-          </Stack>
-        </Box>
-        <HStack justifyContent="center" p={2}>
-          {totalDisplayRecipes.length > displayCount && (
-            <Button onClick={() => setDisplayCount((old) => old + INCREMENT)}>
-              Load more
-            </Button>
-          )}
-        </HStack>
-      </Box>
-      <AddRecipeModal {...addDisclosure} />
+            <PaginationItem>
+              <PaginationNext href="#" onClick={handleClickNext} />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      ) : (
+        <div className="text-center">No recipes found</div>
+      )}
+
       <RecipeDetailsModal
-        {...detailsDisclosure}
+        open={isDetailsOpen}
         recipe={selectedRecipe}
-        selectedDays={selectedDays}
-        onClickEdit={handleClickDetailsEdit}
-        onClickDelete={handleClickDelete}
-        onUpdateDays={(days) =>
-          handleUpdateRecipeDays(selectedRecipe!.id, days)
-        }
+        onOpenChange={setIsDetailsOpen}
+        daysWithRecipes={daysWithRecipes}
       />
-      <EditRecipeModal {...editDisclosure} recipe={selectedRecipe} />
-      <ConfirmDeleteRecipeAlert
-        {...confirmDeletionDisclosure}
-        onConfirmDelete={handleConfirmDelete}
+
+      <AddRecipeModal
+        open={isAddRecipeOpen}
+        onClose={() => setIsAddRecipeOpen(false)}
       />
     </>
   );
 };
+
+export const Recipes = () => <RecipeList />;

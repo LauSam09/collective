@@ -1,221 +1,562 @@
 import {
-  AddIcon,
-  DeleteIcon,
-  EditIcon,
-  ExternalLinkIcon,
-  MinusIcon,
-} from "@chakra-ui/icons";
+  addItem,
+  deleteRecipe,
+  Item,
+  readdItem,
+  Recipe,
+  removeItem,
+  updateRecipe,
+} from "@/firebase";
+import { queryClient } from "@/react-query";
+import { useEffect, useState } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  VStack,
-  Text,
-  Link,
-  Heading,
-  Flex,
-  HStack,
-  Tag,
-  TagLabel,
-  Button,
-  ModalFooter,
-  TagCloseButton,
-  Box,
-} from "@chakra-ui/react";
+  Combobox,
+  ComboboxInput,
+  ComboboxOptions,
+  ComboboxOption,
+} from "@headlessui/react";
+import { ExternalLink, Plus, Trash2, X } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { useAddedItems } from "@/hooks";
+import { normalizeName } from "@/utilities";
+import { useUser } from "@/contexts";
+import { useItems } from "@/hooks/useItems";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { tagDictionary, tags } from "@/models/tags";
+import { ItemComboBox } from "../List/AddItemModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
-import { Recipe } from "@/models/recipe";
-import { useList } from "@/hooks";
-import { normalizeName } from "@/utilities/normalization";
-import { tags } from "@/models/recipeTags";
-
-export type RecipeDetailsModalProps = {
-  isOpen: boolean;
+type RecipeDetailsModalProps = {
   recipe: Recipe | undefined;
-  selectedDays: number[];
-  onClose: () => void;
-  onClickEdit: () => void;
-  onClickDelete: () => void;
-  onUpdateDays: (days: Array<number>) => void;
+  open: boolean;
+  daysWithRecipes: Array<number>;
+
+  onOpenChange: (open: boolean) => void;
 };
 
+// TODO: Consider factoring out common modal elements.
 export const RecipeDetailsModal = (props: RecipeDetailsModalProps) => {
-  const {
-    isOpen,
-    recipe,
-    selectedDays,
-    onClose,
-    onClickEdit,
-    onClickDelete,
-    onUpdateDays,
-  } = props;
-  // TODO: Add normalised version of added items in context
-  const { addedItems, upsertItemByName, removeItem } = useList();
-  const normalisedAddedItems = addedItems.map((i) => ({
-    lowerName: i.lowerName,
-    id: i.id,
-  }));
+  const [mode, setMode] = useState<"readonly" | "edit">("readonly");
 
-  const recipeDays = recipe?.days ?? [];
+  useEffect(() => {
+    if (!props.open) {
+      setMode("readonly");
+    }
+  }, [props.open]);
 
-  const handleAddDayClick = (day: number) => onUpdateDays([...recipeDays, day]);
+  switch (mode) {
+    case "readonly":
+      return <ReadonlyDetailsModal {...props} onEdit={() => setMode("edit")} />;
+    case "edit":
+      return (
+        <EditDetailsModal {...props} onCancel={() => setMode("readonly")} />
+      );
+  }
+};
 
-  const handleRemoveDayClick = (day: number) =>
-    onUpdateDays(recipeDays.filter((d) => d !== day) ?? []);
+type DisplayIngredient = {
+  name: string;
+  added: boolean;
+  id: string | undefined;
+};
 
-  const handleClickDelete = () => onClickDelete();
+const ReadonlyDetailsModal = ({
+  open,
+  recipe,
+  daysWithRecipes,
+  onEdit,
+  onOpenChange,
+}: RecipeDetailsModalProps & { onEdit: () => void }) => {
+  const { groupId, defaultListId } = useUser();
+  const addedItemsQuery = useAddedItems();
+  const allItemsQuery = useItems();
+
+  const displayIngredients = recipe?.ingredients
+    .map((ingredient) => {
+      const normalisedIngredient = normalizeName(ingredient);
+
+      const item = addedItemsQuery.data?.find(
+        (item) => item.lowerName === normalisedIngredient,
+      );
+
+      return { name: ingredient, added: item !== undefined, id: item?.id };
+    })
+    .sort((a) => (a.added ? 1 : -1));
+
+  const handleClickIngredient = (ingredient: DisplayIngredient) => {
+    if (ingredient.added) {
+      removeItem(groupId, defaultListId, ingredient.id!);
+    } else {
+      const normalisedName = normalizeName(ingredient.name);
+
+      const item = allItemsQuery.data?.find(
+        (item) => item.lowerName === normalisedName,
+      );
+
+      if (item) {
+        readdItem(groupId, defaultListId, item.id, item.name);
+      } else {
+        addItem(groupId, defaultListId, {
+          name: ingredient.name,
+          lowerName: normalisedName,
+        });
+      }
+    }
+  };
+
+  const handleClickDay = (index: number) => {
+    if (!recipe) {
+      return;
+    }
+
+    const updatedDays = recipe.days?.includes(index)
+      ? recipe.days.filter((day) => day !== index)
+      : [...(recipe.days || []), index];
+
+    const updatedRecipe: Recipe = {
+      ...recipe,
+      days: updatedDays,
+    };
+
+    updateRecipe(groupId, updatedRecipe);
+
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
+      oldData.map((r) => (r.id === updatedRecipe.id ? updatedRecipe : r)),
+    );
+  };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          <Flex justifyContent="space-between">
-            <Text>{recipe?.name}</Text>
-            <Flex gap={2}>
-              <Button onClick={onClickEdit}>
-                <EditIcon />
-              </Button>
-              <Button colorScheme="red" onClick={handleClickDelete}>
-                <DeleteIcon />
-              </Button>
-            </Flex>
-          </Flex>
-        </ModalHeader>
-
-        <ModalBody>
-          <VStack alignItems="flex-start">
-            <HStack spacing={1} rowGap={1} flexWrap="wrap" mb={2}>
-              {[0, 1, 2, 3, 4, 5, 6].map((day) => {
-                const thisRecipeIsOnThisDay = recipeDays.includes(day);
-                const anotherRecipeIsOnThisDay = selectedDays.includes(day);
-
-                return (
-                  <Tag
-                    key={day}
-                    borderRadius="full"
-                    size="sm"
-                    variant={thisRecipeIsOnThisDay ? "solid" : "subtle"}
-                    colorScheme={
-                      thisRecipeIsOnThisDay || anotherRecipeIsOnThisDay
-                        ? "blue"
-                        : undefined
-                    }
-                  >
-                    <TagLabel>{dayNumberToDisplay(day)}</TagLabel>
-                    {thisRecipeIsOnThisDay ? (
-                      <TagCloseButton
-                        onClick={() => handleRemoveDayClick(day)}
-                      />
-                    ) : (
-                      <TagCloseButton onClick={() => handleAddDayClick(day)}>
-                        <AddIcon boxSize="12px" />
-                      </TagCloseButton>
-                    )}
-                  </Tag>
-                );
-              })}
-            </HStack>
-
-            <Heading size="sm">Tags</Heading>
-            {recipe?.tags === undefined || recipe.tags.length === 0 ? (
-              <Text>No tags yet</Text>
-            ) : (
-              <HStack spacing={1} rowGap={1}>
-                {recipe.tags.map((t) => (
-                  <Tag key={t}>{tags.find((tag) => tag.id === t)?.name}</Tag>
-                ))}
-              </HStack>
-            )}
-
-            {recipe?.recipeUrl && (
-              <>
-                <Heading size="sm">
-                  Recipe link <ExternalLinkIcon mx="2px" />
-                </Heading>
-                <Link isExternal href={recipe?.recipeUrl} width="100%">
-                  <Flex>
-                    <Text
-                      fontSize="sm"
-                      whiteSpace="nowrap"
-                      overflow="hidden"
-                      textOverflow="ellipsis"
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{recipe?.name}</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-3">
+          <div>
+            <h2 className="font-bold">Days</h2>
+            <ul className="flex flex-row flex-wrap gap-1">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                (tag, index) => (
+                  <li key={tag} className="inline">
+                    <Badge
+                      variant={
+                        recipe?.days?.includes(index)
+                          ? "default"
+                          : daysWithRecipes.includes(index)
+                            ? "secondary"
+                            : "outline"
+                      }
+                      onClick={() => handleClickDay(index)}
+                      className="cursor-pointer"
                     >
-                      {recipe?.recipeUrl}
-                    </Text>
-                  </Flex>
-                </Link>
-              </>
-            )}
-            {recipe?.notes && (
-              <Box>
-                <Heading size="sm">Notes</Heading>
-                <Text>{recipe.notes}</Text>
-              </Box>
-            )}
-            {recipe?.ingredients && recipe.ingredients.length > 0 && (
-              <>
-                <Heading size="sm">Ingredients</Heading>
-                <HStack wrap="wrap" rowGap="2" mb={2}>
-                  {recipe.ingredients.map((i) => {
-                    const normalized = normalizeName(i);
-                    const isAdded = normalisedAddedItems.filter(
-                      (i) => i.lowerName == normalized,
-                    )?.[0];
+                      <div className="flex items-center gap-1">
+                        {tagDictionary[tag]?.name || tag}
+                        {recipe?.days?.includes(index) ? (
+                          <X size="12" />
+                        ) : (
+                          <Plus size="12" />
+                        )}
+                      </div>
+                    </Badge>
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
 
-                    if (isAdded) {
-                      return (
-                        <Tag colorScheme={"blue"} key={i}>
-                          <TagLabel>{i}</TagLabel>
-                          <TagCloseButton
-                            onClick={() => removeItem(isAdded.id)}
-                          >
-                            <MinusIcon boxSize="12px" />
-                          </TagCloseButton>
-                        </Tag>
-                      );
-                    }
-
-                    return (
-                      <Tag key={i}>
-                        <TagLabel>{i}</TagLabel>
-                        <TagCloseButton onClick={() => upsertItemByName(i)}>
-                          <AddIcon boxSize="12px" />
-                        </TagCloseButton>
-                      </Tag>
-                    );
-                  })}
-                </HStack>
-              </>
+          <div>
+            <h2 className="font-bold">Ingredients</h2>
+            {displayIngredients && displayIngredients.length > 0 ? (
+              <ul className="flex flex-row flex-wrap gap-1">
+                {displayIngredients.map((ingredient) => (
+                  <li key={ingredient.name} className="inline">
+                    <Badge
+                      variant={ingredient.added ? "default" : "outline"}
+                      className="cursor-pointer"
+                      onClick={() => handleClickIngredient(ingredient)}
+                    >
+                      <div className="flex items-center gap-1">
+                        {ingredient.name}
+                        {ingredient.added ? (
+                          <X size="12" />
+                        ) : (
+                          <Plus size="12" />
+                        )}
+                      </div>
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              "n/a"
             )}
-          </VStack>
-        </ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" onClick={onClose}>
-            Close
+          </div>
+
+          <div>
+            <h2 className="font-bold">Notes</h2>
+            <p>{recipe?.notes || "n/a"}</p>
+          </div>
+
+          <div>
+            <h2 className="font-bold">External link</h2>
+            {recipe?.recipeUrl ? (
+              <a
+                href={recipe.recipeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-sm text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                <span>{recipe?.recipeUrl}</span>
+                <ExternalLink size="16" className="inline ml-1" />
+              </a>
+            ) : (
+              "n/a"
+            )}
+          </div>
+
+          <div>
+            <h2 className="font-bold">Tags</h2>
+            {recipe?.tags && recipe.tags.length > 0 ? (
+              <ul className="flex flex-row flex-wrap gap-1">
+                {recipe.tags.map((tag) => (
+                  <li key={tag} className="inline">
+                    <Badge variant="secondary">
+                      {tagDictionary[tag]?.name || tag}
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              "n/a"
+            )}
+          </div>
+        </div>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="secondary" onClick={onEdit}>
+            Edit
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <Button onClick={() => onOpenChange(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-const dayNumberToDisplay = (dayNumber: number) => {
-  switch (dayNumber) {
-    case 0:
-      return "Mon";
-    case 1:
-      return "Tue";
-    case 2:
-      return "Wed";
-    case 3:
-      return "Thu";
-    case 4:
-      return "Fri";
-    case 5:
-      return "Sat";
-    case 6:
-      return "Sun";
-  }
+interface DetailsForm {
+  name: string;
+  ingredients: Array<{ name: string }>;
+  externalLink?: string;
+  notes?: string;
+  tags: Array<{ name: string }>;
+}
+
+const EditDetailsModal = ({
+  open,
+  recipe,
+  onOpenChange,
+  onCancel,
+}: RecipeDetailsModalProps & { onCancel: () => void }) => {
+  const { groupId } = useUser();
+  const form = useForm<DetailsForm>({
+    defaultValues: {
+      name: recipe?.name,
+      ingredients:
+        recipe?.ingredients.map((ingredient) => ({ name: ingredient })) || [],
+
+      externalLink: recipe?.recipeUrl,
+      notes: recipe?.notes,
+      tags: recipe?.tags?.map((tag) => ({ name: tag })) || [],
+    },
+  });
+
+  const ingredientsFieldArrray = useFieldArray({
+    control: form.control,
+    name: "ingredients",
+  });
+
+  const [selectedIngredient, setSelectedIngredient] = useState<Item | null>(
+    null,
+  );
+
+  const tagFieldArray = useFieldArray({ control: form.control, name: "tags" });
+  const [query, setQuery] = useState("");
+  const allTags = tags
+    .filter(
+      (tag) => !tagFieldArray.fields.some((field) => field.name === tag.id),
+    )
+    .map((tag) => ({ id: tag.id, name: tag.name }));
+  const [selectedTag, setSelectedTag] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const filteredTags =
+    query === ""
+      ? allTags
+      : allTags.filter((tag) =>
+          tag.name.toLowerCase().includes(query.toLowerCase()),
+        );
+
+  useEffect(() => {
+    if (selectedTag) {
+      tagFieldArray.append({ name: selectedTag.id });
+    }
+  }, [selectedTag]);
+
+  const handleSubmit = (data: DetailsForm) => {
+    const updatedRecipe: Recipe = {
+      id: recipe?.id || "",
+      name: data.name,
+      ingredients: data.ingredients.map((ingredient) => ingredient.name),
+      notes: data.notes,
+      recipeUrl: data.externalLink,
+      tags: data.tags.map((tag) => tag.name),
+    };
+
+    updateRecipe(groupId, updatedRecipe);
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
+      oldData.map((r) => (r.id === updatedRecipe.id ? updatedRecipe : r)),
+    );
+    onCancel();
+  };
+
+  const handleClickAddTag = (tag: { id: string } | null) => {
+    if (!tag) {
+      return;
+    }
+
+    tagFieldArray.append({ name: tag.id });
+  };
+
+  const handleSelectIngredient = (item: Item | null) => {
+    if (!item) {
+      return;
+    }
+
+    if (
+      ingredientsFieldArrray.fields.some((field) => field.name === item.name)
+    ) {
+      setSelectedIngredient(null);
+      return;
+    }
+
+    ingredientsFieldArrray.append({ name: item.name });
+    setSelectedIngredient(null);
+  };
+
+  const handleClickRemoveTag = (index: number) => {
+    tagFieldArray.remove(index);
+    setSelectedTag(null);
+  };
+
+  const handleClickRemoveIngredient = (index: number) => {
+    ingredientsFieldArrray.remove(index);
+  };
+
+  const handleClickDelete = () => {
+    if (!recipe) {
+      return;
+    }
+
+    deleteRecipe(groupId, recipe.id);
+
+    queryClient.setQueryData(["recipes", groupId], (oldData: Recipe[]) =>
+      oldData.filter((r) => r.id !== recipe.id),
+    );
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange} modal={false}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{recipe?.name}</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col gap-2"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              rules={{ required: "Name is required" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormItem>
+              <FormLabel>Ingredients</FormLabel>
+              {ingredientsFieldArrray.fields.length > 0 && (
+                <ul className="flex flex-row flex-wrap gap-1">
+                  {ingredientsFieldArrray.fields.map((field, index) => (
+                    <li key={field.id} className="inline">
+                      <Badge
+                        variant="secondary"
+                        onClick={() => handleClickRemoveIngredient(index)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {field.name}
+                          <X size="12" />
+                        </div>
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <ItemComboBox
+                placeholder="Add ingredient"
+                showAddedIcon={false}
+                selectedItem={selectedIngredient}
+                onSelectItem={handleSelectIngredient}
+              />
+            </FormItem>
+
+            <FormField
+              control={form.control}
+              name="externalLink"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>External link</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormItem>
+              <FormLabel>Tags</FormLabel>
+              {tagFieldArray.fields.length > 0 && (
+                <ul className="flex flex-row flex-wrap gap-1">
+                  {tagFieldArray.fields.map((tag, index) => (
+                    <li key={tag.id} className="inline">
+                      {/* TODO: Consider factoring out a plus/minus button component */}
+                      <Badge
+                        variant="secondary"
+                        onClick={() => handleClickRemoveTag(index)}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {tagDictionary[tag.name]?.name || tag.name}
+                          <X size="12" />
+                        </div>
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <Combobox
+                immediate
+                value={selectedTag}
+                onChange={handleClickAddTag}
+                onClose={() => setQuery("")}
+              >
+                <ComboboxInput
+                  displayValue={(tag: { name: string }) => tag?.name}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Add tag"
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+                />
+                <ComboboxOptions
+                  anchor="bottom"
+                  className="border empty:invisible z-[60] bg-background w-[var(--input-width)]"
+                >
+                  {filteredTags.map((tag) => (
+                    <ComboboxOption
+                      key={tag.id}
+                      value={tag}
+                      className="data-[focus]:bg-accent p-1"
+                    >
+                      {tag.name}
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              </Combobox>
+            </FormItem>
+            <FormItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" type="button">
+                    <Trash2 />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This recipe will be permanently deleted.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClickDelete}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </FormItem>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button variant="secondary" onClick={onCancel}>
+                Cancel
+              </Button>
+              <Button>Save</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
 };

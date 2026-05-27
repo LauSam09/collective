@@ -1,0 +1,313 @@
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  deleteField,
+  doc,
+  getDoc,
+  getDocs,
+  increment,
+  initializeFirestore,
+  orderBy,
+  persistentLocalCache,
+  query,
+  updateDoc,
+  where,
+  writeBatch,
+} from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+};
+
+export const app = initializeApp(firebaseConfig);
+export const analytics = getAnalytics(app);
+export const firestore = initializeFirestore(app, {
+  localCache: persistentLocalCache(),
+});
+
+interface FirestoreUser {
+  group: {
+    id: string;
+    name: string;
+    defaultList: string;
+  };
+}
+
+export const getFirestoreUser = async (uid: string) => {
+  const ref = doc(firestore, "users", uid);
+  const snapshot = await getDoc(ref);
+
+  if (!snapshot.exists()) {
+    return;
+  }
+
+  return { ...(snapshot.data() as FirestoreUser), id: snapshot.id };
+};
+
+export interface Category {
+  id: string;
+  colour: string;
+  name: string;
+  order: number;
+}
+
+export const getCategories = async (groupId: string, listId: string) => {
+  const snapshot = await getDocs(
+    collection(firestore, "groups", groupId, "lists", listId, "categories"),
+  );
+
+  const categories: Array<Category> = [];
+
+  snapshot.forEach((doc) => {
+    categories.push({ ...(doc.data() as Category), id: doc.id });
+  });
+
+  return categories;
+};
+
+export interface Recipe {
+  id: string;
+  name: string;
+  notes: string | undefined;
+  recipeUrl: string | undefined;
+  tags: Array<string>;
+  ingredients: Array<string>;
+  days?: Array<number>;
+}
+
+export const getAddedRecipes = async (groupId: string) => {
+  const snapshot = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "recipes"),
+      // TODO: Check if 0 or 1 indexed.
+      where("days", "array-contains-any", [0, 1, 2, 3, 4, 5, 6, 7]),
+    ),
+  );
+
+  const recipes: Array<Recipe> = [];
+
+  snapshot.forEach((doc) => {
+    recipes.push({ ...(doc.data() as Recipe), id: doc.id });
+  });
+
+  return recipes;
+};
+
+export const getRecipes = async (groupId: string) => {
+  const snapshot = await getDocs(
+    query(collection(firestore, "groups", groupId, "recipes"), orderBy("name")),
+  );
+
+  const recipes: Array<Recipe> = [];
+
+  snapshot.forEach((doc) => {
+    recipes.push({ ...(doc.data() as Recipe), id: doc.id });
+  });
+
+  return recipes;
+};
+
+export const updateRecipe = (groupId: string, recipe: Recipe) => {
+  const docRef = doc(firestore, "groups", groupId, "recipes", recipe.id);
+
+  updateDoc(docRef, {
+    ...recipe,
+  });
+};
+
+export const addRecipe = (groupId: string, recipe: Partial<Recipe>) => {
+  delete recipe.id;
+
+  addDoc(collection(firestore, "groups", groupId, "recipes"), {
+    ...recipe,
+  });
+};
+
+export const deleteRecipe = (groupId: string, recipeId: string) => {
+  const docRef = doc(firestore, "groups", groupId, "recipes", recipeId);
+
+  deleteDoc(docRef);
+};
+
+export const updateItemCompleted = (
+  groupId: string,
+  listId: string,
+  itemId: string,
+  completed: boolean,
+) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  updateDoc(docRef, {
+    completed,
+  });
+};
+
+export const addItem = (
+  groupId: string,
+  listId: string,
+  item: Partial<Item>,
+) => {
+  delete item.id;
+
+  addDoc(collection(firestore, "groups", groupId, "lists", listId, "items"), {
+    ...item,
+    count: 1,
+    added: true,
+    completed: false,
+    notes: "",
+  });
+};
+
+export const readdItem = (
+  groupId: string,
+  listId: string,
+  itemId: string,
+  name: string,
+) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  updateDoc(docRef, {
+    name,
+    added: true,
+    count: increment(1),
+    notes: "",
+  });
+};
+
+export const removeItem = (groupId: string, listId: string, itemId: string) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  updateDoc(docRef, {
+    added: false,
+    completed: false,
+    count: increment(-1),
+    notes: "",
+  });
+};
+
+export const updateItem = (
+  groupId: string,
+  listId: string,
+  itemId: string,
+  item: Partial<Item>,
+) => {
+  const docRef = doc(
+    firestore,
+    "groups",
+    groupId,
+    "lists",
+    listId,
+    "items",
+    itemId,
+  );
+
+  updateDoc(docRef, {
+    ...item,
+  });
+};
+
+export interface Item {
+  id: string;
+  added: boolean;
+  category: string;
+  completed: boolean;
+  count: number;
+  name: string;
+  lowerName: string;
+  notes: string;
+}
+
+export const fetchItems = async (groupId: string, listId: string) => {
+  const snapshot = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "lists", listId),
+      // TODO: Check if 0 or 1 indexed.
+      where("days", "array-contains-any", [0, 1, 2, 3, 4, 5, 6, 7]),
+    ),
+  );
+
+  const recipes: Array<Recipe> = [];
+
+  snapshot.forEach((doc) => {
+    recipes.push({ ...(doc.data() as Recipe), id: doc.id });
+  });
+};
+
+export const batchRemoveItems = (
+  groupId: string,
+  listId: string,
+  ids: Array<string>,
+) => {
+  const batch = writeBatch(firestore);
+
+  ids.forEach((id) => {
+    const docRef = doc(
+      firestore,
+      "groups",
+      groupId,
+      "lists",
+      listId,
+      "items",
+      id,
+    );
+    batch.update(docRef, {
+      completed: false,
+      added: false,
+      notes: deleteField(),
+    });
+  });
+
+  batch.commit();
+};
+
+export const batchRemoveRecipeDays = (
+  groupId: string,
+  recipeIds: Array<string>,
+) => {
+  const batch = writeBatch(firestore);
+
+  recipeIds.forEach((recipeId) => {
+    const docRef = doc(firestore, "groups", groupId, "recipes", recipeId);
+    batch.update(docRef, {
+      days: [],
+    });
+  });
+
+  batch.commit();
+};
+
+export * from "firebase/auth";

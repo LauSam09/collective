@@ -1,173 +1,268 @@
-import { useState } from "react";
-import {
-  Box,
-  Flex,
-  IconButton,
-  Skeleton,
-  Stack,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { deleteField, doc, writeBatch } from "firebase/firestore";
-import {
-  AddIcon,
-  DeleteIcon,
-  RepeatIcon,
-  ViewIcon,
-  ViewOffIcon,
-} from "@chakra-ui/icons";
-import { logEvent } from "firebase/analytics";
+import React, { useState } from "react";
+import { CheckedState } from "@radix-ui/react-checkbox";
+import { CalendarPlus, Menu, Trash2 } from "lucide-react";
 
-import { Category } from "./Category";
-import { EditItemModal } from "./EditItemModal";
-import { Item } from "./Item";
+import { useListItems, useLocalStorage, useMatchingRecipes } from "@/hooks";
+import {
+  batchRemoveItems,
+  Category,
+  Item,
+  updateItemCompleted,
+} from "@/firebase";
+import { useUser } from "@/contexts";
 import { ItemDetailsModal } from "./ItemDetailsModal";
-import { Item as ItemModel } from "@/models/item";
-import { Category as CategoryModel } from "@/models/category";
-import { useAuthentication, useFirebase, useList } from "@/hooks";
-import { FavouritesModal } from "./FavouritesModal";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { QuickAddModal } from "./QuickAddModal";
+import { toast } from "sonner";
 
 export const List = () => {
-  const detailsDisclosure = useDisclosure();
-  const editDisclosure = useDisclosure();
-  const favouritesDisclosure = useDisclosure();
-  const { firestore, analytics } = useFirebase();
-  const { appUser } = useAuthentication();
-  const [selectedItem, setSelectedItem] = useState<ItemModel>();
-  const [hideCompleted, setHideCompleted] = useState(false);
-  const {
-    isLoading: isLoading,
-    categories,
-    addedItems: items,
-    openAddItemModal,
-  } = useList();
+  const { groupId, defaultListId } = useUser();
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item>();
+  const [showCompleted, setShowCompleted] = useLocalStorage(
+    "show-completed-items",
+    true,
+  );
+  const { isPending, isError, data } = useListItems(showCompleted);
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
 
-  const handleOpenDetails = (item: ItemModel) => {
+  const handleClickDetails = (item: Item) => {
     setSelectedItem(item);
-    detailsDisclosure.onOpen();
+    setIsDetailsOpen(true);
   };
 
-  const handleClickClear = () => {
-    const batch = writeBatch(firestore);
+  const handleBatchRemove = () => {
+    const completedItems = data
+      .flatMap((c) => c.items)
+      .filter((item) => item.completed)
+      .map((item) => item.id);
 
-    for (const item of items.filter((item) => item.completed)) {
-      const itemRef = doc(
-        firestore,
-        "groups",
-        appUser!.group.id,
-        "lists",
-        appUser!.group.defaultList,
-        "items",
-        item.id,
-      );
-      batch.update(itemRef, {
-        completed: false,
-        added: false,
-        notes: deleteField(),
-        flagged: deleteField(),
-      });
-    }
-
-    batch.commit();
-
-    logEvent(analytics, "clear_completed");
+    batchRemoveItems(groupId, defaultListId, completedItems);
   };
 
-  const handleClickDetailsEdit = () => {
-    detailsDisclosure.onClose();
-    editDisclosure.onOpen();
-  };
-
-  if (isLoading) {
-    return (
-      <Stack py={2}>
-        {[
-          { name: "", colour: "" },
-          { name: "", colour: "" },
-          { name: "", colour: "" },
-        ].map((category, i) => (
-          <Skeleton key={i}>
-            <Category {...category} />
-          </Skeleton>
-        ))}
-      </Stack>
-    );
+  if (isPending) {
+    return <CategorySkeleton />;
   }
 
-  const displayCategories: Array<CategoryModel> = categories
-    .map((category) => ({
-      ...category,
-      items: items
-        .filter(
-          (item) =>
-            item.category === category.id &&
-            ((hideCompleted && !item.completed) || !hideCompleted),
-        )
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    }))
-    .sort((a, b) => a.order - b.order);
-
-  const uncategorisedItems = items.filter((item) => !item.category);
-
-  if (uncategorisedItems.length > 0) {
-    displayCategories.unshift({
-      id: "",
-      name: "Uncategorised",
-      colour: "#d4d5d6",
-      order: 0,
-      items: uncategorisedItems,
-    });
+  if (isError) {
+    return <CategoryError />;
   }
 
   return (
-    <Box>
-      <Flex justify={{ base: "space-evenly", sm: "flex-end" }} mb={2} gap={2}>
-        <IconButton
-          colorScheme="blue"
-          icon={<AddIcon />}
-          size="lg"
-          aria-label="Add item"
-          onClick={openAddItemModal}
-        />
-        <IconButton
-          icon={<RepeatIcon />}
-          size="lg"
-          aria-label="Frequent items"
-          onClick={favouritesDisclosure.onOpen}
-        />
-        <IconButton
-          icon={hideCompleted ? <ViewIcon /> : <ViewOffIcon />}
-          size="lg"
-          aria-label="Toggle displaying completed items"
-          onClick={() => setHideCompleted((hideCompleted) => !hideCompleted)}
-        />
-        <IconButton
-          colorScheme="red"
-          icon={<DeleteIcon />}
-          size="lg"
-          aria-label="Clear completed items"
-          onClick={handleClickClear}
-        />
-      </Flex>
-      <Stack>
-        {displayCategories.map((category) => (
-          <Category key={category.name} {...category}>
-            {category.items.map((item) => (
-              <Item
-                key={item.id}
-                item={item}
-                openDetails={() => handleOpenDetails(item)}
-              />
-            ))}
-          </Category>
+    <>
+      <div className="flex items-center justify-between space-x-2 mb-2">
+        <div className="space-x-2">
+          <Switch
+            id="toggle-completed"
+            checked={showCompleted}
+            onCheckedChange={setShowCompleted}
+          />
+          <Label htmlFor="toggle-completed">Show completed</Label>
+        </div>
+        <div className="space-x-2">
+          <Button
+            size="icon"
+            variant="secondary"
+            onClick={() => setIsQuickAddOpen(true)}
+          >
+            <CalendarPlus />
+          </Button>
+          {/* TODO: Move into component */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="icon">
+                <Trash2 />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  All completed items will be removed from the list.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleBatchRemove}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mx-auto gap-4">
+        {data.map((category) => (
+          <div key={category.name}>
+            <ListCategory category={category}>
+              {category.items.map((item) => (
+                <ListItem
+                  key={item.id}
+                  item={item}
+                  onOpenDetails={() => handleClickDetails(item)}
+                />
+              ))}
+            </ListCategory>
+          </div>
         ))}
-      </Stack>
+      </div>
       <ItemDetailsModal
-        {...detailsDisclosure}
-        item={selectedItem}
-        onEdit={handleClickDetailsEdit}
+        item={selectedItem!}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
       />
-      <EditItemModal {...editDisclosure} item={selectedItem} />
-      <FavouritesModal {...favouritesDisclosure} />
-    </Box>
+      <QuickAddModal
+        open={isQuickAddOpen}
+        onClose={() => setIsQuickAddOpen(false)}
+      />
+    </>
+  );
+};
+
+// TODO: Update for large resolutions
+const CategorySkeleton = () => (
+  <div className="flex flex-col gap-2">
+    {/* <div className="flex gap-2 justify-between">
+      <Skeleton className="rounded-full h-[3rem] w-[3rem]" />
+      <Skeleton className="rounded-full h-[3rem] w-[3rem]" />
+      <Skeleton className="rounded-full h-[3rem] w-[3rem]" />
+      <Skeleton className="rounded-full h-[3rem] w-[3rem]" />
+    </div> */}
+    <div className="flex flex-col gap-2">
+      <Skeleton className="h-[120px]" />
+      <Skeleton className="h-[60px]" />
+      <Skeleton className="h-[120px]" />
+      <Skeleton className="h-[180px]" />
+      <Skeleton className="h-[60px]" />
+    </div>
+  </div>
+);
+
+const CategoryError = () => <div>Error loading categories</div>;
+
+const ListCategory = ({
+  category,
+  children,
+}: {
+  category: Category;
+  children: React.ReactNode;
+}) => {
+  const hasChildren = React.Children.count(children) > 0;
+
+  return (
+    <Card className="border-none">
+      <CardHeader
+        className={hasChildren ? "rounded-t-xl" : "rounded-xl"}
+        style={{ backgroundColor: `${category.colour}75` }}
+      >
+        <h2 className="text-sm font-bold">
+          {category.name.toLocaleUpperCase()}
+        </h2>
+      </CardHeader>
+      {hasChildren && (
+        <CardContent
+          className="pt-6 rounded-b-xl"
+          style={{ backgroundColor: `${category.colour}50` }}
+        >
+          <div className="flex flex-col gap-2">{children}</div>
+        </CardContent>
+      )}
+    </Card>
+  );
+};
+
+const ListItem = ({
+  item,
+  onOpenDetails,
+}: {
+  item: Item;
+  onOpenDetails: () => void;
+}) => {
+  const { groupId, defaultListId } = useUser();
+  const matchingRecipesQuery = useMatchingRecipes(item.lowerName);
+
+  const handleItemChecked = (e: CheckedState) => {
+    const completed = e;
+
+    if (typeof completed !== "boolean") {
+      return;
+    }
+
+    updateItemCompleted(groupId, defaultListId, item.id, completed);
+
+    if (completed) {
+      toast(`Item "${item.name}" marked as completed`, {
+        action: {
+          label: "Undo",
+          onClick: () => {
+            updateItemCompleted(groupId, defaultListId, item.id, false);
+          },
+        },
+      });
+    }
+  };
+
+  // TODO: Fix overflowing items
+  return (
+    <div
+      key={item.name}
+      className="group flex justify-between items-center h-12"
+      data-completed={item.completed}
+    >
+      <Checkbox
+        id={item.id}
+        onCheckedChange={handleItemChecked}
+        checked={item.completed}
+        className="scale-150 mr-3"
+      />
+      <label
+        htmlFor={item.id}
+        className="flex-1 cursor-pointer group-data-[completed=true]:text-gray-500 dark:group-data-[completed=true]:text-gray-400"
+      >
+        <div>
+          <p className="inline group-data-[completed=true]:line-through">
+            {item.name}
+          </p>
+          {item.notes && (
+            <div className="ml-1 text-xs inline">- {item.notes}</div>
+          )}
+        </div>
+      </label>
+      <div className="w-12 h-12">
+        {matchingRecipesQuery.data?.length > 0 ? (
+          <Button
+            onClick={onOpenDetails}
+            variant="secondary"
+            className="h-full w-full font-bold"
+          >
+            {matchingRecipesQuery.data?.length}
+          </Button>
+        ) : (
+          <Button
+            onClick={onOpenDetails}
+            variant="secondary"
+            className="h-full w-full"
+          >
+            <Menu />
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };
