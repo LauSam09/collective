@@ -44,7 +44,8 @@ export function ItemComboBox({
 }: ItemComboBoxProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-  const filteredItems = useFilteredItems(debouncedSearchQuery);
+  const { filteredItems, hasExactMatch } =
+    useFilteredItems(debouncedSearchQuery);
   const categoriesQuery = useCategories();
 
   const filteredItemCommandItems = filteredItems.map((i) => ({
@@ -107,10 +108,10 @@ export function ItemComboBox({
       >
         {searchQuery.length > 0 &&
           searchQuery === debouncedSearchQuery &&
-          filteredItems.length === 0 && (
+          !hasExactMatch && (
             <ComboboxOption
               value={{ id: null, name: searchQuery }}
-              className="data-[focus]:bg-accent py-1"
+              className="data-[focus]:bg-accent px-2 py-1"
             >
               Create{" "}
               <span className="font-bold">&quot;{searchQuery}&quot;</span>
