@@ -56,6 +56,10 @@ const RecipeList = () => {
     });
   }, [recipesQuery.data]);
 
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearchQuery, cuisineTags, typeTags]);
+
   const filteredRecipes = filteringApplied
     ? recipesQuery.data
         ?.filter(
