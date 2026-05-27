@@ -109,6 +109,12 @@ const RecipeList = () => {
     setIsDetailsOpen(true);
   };
 
+  const clearSearch = () => {
+    setSearchQuery("");
+    setCuisineTags([]);
+    setTypeTags([]);
+  };
+
   return (
     <>
       <div className="flex justify-between gap-3">
@@ -125,7 +131,7 @@ const RecipeList = () => {
             type="button"
             variant="outline"
             size="icon"
-            onClick={() => setSearchQuery("")}
+            onClick={clearSearch}
           >
             <X />
           </Button>
